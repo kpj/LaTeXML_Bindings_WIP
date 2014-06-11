@@ -1,0 +1,15 @@
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+######################################################
+
+DefConstructor(
+	'\Tree{}',
+	"<ltx:p class='ltx_tree'>#1</ltx:p>"
+);
+
+######################################################
+
+1;
