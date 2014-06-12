@@ -21,23 +21,18 @@ sub make_paramlist {
 
 		if(defined $val) {
 			my $usedef = ($keyval) ? $keyval->getValue('usedefault') : undef;
-				if(defined $usedef) {
-				print "usedef: " . ToString($usedef);
-				} else {
-				print "meep";
-				}
-				print "\n";
-			$paramlist .= "XArgsOptional:" . $val->toString() . "|";
+
 			if(defined $usedef) {
-				$paramlist .= ToString($usedef);
-			}
+    			$paramlist .= "XArgsOptional:" . $val->toString() . "|" . ToString($usedef);
+			} else {
+                $paramlist .= "Optional:" . $val->toString();
+            }
 			$paramlist .= "  ";
 		} else {
 			$paramlist .= "{}";
 		}
 	}
 
-	print $paramlist . "\n\n";
 	return $paramlist;
 }
 
