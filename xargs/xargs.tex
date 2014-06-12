@@ -11,10 +11,14 @@
 \providecommandx{\comm}[5][2=24, 4=42]{foo bar baz}
 
 \newenvironmentx{foo}{bar}{hum}
-	\renewenvironmentx{foo}[2][1=honey, 2=mustard]{``{#1} - ``{#2}''}{``The End''}
+\renewenvironmentx{foo}[2][1=honey, 2=mustard]{``{#1} - ``{#2}''}{``The End''}
 
 \newcommandx{\hihi}[2][1=honey, 2=mustard, usedefault]{``{#1}'' - ``{#2}''}
 \newcommandx{\hihihi}[2][1=honey, 2=mustard, usedefault=ha]{``{#1}'' - ``{#2}''}
+
+\newcommandx{\greeting}[2][1=Hello, 2=World]{#1 #2!}
+\newcommandx{\greetingUsedef}[2][1=Hello, 2=World, usedefault]{#1 #2!}
+\newcommandx{\greetingUsedefAt}[2][1=Hello, 2=World, usedefault=@]{#1 #2!}
 
 \begin{document}
 
@@ -29,5 +33,12 @@
 \begin{foo}
 	butterfly
 \end{foo}
+
+\greeting \\
+\greeting[Bye] \\
+\greeting[][Tree] \\
+\greetingUsedef[][Forrest] \\
+\greetingUsedefAt[@][Sea] \\
+\greetingUsedefAt[][Lake] \\
 
 \end{document}

@@ -16,33 +16,30 @@ sub make_paramlist {
 	my ($keyval, $nargs) = @_;
 	my $paramlist = "";
 
-	# fix $nargs
-	$nargs = $nargs->toString if ref $nargs;
-	$nargs = 0 unless $nargs;
-
-	# parse usedefault
-	my $usedef = ($keyval) ? $keyval->getValue('usedefault') : undef;
-	print "\n\n";
-	if(defined $usedef) {
-		print "usedef: " . ToString($usedef);
-	} else {
-		print "meep";
-	}
-	print "\n\n";
-
 	for my $i (1 .. $nargs) {
 		my $val = ($keyval) ? $keyval->getValue($i) : undef;
 
 		if(defined $val) {
-			$paramlist .= "[Default:" . $val->toString() . "]";
+			my $usedef = ($keyval) ? $keyval->getValue('usedefault') : undef;
+				if(defined $usedef) {
+				print "usedef: " . ToString($usedef);
+				} else {
+				print "meep";
+				}
+				print "\n";
+			$paramlist .= "XArgsOptional:" . $val->toString() . "|";
+			if(defined $usedef) {
+				$paramlist .= ToString($usedef);
+			}
+			$paramlist .= "  ";
 		} else {
 			$paramlist .= "{}";
 		}
 	}
 
+	print $paramlist . "\n\n";
 	return $paramlist;
 }
-
 
 ##########
 # Macros #
@@ -157,6 +154,10 @@ foreach(@macros) {
 				return;
 			}
 
+			# fix $nargs
+			$nargs = $nargs->toString if ref $nargs;
+			$nargs = 0 unless $nargs;
+
 			if($macro_type eq 'cmd') {
 				DefMacroI(
 					$cs,
@@ -184,3 +185,6 @@ DefPrimitive(
 ######################################################
 
 1;
+
+
+# vim: ft=perl: 

@@ -1,0 +1,27 @@
+DefParameterType(
+    'XArgsOptional',
+    sub {
+        my ($gullet, $default, $usedefault, $inner) = @_;
+        my $value = $gullet->readOptional;
+
+        if($usedefault && ToString($value) eq ToString($usedefault)) {
+            $value = $default;
+        }
+        if(!$usedefault && !$value) {
+            $value = $default;
+        }
+
+        print "\n\n";
+        if(defined $value) {
+            print "value def: ".ToString($value);
+        }
+        print "\n";
+        if(defined $usedefault) {
+            print "usedefault def: ".ToString($usedefault);
+        }
+        print "\n\n";
+
+        $value;
+    },
+    optional => 1
+);
