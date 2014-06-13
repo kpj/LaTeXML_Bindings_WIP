@@ -20,6 +20,9 @@
 \newcommandx{\greetingUsedef}[2][1=Hello, 2=World, usedefault]{#1 #2!}
 \newcommandx{\greetingUsedefAt}[2][1=Hello, 2=World, usedefault=@]{#1 #2!}
 
+\newcommandx{\prefixstuff}[1][addprefix=\global]{Prefix: #1}
+\newcommandx*{\prefixstuffstar}[1][addprefix=\global]{** Prefix: #1 **}
+
 \begin{document}
 
 \comm{World} \\
@@ -40,5 +43,8 @@
 \greetingUsedef[][Forrest] \\
 \greetingUsedefAt[@][Sea] \\
 \greetingUsedefAt[][Lake] \\
+
+\prefixstuff{foo} \\
+\prefixstuffstar{bar} \\
 
 \end{document}
