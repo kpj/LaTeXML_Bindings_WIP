@@ -23,10 +23,10 @@ sub make_paramlist {
 			my $usedef = ($keyval) ? $keyval->getValue('usedefault') : undef;
 
 			if(defined $usedef) {
-    			$paramlist .= "XArgsOptional:" . $val->toString() . "|" . ToString($usedef);
+				$paramlist .= "XArgsOptional:" . $val->toString() . "|" . ToString($usedef);
 			} else {
-                $paramlist .= "Optional:" . $val->toString();
-            }
+				$paramlist .= "Optional:" . $val->toString();
+			}
 			$paramlist .= "  ";
 		} else {
 			$paramlist .= "{}";
@@ -38,26 +38,26 @@ sub make_paramlist {
 
 # generate command prefix (\global, \long, ...; but not \outer)
 sub extract_prefix {
-    my ($star, $keyval) = @_;
-    my $prefix = '';
+	my ($star, $keyval) = @_;
+	my $prefix = '';
 
-    if(!defined $star) {
-        # defaults to \long for unstarred form
-        $prefix = '\\long';
-    }
+	if(!defined $star) {
+		# defaults to \long for unstarred form
+		$prefix = '\\long';
+	}
 
-    if(defined $keyval) {
-        my @pairs = $keyval->getPairs;
-        while (@pairs) {
-            my ($key, $value) = (shift(@pairs), shift(@pairs));
+	if(defined $keyval) {
+		my @pairs = $keyval->getPairs;
+		while (@pairs) {
+			my ($key, $value) = (shift(@pairs), shift(@pairs));
 
-            if($key eq 'addprefix') {
-                $prefix .= ToString($value);
-            }
-        }
-    }
+			if($key eq 'addprefix') {
+				$prefix .= ToString($value);
+			}
+		}
+	}
 
-    return $prefix;
+	return $prefix;
 }
 
 ##########
@@ -177,16 +177,16 @@ foreach(@macros) {
 			$nargs = $nargs->toString if ref $nargs;
 			$nargs = 0 unless $nargs;
 
-            # handle global prefix
-            my $prefix = extract_prefix($star, $defaults);
-            my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+			# handle global prefix
+			my $prefix = extract_prefix($star, $defaults);
+			my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
 
 			if($macro_type eq 'cmd') {
 				DefMacroI(
 					$cs,
 					make_paramlist($defaults, $nargs),
 					$body,
-                    ($is_global ? (scope=>'global'):())
+					($is_global ? (scope=>'global'):())
 				);
 			} elsif($macro_type eq 'env') {
 				my $preamble = $body;
@@ -195,17 +195,17 @@ foreach(@macros) {
 				$cs = ToString($cs);
 
 				DefMacroI(
-                    T_CS("\\$cs"), 
-                    make_paramlist($defaults, $nargs), 
-                    $preamble,
-                    ($is_global ? (scope=>'global'):())
-                );
+					T_CS("\\$cs"), 
+					make_paramlist($defaults, $nargs), 
+					$preamble,
+					($is_global ? (scope=>'global'):())
+				);
 				DefMacroI(
-                    T_CS("\\end$cs"), 
-                    undef, 
-                    $postamble,
-                    ($is_global ? (scope=>'global'):())
-                );
+					T_CS("\\end$cs"), 
+					undef, 
+					$postamble,
+					($is_global ? (scope=>'global'):())
+				);
 			}
 		}
 	);
