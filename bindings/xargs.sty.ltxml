@@ -14,7 +14,7 @@ DefKeyVal('xargs', 'usedefault', undef, '');
 # generate $paramlist
 sub make_paramlist {
 	my ($keyval, $nargs) = @_;
-	my $paramlist = "";
+	my @paramlist = ();
 
 	for my $i (1 .. $nargs) {
 		my $val = ($keyval) ? $keyval->getValue($i) : undef;
@@ -23,17 +23,30 @@ sub make_paramlist {
 			my $usedef = ($keyval) ? $keyval->getValue('usedefault') : undef;
 
 			if(defined $usedef) {
-				$paramlist .= "XArgsOptional:" . $val->toString() . "|" . ToString($usedef);
+                push(
+                    @paramlist, 
+                    LaTeXML::Core::Parameter->new(
+                        'XArgsOptional', 
+                        "XArgsOptional:" . $val->toString() . "|" . ToString($usedef), 
+                        [$val, $usedef]
+                    )
+                );
 			} else {
-				$paramlist .= "Optional:" . $val->toString();
+                push(
+                    @paramlist, 
+                    LaTeXML::Core::Parameter->new(
+                        'Optional', 
+                        "Default:" . $val->toString(), 
+                        [$val, $usedef]
+                    )
+                );
 			}
-			$paramlist .= "  ";
 		} else {
-			$paramlist .= "{}";
+			push(@paramlist, LaTeXML::Core::Parameter->new('Plain',"{}"));
 		}
 	}
 
-	return $paramlist;
+	return LaTeXML::Core::Parameters->new(@paramlist);
 }
 
 # generate command prefix (\global, \long, ...; but not \outer)
