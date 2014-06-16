@@ -28,7 +28,7 @@ sub make_paramlist {
 					LaTeXML::Core::Parameter->new(
 						'XArgsOptional', 
 						"XArgsOptional:" . $val->toString() . "|" . ToString($usedef), 
-						[$val, $usedef]
+						extra => [$val, $usedef]
 					)
 				);
 			} else {
@@ -36,8 +36,8 @@ sub make_paramlist {
 					@paramlist, 
 					LaTeXML::Core::Parameter->new(
 						'Optional', 
-						"Default:" . $val->toString(), 
-						[$val, $usedef]
+						"Optional:" . $val->toString(), 
+						extra => [$val, $usedef]
 					)
 				);
 			}
