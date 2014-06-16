@@ -58,16 +58,9 @@ sub extract_prefix {
 		# defaults to \long for unstarred form
 		$prefix = '\\long';
 	}
-
 	if(defined $keyval) {
-		my @pairs = $keyval->getPairs;
-		while (@pairs) {
-			my ($key, $value) = (shift(@pairs), shift(@pairs));
-
-			if($key eq 'addprefix') {
-				$prefix .= ToString($value);
-			}
-		}
+		my $p = $keyval->getValue('addprefix');
+		$prefix .= join('', map { ToString($_) } (ref $p eq 'ARRAY' ?  @$p : ($p)));
 	}
 
 	return $prefix;
