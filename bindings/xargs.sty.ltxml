@@ -23,23 +23,23 @@ sub make_paramlist {
 			my $usedef = ($keyval) ? $keyval->getValue('usedefault') : undef;
 
 			if(defined $usedef) {
-                push(
-                    @paramlist, 
-                    LaTeXML::Core::Parameter->new(
-                        'XArgsOptional', 
-                        "XArgsOptional:" . $val->toString() . "|" . ToString($usedef), 
-                        [$val, $usedef]
-                    )
-                );
+				push(
+					@paramlist, 
+					LaTeXML::Core::Parameter->new(
+						'XArgsOptional', 
+						"XArgsOptional:" . $val->toString() . "|" . ToString($usedef), 
+						[$val, $usedef]
+					)
+				);
 			} else {
-                push(
-                    @paramlist, 
-                    LaTeXML::Core::Parameter->new(
-                        'Optional', 
-                        "Default:" . $val->toString(), 
-                        [$val, $usedef]
-                    )
-                );
+				push(
+					@paramlist, 
+					LaTeXML::Core::Parameter->new(
+						'Optional', 
+						"Default:" . $val->toString(), 
+						[$val, $usedef]
+					)
+				);
 			}
 		} else {
 			push(@paramlist, LaTeXML::Core::Parameter->new('Plain',"{}"));
@@ -234,4 +234,4 @@ DefPrimitive(
 1;
 
 
-# vim: ft=perl: 
+# vim: ft=perl: noexpandtab:
