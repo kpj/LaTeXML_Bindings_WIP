@@ -4,12 +4,12 @@ DefParameterType(
         my ($gullet, $default, $usedefault, $inner) = @_;
         my $value = $gullet->readOptional;
 
-        if($usedefault && ToString($value) eq ToString($usedefault)) {
-            $value = $default;
-        }
-        if(!defined $usedefault && ToString($value) eq '') {
-            $value = $default;
-        }
+	if(
+		($usedefault && ToString($value) eq ToString($usedefault)) ||
+		(!defined $usedefault && ToString($value) eq '')
+	) {
+		$value = $default;
+	}
 
         $value;
     },
