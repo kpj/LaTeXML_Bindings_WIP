@@ -7,9 +7,10 @@ cwd="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$cwd"
 
 dir="$1"
-tex_file="${dir%/}.tex"
+fname="main"
+tex_file="$fname.tex"
 xml_file="${tex_file/%tex/xml}"
-pdf_file="${dir%/}.pdf"
+pdf_file="${tex_file/%tex/pdf}"
 
 
 cd "$dir" && \
