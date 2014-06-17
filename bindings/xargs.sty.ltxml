@@ -89,157 +89,190 @@ sub extract_prefix {
 # Macros #
 ##########
 
-my @macros = (
-#	{
-#		'macro' => '\\name_of_macro',
-#		'type' => 'cmd' | 'env', # influences macro generation
-#		'func' => sub {
-#			# does some extra work
-#			# return 0 if macro should be defined, 1 otherwise
-#		}
-#	}
-	{
-		'macro' => '\\newcommandx',
-		'type' => 'cmd',
-		'func' => sub {
-			my ($stomach, $cs) = @_;
-			my $key = "defined:" . Stringify($cs);
-
-			if(LookupValue($key)) {
-				Error(
-					'ignore', 
-					$cs, 
-					$stomach,
-					"Ignoring redefinition (\\newcommandx) of '" . Stringify($cs) . "'"
-				);
-				return 1;
-			}
-			AssignValue($key => 1);
-
-			return 0;
-		}
-	},
-	{
-		'macro' => '\\renewcommandx',
-		'type' => 'cmd',
-		'func' => sub {
-			my ($stomach, $cs) = @_;
-
-			AssignValue("defined:" . Stringify($cs) => 1);
-			return 0;
-		}
-	},
-	{
-		'macro' => '\\providecommandx',
-		'type' => 'cmd',
-		'func' => sub {
-			my ($stomach, $cs) = @_;
-
-			if (LookupValue("defined:" . Stringify($cs)) || LookupDefinition($cs)) {
-				return 1;
-			}
-			return 0;
-		}
-	},
-	{
-		'macro' => '\\DeclareRobustCommandx',
-		'type' => 'cmd',
-		'func' => sub {
-			my ($stomach, $cs) = @_;
-			# do something in here?
-			return 0;
-		}
-	},
-	{
-		'macro' => '\\newenvironmentx',
-		'type' => 'env',
-		'func' => sub {
-			my ($stomach, $name) = @_;
-
-			if(LookupDefinition(T_CS("\\$name"))) {
-				Error(
-					'ignore', 
-					$name, 
-					$stomach,
-					"Ignoring redefinition (\\newenvironmentx) of Environment '$name'"
-				);
-				return 1;
-			}
-			return 0;
-		}
-	},
-	{
-		'macro' => '\\renewenvironmentx',
-		'type' => 'env',
-		'func' => sub {
-			my ($stomach, $name) = @_;
-
-			AssignValue("defined:" . Stringify($name) => 1);
-			return 0;
-		}
-	}
-);
-
-foreach(@macros) {
-	my $macro_name = $_->{'macro'};
-	my $logic_func = $_->{'func'};
-	my $macro_type = $_->{'type'};
-
-	my $arg_string = ' OptionalMatch:* ' . (($macro_type eq 'cmd')?'DefToken':'{}') . ' [] OptionalKeyVals:xargs {}' . (($macro_type eq 'cmd')?'':'{}');
-
-	DefPrimitive(
-		$macro_name . $arg_string,
-		sub {
-			my ($stomach, $star, $cs, $nargs, $defaults, $body) = @_;
-			my @args = @_; # save arguments for later
-
-			if($logic_func->($stomach, $cs)) {
-				# maybe something failed and we have to return (no macros generated)
-				return;
-			}
-
-			# fix $nargs
-			$nargs = $nargs->toString if ref $nargs;
-			$nargs = 0 unless $nargs;
-
-			# handle global prefix
-			my $prefix = extract_prefix($star, $defaults);
-			my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
-
-			if($macro_type eq 'cmd') {
-				DefMacroI(
-					$cs,
-					make_paramlist($defaults, $nargs),
-					$body,
-					($is_global ? (scope=>'global'):())
-				);
-			} elsif($macro_type eq 'env') {
-				my $preamble = $body;
-				my $postamble = $args[-1];
-
-				$cs = ToString($cs);
-
-				DefMacroI(
-					T_CS("\\$cs"), 
-					make_paramlist($defaults, $nargs), 
-					$preamble,
-					($is_global ? (scope=>'global'):())
-				);
-				DefMacroI(
-					T_CS("\\end$cs"), 
-					undef, 
-					$postamble,
-					($is_global ? (scope=>'global'):())
-				);
-			}
-		}
-	);
-}
-
 DefPrimitive(
 	'\CheckCommandx OptionalMatch:* DefToken [] OptionalKeyVals:xargs {}', 
 	undef
 );
+
+DefPrimitive(
+	'\newcommandx OptionalMatch:* DefToken [] OptionalKeyVals:xargs {}',
+	sub {
+		my ($stomach, $star, $cs, $nargs, $defaults, $body) = @_;
+
+		my $key = "defined:" . Stringify($cs);
+		if(LookupValue($key)) {
+			Error(
+				'ignore', 
+				$cs, 
+				$stomach,
+				"Ignoring redefinition (\\newcommandx) of '" . Stringify($cs) . "'"
+			);
+			return;
+		}
+		AssignValue($key => 1);
+
+		# fix $nargs
+		$nargs = $nargs->toString if ref $nargs;
+		$nargs = 0 unless $nargs;
+
+		# handle global prefix
+		my $prefix = extract_prefix($star, $defaults);
+		my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+
+		DefMacroI(
+			$cs,
+			make_paramlist($defaults, $nargs),
+			$body,
+			($is_global ? (scope=>'global'):())
+		);
+	}
+);
+
+DefPrimitive(
+	'\renewcommandx OptionalMatch:* DefToken [] OptionalKeyVals:xargs {}',
+	sub {
+		my ($stomach, $star, $cs, $nargs, $defaults, $body) = @_;
+
+		AssignValue("defined:" . Stringify($cs) => 1);
+
+		# fix $nargs
+		$nargs = $nargs->toString if ref $nargs;
+		$nargs = 0 unless $nargs;
+
+		# handle global prefix
+		my $prefix = extract_prefix($star, $defaults);
+		my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+
+		DefMacroI(
+			$cs,
+			make_paramlist($defaults, $nargs),
+			$body,
+			($is_global ? (scope=>'global'):())
+		);
+	}
+);
+
+DefPrimitive(
+	'\providecommandx OptionalMatch:* DefToken [] OptionalKeyVals:xargs {}',
+	sub {
+		my ($stomach, $star, $cs, $nargs, $defaults, $body) = @_;
+
+		if (LookupValue("defined:" . Stringify($cs)) || LookupDefinition($cs)) {
+			return;
+		}
+
+		# fix $nargs
+		$nargs = $nargs->toString if ref $nargs;
+		$nargs = 0 unless $nargs;
+
+		# handle global prefix
+		my $prefix = extract_prefix($star, $defaults);
+		my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+
+		DefMacroI(
+			$cs,
+			make_paramlist($defaults, $nargs),
+			$body,
+			($is_global ? (scope=>'global'):())
+		);
+	}
+);
+
+DefPrimitive(
+	'\DeclareRobustCommandx OptionalMatch:* DefToken [] OptionalKeyVals:xargs {}',
+	sub {
+		my ($stomach, $star, $cs, $nargs, $defaults, $body) = @_;
+
+		# fix $nargs
+		$nargs = $nargs->toString if ref $nargs;
+		$nargs = 0 unless $nargs;
+
+		# handle global prefix
+		my $prefix = extract_prefix($star, $defaults);
+		my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+
+		DefMacroI(
+			$cs,
+			make_paramlist($defaults, $nargs),
+			$body,
+			($is_global ? (scope=>'global'):())
+		);
+	}
+);
+
+
+DefPrimitive(
+	'\newenvironmentx OptionalMatch:* {} [] OptionalKeyVals:xargs {}{}',
+	sub {
+		my ($stomach, $star, $cs, $nargs, $defaults, $preamble, $postamble) = @_;
+
+		# fix $nargs
+		$nargs = $nargs->toString if ref $nargs;
+		$nargs = 0 unless $nargs;
+
+		# handle global prefix
+		my $prefix = extract_prefix($star, $defaults);
+		my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+
+		if(LookupDefinition(T_CS("\\$cs"))) {
+			Error(
+				'ignore', 
+				$cs, 
+				$stomach,
+				"Ignoring redefinition (\\newenvironmentx) of Environment '$cs'"
+			);
+			return;
+		}
+
+		$cs = ToString($cs);
+
+		DefMacroI(
+			T_CS("\\$cs"), 
+			make_paramlist($defaults, $nargs), 
+			$preamble,
+			($is_global ? (scope=>'global'):())
+		);
+		DefMacroI(
+			T_CS("\\end$cs"), 
+			undef, 
+			$postamble,
+			($is_global ? (scope=>'global'):())
+		);
+	}
+);
+
+DefPrimitive(
+	'\renewenvironmentx OptionalMatch:* {} [] OptionalKeyVals:xargs {}{}',
+	sub {
+		my ($stomach, $star, $cs, $nargs, $defaults, $preamble, $postamble) = @_;
+
+		# fix $nargs
+		$nargs = $nargs->toString if ref $nargs;
+		$nargs = 0 unless $nargs;
+
+		# handle global prefix
+		my $prefix = extract_prefix($star, $defaults);
+		my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+
+		AssignValue("defined:" . Stringify($cs) => 1);
+
+		$cs = ToString($cs);
+
+		DefMacroI(
+			T_CS("\\$cs"), 
+			make_paramlist($defaults, $nargs), 
+			$preamble,
+			($is_global ? (scope=>'global'):())
+		);
+		DefMacroI(
+			T_CS("\\end$cs"), 
+			undef, 
+			$postamble,
+			($is_global ? (scope=>'global'):())
+		);
+	}
+);
+
 
 ######################################################
 
