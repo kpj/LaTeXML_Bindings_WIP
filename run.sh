@@ -11,9 +11,11 @@ fname="main"
 tex_file="$fname.tex"
 xml_file="${tex_file/%tex/xml}"
 pdf_file="${tex_file/%tex/pdf}"
+html_file="${tex_file/%tex/html}"
 
 
 cd "$dir" && \
-rm -f "$xml_file" "$pdf_file" && \
+rm -f "$xml_file" "$pdf_file" "$html_file" && \
 pdflatex -file-line-error -halt-on-error "$tex_file" && \
-latexml --path="$cwd/bindings" --dest="$xml_file" "$tex_file"
+latexml --path="$cwd/bindings" --dest="$xml_file" "$tex_file" && \
+latexmlpost --format=html "$xml_file" --destination="$html_file"
