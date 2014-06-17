@@ -1,0 +1,27 @@
+\documentclass{article}
+
+\usepackage[cam,a4,center,dvips]{crop}
+
+\crop[nographics]
+\crop
+
+\newcommand*\funnymarkA{%
+	\begin{picture}(0,0)
+		\thinlines\unitlength1pt
+		\put(-5,-5){\line(1,1){10}}
+		\put(-5,5){\line(1,-1){10}}
+	\end{picture}}
+\newcommand*\funnymarkB{%
+	\begin{picture}(0,0)
+		\unitlength1pt
+		\put(0,0){\circle*{5}}
+	\end{picture}}
+
+\newcommand*\funnyinfo{funnypageinfo}
+\cropdef[\funnyinfo]\relax\funnymarkA\relax\funnymarkB{funny}
+
+\begin{document}
+foo
+{\crop[cross,axes]\mbox{}\newpage}
+bar
+\end{document}
