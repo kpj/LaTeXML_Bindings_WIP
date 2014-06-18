@@ -457,6 +457,30 @@ DefMath('\@underbracket Digested', "\x{FE47}", operator_role => 'UNDERACCENT', s
 Let('\LaTeXunderbrace', '\underbrace');
 Let('\LaTeXoverbrace', '\overbrace');
 
+# 3.4
+
+sub MTMatrixTemplate {
+        my $stuff = LaTeXML::Core::Alignment::Template->new(
+                repeated => [{
+                        before => Tokens(T_CS('\hfil')),
+                        after => Tokens(T_CS('\hfil'))
+                }]
+        );
+        return $stuff;
+}
+
+DefMacro('\matrix OptionalMatch:* []', '\ifx&#1&\@@matrix\else\@@MTSmatrix\fi\@start@alignment');
+DefMacro('\endmatrix OptionalMatch:*', '\@finish@alignment\ifx&#1&\@end@matrix\else\@end@MTSmatrix\fi');
+DefPrimitive('\@end@MTSmatrix', sub { $_[0]->egroup; });
+DefConstructor(
+        '\@@MTSmatrix DigestedBody',
+        '#1',
+        beforeDigest => sub {
+                $_[0]->bgroup;
+                alignmentBindings(MTMatrixTemplate(), 'math', attributes => { name => 'Matrix' });
+        },
+        reversion => '\begin{matrix}#1\end{matrix}'
+);
 
 ######################################################
 
