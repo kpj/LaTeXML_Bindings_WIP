@@ -4,8 +4,11 @@
 
 \newcommand{\horz}{\noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}}
 
-\newtagform{brackets2}[\textbf]{[}{]}
-\usetagform{brackets2}
+\newtagform{bad}{...}{...}
+\newtagform{good}[\textbf]{[}{]}
+\renewtagform{good}[\textbf]{.[}{].}
+\usetagform{bad}
+\usetagform{good}
 
 \begin{document}
 
@@ -62,6 +65,35 @@ a=b \label{eq:example}\tag*{Q\&A}
 \end{equation*}
 See \ref{eq:example} or is it better with \refeq{eq:example}?
 \end{quote}
+
+\horz
+
+\[
+A \xLeftarrow[under]{over} B \xRightarrow[under]{over} C
+\]
+\[
+x \xleftrightarrow[under]{overlooooooong} y \xLeftrightarrow[underloooooooong]{over} z
+\]
+\[
+x \xhookleftarrow[bar]{foo} y \xhookrightarrow[bluuuuuuuuub]{baz} t \xmapsto{heeereee} k
+\]
+\[
+k \xleftharpoonup[.]{} l \xleftharpoondown{..} m \xrightharpoondown[...]{} n \xrightharpoonup{....} o
+\]
+\[
+x \xrightleftharpoons{bluuuuub} y \xleftrightharpoons[blaaaaaab]{} z
+\]
+
+\horz
+
+\[
+z = \LaTeXoverbrace{
+   \underbracket{x}_\text{real} + i
+      \underbracket[1pt][7pt]{y}_\text{imaginary}
+        }^\text{complex number}
+\quad
+\underbrace{1+1}_{=2}
+\]
 
 \horz
 
