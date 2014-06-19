@@ -109,6 +109,21 @@ sub extract_prefix {
 	return $prefix;
 }
 
+# this function does stuff in order to decrease code redundancies
+sub do_stuff {
+        my ($nargs, $star, $defaults) = @_;
+
+        # fix $nargs
+        $nargs = $nargs->toString if ref $nargs;
+        $nargs = 0 unless $nargs;
+
+        # handle global prefix
+        my $prefix = extract_prefix($star, $defaults);
+        my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+
+        return ($nargs, $is_global);
+}
+
 ##########
 # Macros #
 ##########
@@ -135,13 +150,8 @@ DefPrimitive(
 		}
 		AssignValue($key => 1);
 
-		# fix $nargs
-		$nargs = $nargs->toString if ref $nargs;
-		$nargs = 0 unless $nargs;
-
-		# handle global prefix
-		my $prefix = extract_prefix($star, $defaults);
-		my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+                my $is_global;
+                ($nargs, $is_global) = do_stuff($nargs, $star, $defaults);
 
 		DefMacroI(
 			$cs,
@@ -159,13 +169,8 @@ DefPrimitive(
 
 		AssignValue("defined:" . Stringify($cs) => 1);
 
-		# fix $nargs
-		$nargs = $nargs->toString if ref $nargs;
-		$nargs = 0 unless $nargs;
-
-		# handle global prefix
-		my $prefix = extract_prefix($star, $defaults);
-		my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+                my $is_global;
+                ($nargs, $is_global) = do_stuff($nargs, $star, $defaults);
 
 		DefMacroI(
 			$cs,
@@ -185,13 +190,8 @@ DefPrimitive(
 			return;
 		}
 
-		# fix $nargs
-		$nargs = $nargs->toString if ref $nargs;
-		$nargs = 0 unless $nargs;
-
-		# handle global prefix
-		my $prefix = extract_prefix($star, $defaults);
-		my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+                my $is_global;
+                ($nargs, $is_global) = do_stuff($nargs, $star, $defaults);
 
 		DefMacroI(
 			$cs,
@@ -207,13 +207,8 @@ DefPrimitive(
 	sub {
 		my ($stomach, $star, $cs, $nargs, $defaults, $body) = @_;
 
-		# fix $nargs
-		$nargs = $nargs->toString if ref $nargs;
-		$nargs = 0 unless $nargs;
-
-		# handle global prefix
-		my $prefix = extract_prefix($star, $defaults);
-		my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+                my $is_global;
+                ($nargs, $is_global) = do_stuff($nargs, $star, $defaults);
 
 		DefMacroI(
 			$cs,
@@ -230,13 +225,8 @@ DefPrimitive(
 	sub {
 		my ($stomach, $star, $cs, $nargs, $defaults, $preamble, $postamble) = @_;
 
-		# fix $nargs
-		$nargs = $nargs->toString if ref $nargs;
-		$nargs = 0 unless $nargs;
-
-		# handle global prefix
-		my $prefix = extract_prefix($star, $defaults);
-		my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+                my $is_global;
+                ($nargs, $is_global) = do_stuff($nargs, $star, $defaults);
 
 		if(LookupDefinition(T_CS("\\$cs"))) {
 			Error(
@@ -270,13 +260,8 @@ DefPrimitive(
 	sub {
 		my ($stomach, $star, $cs, $nargs, $defaults, $preamble, $postamble) = @_;
 
-		# fix $nargs
-		$nargs = $nargs->toString if ref $nargs;
-		$nargs = 0 unless $nargs;
-
-		# handle global prefix
-		my $prefix = extract_prefix($star, $defaults);
-		my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
+                my $is_global;
+                ($nargs, $is_global) = do_stuff($nargs, $star, $defaults);
 
 		AssignValue("defined:" . Stringify($cs) => 1);
 
