@@ -469,8 +469,8 @@ sub MTMatrixTemplate {
         return $stuff;
 }
 
-DefMacro('\matrix OptionalMatch:* []', '\ifx&#1&\@@matrix\else\@@MTSmatrix\fi\@start@alignment');
-DefMacro('\endmatrix OptionalMatch:*', '\@finish@alignment\ifx&#1&\@end@matrix\else\@end@MTSmatrix\fi');
+DefMacro('\csname matrix*\endcsname', '\@@MTSmatrix\@start@alignment');
+DefMacro('\csname endmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
 DefPrimitive('\@end@MTSmatrix', sub { $_[0]->egroup; });
 DefConstructor(
         '\@@MTSmatrix DigestedBody',
@@ -479,7 +479,7 @@ DefConstructor(
                 $_[0]->bgroup;
                 alignmentBindings(MTMatrixTemplate(), 'math', attributes => { name => 'Matrix' });
         },
-        reversion => '\begin{matrix}#1\end{matrix}'
+        reversion => '\begin{matrix*}#1\end{matrix*}'
 );
 
 ######################################################
