@@ -459,6 +459,7 @@ Let('\LaTeXoverbrace', '\overbrace');
 
 # 3.4
 
+# alignment stuff
 sub MTMatrixTemplate {
         my ($type) = @_;
 
@@ -511,7 +512,7 @@ DefPrimitive(
                 alignmentBindings(MTMatrixTemplate($col), 'math', attributes => { name => 'Matrix', open => $open, close => $close });
         }
 );
-
+# starred normal matrices
 DefMacro('\csname matrix*\endcsname []', '\@MTSmatrix@bindings[#1]{m}\@@MTSmatrix[#1]\@start@alignment');
 DefMacro('\csname pmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{p}\@@MTSpmatrix[#1]\@start@alignment');
 DefMacro('\csname bmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{b}\@@MTSbmatrix[#1]\@start@alignment');
@@ -581,6 +582,34 @@ DefConstructor(
         reversion => '\begin{Vmatrix*}[#1]#2\end{Vmatrix*}',
         bounded => 1
 );
+
+# starred small matrices
+DefMacro('\csname smallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{m}\@@MTSmatrix[#1]\@start@alignment');
+DefMacro('\csname psmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{p}\@@MTSpmatrix[#1]\@start@alignment');
+DefMacro('\csname bsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{b}\@@MTSbmatrix[#1]\@start@alignment');
+DefMacro('\csname Bsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{B}\@@MTSBmatrix[#1]\@start@alignment');
+DefMacro('\csname vsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{v}\@@MTSvmatrix[#1]\@start@alignment');
+DefMacro('\csname Vsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{V}\@@MTSVmatrix[#1]\@start@alignment');
+
+DefMacro('\csname endsmallmatrix*\endcsname', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
+DefMacro('\csname endpsmallmatrix*\endcsname', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
+DefMacro('\csname endbsmallmatrix*\endcsname', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
+DefMacro('\csname endBsmallmatrix*\endcsname', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
+DefMacro('\csname endvsmallmatrix*\endcsname', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
+DefMacro('\csname endVsmallmatrix*\endcsname', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
+
+# non-starred small matrices
+DefMacro('\psmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{p}\@@MTSpmatrix[#1]\@start@alignment');
+DefMacro('\bsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{b}\@@MTSbmatrix[#1]\@start@alignment');
+DefMacro('\Bsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{B}\@@MTSBmatrix[#1]\@start@alignment');
+DefMacro('\vsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{v}\@@MTSvmatrix[#1]\@start@alignment');
+DefMacro('\Vsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{V}\@@MTSVmatrix[#1]\@start@alignment');
+
+DefMacro('\endpsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
+DefMacro('\endbsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
+DefMacro('\endBsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
+DefMacro('\endvsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
+DefMacro('\endVsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
 
 
 ######################################################
