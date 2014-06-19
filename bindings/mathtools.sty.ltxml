@@ -460,27 +460,128 @@ Let('\LaTeXoverbrace', '\overbrace');
 # 3.4
 
 sub MTMatrixTemplate {
+        my ($type) = @_;
+
+        my $alty = {};
+        if($type eq 'c') {
+                $alty = {before => Tokens(T_CS('\hfil')), after => Tokens(T_CS('\hfil'))};
+        } elsif ($type eq 'l') {
+                $alty = {after => Tokens(T_CS('\hfil'))};
+        } elsif ($type eq 'r') {
+                $alty = {before => Tokens(T_CS('\hfil'))};
+        }
+
         my $stuff = LaTeXML::Core::Alignment::Template->new(
-                repeated => [{
-                        before => Tokens(T_CS('\hfil')),
-                        after => Tokens(T_CS('\hfil'))
-                }]
+                repeated => [$alty]
         );
         return $stuff;
 }
 
-DefMacro('\csname matrix*\endcsname', '\@@MTSmatrix\@start@alignment');
+DefPrimitive(
+        '\@MTSmatrix@bindings [] {}',
+        sub {
+                my ($stomach, $col, $mat) = @_;
+
+                # handle column type
+                $col = ToString($col);
+                $col = ($col ne '') ? $col : 'c'; # defaults to [c]
+
+                # handle delimiters
+                my $open = '';
+                my $close = '';
+                $mat = ToString($mat);
+
+                if($mat eq 'p') {
+                        $open = '(';
+                        $close = ')';
+                } elsif($mat eq 'b') {
+                        $open = '[';
+                        $close = ']';
+                } elsif($mat eq 'B') {
+                        $open = '{';
+                        $close = '}';
+                } elsif($mat eq 'v') {
+                        $open = '|';
+                        $close = '|';
+                } elsif($mat eq 'V') {
+                        $open = '||';
+                        $close = '||';
+                }
+
+                alignmentBindings(MTMatrixTemplate($col), 'math', attributes => { name => 'Matrix', open => $open, close => $close });
+        }
+);
+
+DefMacro('\csname matrix*\endcsname []', '\@MTSmatrix@bindings[#1]{m}\@@MTSmatrix[#1]\@start@alignment');
+DefMacro('\csname pmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{p}\@@MTSpmatrix[#1]\@start@alignment');
+DefMacro('\csname bmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{b}\@@MTSbmatrix[#1]\@start@alignment');
+DefMacro('\csname Bmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{B}\@@MTSBmatrix[#1]\@start@alignment');
+DefMacro('\csname vmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{v}\@@MTSvmatrix[#1]\@start@alignment');
+DefMacro('\csname Vmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{V}\@@MTSVmatrix[#1]\@start@alignment');
+
 DefMacro('\csname endmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
+DefMacro('\csname endpmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
+DefMacro('\csname endbmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
+DefMacro('\csname endBmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
+DefMacro('\csname endvmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
+DefMacro('\csname endVmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
+
 DefPrimitive('\@end@MTSmatrix', sub { $_[0]->egroup; });
+
 DefConstructor(
-        '\@@MTSmatrix DigestedBody',
-        '#1',
+        '\@@MTSmatrix [] DigestedBody',
+        '#2',
         beforeDigest => sub {
                 $_[0]->bgroup;
-                alignmentBindings(MTMatrixTemplate(), 'math', attributes => { name => 'Matrix' });
         },
-        reversion => '\begin{matrix*}#1\end{matrix*}'
+        reversion => '\begin{matrix*}[#1]#2\end{matrix*}'
 );
+DefConstructor(
+        '\@@MTSpmatrix [] DigestedBody',
+        '#2',
+        beforeDigest => sub {
+                $_[0]->bgroup;
+        },
+        reversion => '\begin{pmatrix*}[#1]#2\end{pmatrix*}',
+        bounded => 1
+);
+DefConstructor(
+        '\@@MTSbmatrix [] DigestedBody',
+        '#2',
+        beforeDigest => sub {
+                $_[0]->bgroup;
+        },
+        reversion => '\begin{bmatrix*}[#1]#2\end{bmatrix*}',
+        bounded => 1
+);
+DefConstructor(
+        '\@@MTSBmatrix [] DigestedBody',
+        '#2',
+        beforeDigest => sub {
+                $_[0]->bgroup;
+        },
+        reversion => '\begin{Bmatrix*}[#1]#2\end{Bmatrix*}',
+        bounded => 1
+);
+DefConstructor(
+        '\@@MTSvmatrix [] DigestedBody',
+        '#2',
+        beforeDigest => sub {
+                $_[0]->bgroup;
+        },
+        reversion => '\begin{vmatrix*}[#1]#2\end{vmatrix*}',
+        bounded => 1
+);
+DefConstructor(
+        '\@@MTSVmatrix [] DigestedBody',
+        '#2',
+        beforeDigest => sub {
+                $_[0]->bgroup;
+        },
+        reversion => '\begin{Vmatrix*}[#1]#2\end{Vmatrix*}',
+        bounded => 1
+);
+
 
 ######################################################
 
