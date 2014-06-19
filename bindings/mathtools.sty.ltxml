@@ -612,6 +612,22 @@ DefMacro('\endvsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSma
 DefMacro('\endVsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
 
 
+# add {multilined} in here
+
+# some cases
+DefMacro('\dcases{}', '\@@cases{\@start@alignment#1\@finish@alignment}');
+
+
+# 3.7
+
+# special characters
+DefMathI('\vcentcolon', undef, ':',  role => 'undefined');
+DefMathI('\ordinarycolon', undef, ':',  role => 'undefined');
+
+DefMathI('\nuparrow', undef, UTF(0x2909),  role => 'ARROW');
+DefMathI('\ndownarrow', undef, UTF(0x2908),  role => 'ARROW');
+DefMathI('\bigtimes', undef, UTF(0x2716),  role => 'MULOP', meaning => 'times');
+
 ######################################################
 
 1;
