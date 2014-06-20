@@ -554,30 +554,31 @@ DefMacro('\dcases{}', '\@@cases{\@start@alignment#1\@finish@alignment}');
 
 # 3.7
 
-DefMathI('\vcentcolon', undef, ':',  role => 'undefined');
-DefMathI('\ordinarycolon', undef, ':',  role => 'undefined');
+DefMath('\lparen', '(', role => 'OPEN',  stretchy => 'false');
+DefMath('\rparen', ')', role => 'CLOSE', stretchy => 'false');
+
+DefMathI('\vcentcolon',     undef, ':',  role => 'RELOP');
+DefMathI('\ordinarycolon',  undef, ':',  role => 'RELOP');
 
 DefMath('\dblcolon', "::", role => 'RELOP');
-# only define them if other packages (defining them) are not already loaded
-if(!LookupValue('txfonts.ltxml_loaded') && !LookupValue('pxfonts.ltxml_loaded')) {
-    # taken from txfonts.sty.ltxml
-    DefMath('\coloneqq',        "\x{2254}",         role => 'RELOP');
-    DefMath('\Coloneqq',        "\x{2A74}",         role => 'RELOP');
-    DefMath('\coloneq',         ":-",               role => 'RELOP');
-    DefMath('\Coloneq',         "::-",              role => 'RELOP');
-    DefMath('\eqqcolon',        "\x{2255}",         role => 'RELOP');
-    DefMath('\Eqqcolon',        "=::",              role => 'RELOP');
-    DefMath('\eqcolon',         "-:",               role => 'RELOP');
-    DefMath('\Eqcolon',         "-::",              role => 'RELOP');
-    DefMath('\colonapprox',     ":\x{2248}",        role => 'RELOP');
-    DefMath('\Colonapprox',     "::\x{2248}",       role => 'RELOP');
-    DefMath('\colonsim',        ":\x{223C}",        role => 'RELOP');
-    DefMath('\Colonsim',        "::\x{223C}",       role => 'RELOP');
-}
+# taken from txfonts.sty.ltxml
+DefMath('\coloneqq',        "\x{2254}",         role => 'RELOP');
+DefMath('\Coloneqq',        "\x{2A74}",         role => 'RELOP');
+DefMath('\coloneq',         ":-",               role => 'RELOP');
+DefMath('\Coloneq',         "::-",              role => 'RELOP');
+DefMath('\eqqcolon',        "\x{2255}",         role => 'RELOP');
+DefMath('\Eqqcolon',        "=::",              role => 'RELOP');
+DefMath('\eqcolon',         "-:",               role => 'RELOP');
+DefMath('\Eqcolon',         "-::",              role => 'RELOP');
+DefMath('\colonapprox',     ":\x{2248}",        role => 'RELOP');
+DefMath('\Colonapprox',     "::\x{2248}",       role => 'RELOP');
+DefMath('\colonsim',        ":\x{223C}",        role => 'RELOP');
+DefMath('\Colonsim',        "::\x{223C}",       role => 'RELOP');
 
-DefMathI('\nuparrow', undef, UTF(0x2909),  role => 'ARROW');
-DefMathI('\ndownarrow', undef, UTF(0x2908),  role => 'ARROW');
-DefMathI('\bigtimes', undef, UTF(0x2716),  role => 'MULOP', meaning => 'times');
+DefMathI('\nuparrow',   undef, UTF(0x2909), role => 'ARROW'); # could not find arrow with vertical line
+DefMathI('\ndownarrow', undef, UTF(0x2908), role => 'ARROW'); # see above
+DefMathI('\bigtimes',   undef, UTF(0xD7),   role => 'MULOP', font => { size => 'Big' }, scriptpos => \&doScriptpos);
+
 
 ######################################################
 
