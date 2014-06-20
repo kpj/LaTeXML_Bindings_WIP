@@ -479,46 +479,25 @@ sub MTMatrixTemplate {
 }
 
 DefPrimitive(
-        '\@MTSmatrix@bindings [] {}',
+        '\@MTSmatrix@bindings [] {} {}',
         sub {
-                my ($stomach, $col, $mat) = @_;
+                my ($stomach, $col, $open, $close) = @_;
 
                 # handle column type
                 $col = ToString($col);
                 $col = ($col ne '') ? $col : 'c'; # defaults to [c]
 
-                # handle delimiters
-                my $open = '';
-                my $close = '';
-                $mat = ToString($mat);
-
-                if($mat eq 'p') {
-                        $open = '(';
-                        $close = ')';
-                } elsif($mat eq 'b') {
-                        $open = '[';
-                        $close = ']';
-                } elsif($mat eq 'B') {
-                        $open = '{';
-                        $close = '}';
-                } elsif($mat eq 'v') {
-                        $open = '|';
-                        $close = '|';
-                } elsif($mat eq 'V') {
-                        $open = '||';
-                        $close = '||';
-                }
-
                 alignmentBindings(MTMatrixTemplate($col), 'math', attributes => { name => 'Matrix', open => $open, close => $close });
         }
 );
+
 # starred normal matrices
-DefMacro('\csname matrix*\endcsname []', '\@MTSmatrix@bindings[#1]{m}\@@MTSmatrix[#1]\@start@alignment');
-DefMacro('\csname pmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{p}\@@MTSpmatrix[#1]\@start@alignment');
-DefMacro('\csname bmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{b}\@@MTSbmatrix[#1]\@start@alignment');
-DefMacro('\csname Bmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{B}\@@MTSBmatrix[#1]\@start@alignment');
-DefMacro('\csname vmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{v}\@@MTSvmatrix[#1]\@start@alignment');
-DefMacro('\csname Vmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{V}\@@MTSVmatrix[#1]\@start@alignment');
+DefMacro('\csname matrix*\endcsname []', '\@MTSmatrix@bindings[#1]{}{}\@@MTSmatrix{matrix*}[#1]\@start@alignment');
+DefMacro('\csname pmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{(}{)}\@@MTSmatrix{pmatrix*}[#1]\@start@alignment');
+DefMacro('\csname bmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{[}{]}\@@MTSmatrix{bmatrix*}[#1]\@start@alignment');
+DefMacro('\csname Bmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{\{}{\}}\@@MTSmatrix{Bmatrix*}[#1]\@start@alignment');
+DefMacro('\csname vmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{|}{|}\@@MTSmatrix{vmatrix*}[#1]\@start@alignment');
+DefMacro('\csname Vmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{'."\x{2016}".'}{'."\x{2016}".'}\@@MTSmatrix{Vmatrix*}[#1]\@start@alignment');
 
 DefMacro('\csname endmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
 DefMacro('\csname endpmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
@@ -530,66 +509,21 @@ DefMacro('\csname endVmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
 DefPrimitive('\@end@MTSmatrix', sub { $_[0]->egroup; });
 
 DefConstructor(
-        '\@@MTSmatrix [] DigestedBody',
-        '#2',
+        '\@@MTSmatrix {} [] DigestedBody',
+        '#3',
         beforeDigest => sub {
                 $_[0]->bgroup;
         },
-        reversion => '\begin{matrix*}[#1]#2\end{matrix*}'
-);
-DefConstructor(
-        '\@@MTSpmatrix [] DigestedBody',
-        '#2',
-        beforeDigest => sub {
-                $_[0]->bgroup;
-        },
-        reversion => '\begin{pmatrix*}[#1]#2\end{pmatrix*}',
-        bounded => 1
-);
-DefConstructor(
-        '\@@MTSbmatrix [] DigestedBody',
-        '#2',
-        beforeDigest => sub {
-                $_[0]->bgroup;
-        },
-        reversion => '\begin{bmatrix*}[#1]#2\end{bmatrix*}',
-        bounded => 1
-);
-DefConstructor(
-        '\@@MTSBmatrix [] DigestedBody',
-        '#2',
-        beforeDigest => sub {
-                $_[0]->bgroup;
-        },
-        reversion => '\begin{Bmatrix*}[#1]#2\end{Bmatrix*}',
-        bounded => 1
-);
-DefConstructor(
-        '\@@MTSvmatrix [] DigestedBody',
-        '#2',
-        beforeDigest => sub {
-                $_[0]->bgroup;
-        },
-        reversion => '\begin{vmatrix*}[#1]#2\end{vmatrix*}',
-        bounded => 1
-);
-DefConstructor(
-        '\@@MTSVmatrix [] DigestedBody',
-        '#2',
-        beforeDigest => sub {
-                $_[0]->bgroup;
-        },
-        reversion => '\begin{Vmatrix*}[#1]#2\end{Vmatrix*}',
-        bounded => 1
+        reversion => '\begin{#1}[#2]#3\end{#1}'
 );
 
 # starred small matrices
-DefMacro('\csname smallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{m}\@@MTSmatrix[#1]\@start@alignment');
-DefMacro('\csname psmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{p}\@@MTSpmatrix[#1]\@start@alignment');
-DefMacro('\csname bsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{b}\@@MTSbmatrix[#1]\@start@alignment');
-DefMacro('\csname Bsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{B}\@@MTSBmatrix[#1]\@start@alignment');
-DefMacro('\csname vsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{v}\@@MTSvmatrix[#1]\@start@alignment');
-DefMacro('\csname Vsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{V}\@@MTSVmatrix[#1]\@start@alignment');
+DefMacro('\csname smallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{}{}\@@MTSmatrix{smallmatrix*}[#1]\@start@alignment');
+DefMacro('\csname psmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{(}{)}\@@MTSmatrix{psmallmatrix*}[#1]\@start@alignment');
+DefMacro('\csname bsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{[}{]}\@@MTSmatrix{bsmallmatrix*}[#1]\@start@alignment');
+DefMacro('\csname Bsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{\{}{\}}\@@MTSmatrix{Bsmallmatrix*}[#1]\@start@alignment');
+DefMacro('\csname vsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{|}{|}\@@MTSmatrix{vsmallmatrix*}[#1]\@start@alignment');
+DefMacro('\csname Vsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{'."\x{2016}".'}{'."\x{2016}".'}\@@MTSmatrix{Vsmallmatrix*}[#1]\@start@alignment');
 
 DefMacro('\csname endsmallmatrix*\endcsname', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
 DefMacro('\csname endpsmallmatrix*\endcsname', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
@@ -599,11 +533,11 @@ DefMacro('\csname endvsmallmatrix*\endcsname', '\@hidden{\scriptsize}\@finish@al
 DefMacro('\csname endVsmallmatrix*\endcsname', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
 
 # non-starred small matrices
-DefMacro('\psmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{p}\@@MTSpmatrix[#1]\@start@alignment');
-DefMacro('\bsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{b}\@@MTSbmatrix[#1]\@start@alignment');
-DefMacro('\Bsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{B}\@@MTSBmatrix[#1]\@start@alignment');
-DefMacro('\vsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{v}\@@MTSvmatrix[#1]\@start@alignment');
-DefMacro('\Vsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{V}\@@MTSVmatrix[#1]\@start@alignment');
+DefMacro('\psmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{(}{)}\@@MTSmatrix{psmallmatrix}[#1]\@start@alignment');
+DefMacro('\bsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{[}{]}\@@MTSmatrix{bsmallmatrix}[#1]\@start@alignment');
+DefMacro('\Bsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{\{}{\}}\@@MTSmatrix{Bsmallmatrix}[#1]\@start@alignment');
+DefMacro('\vsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{|}{|}\@@MTSmatrix{vsmallmatrix}[#1]\@start@alignment');
+DefMacro('\Vsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{'."\x{2016}".'}{'."\x{2016}".'}\@@MTSmatrix{Vsmallmatrix}[#1]\@start@alignment');
 
 DefMacro('\endpsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
 DefMacro('\endbsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
