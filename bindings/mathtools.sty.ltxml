@@ -551,6 +551,32 @@ DefMacro('\endVsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSma
 # some cases
 DefMacro('\dcases{}', '\@@cases{\@start@alignment#1\@finish@alignment}');
 
+# 3.6
+
+DefPrimitive(
+    '\DeclarePairedDelimiter DefToken {}{}',
+    sub {
+        my ($stomach, $cs, $ldel, $rdel) = @_;
+        $cs = ToString($cs);
+        $ldel = ToString($ldel);
+        $rdel = ToString($rdel);
+
+        DefPrimitive(
+            $cs . ' OptionalMatch:* [] {}',
+            sub {
+                my ($stomach, $star, $size, $arg) = @_;
+                $arg = ToString($arg);
+                $size = ToString($size);
+
+                # starred (\left, \right) / optional arg ($size, $size) / normal ('', '') version
+                my $lsize = (defined $star) ? '\left' : $size;
+                my $rsize = (defined $star) ? '\right' : $size;
+
+                return Digest($lsize . $ldel . $arg . $rsize . $rdel);
+            }
+        );
+    }
+);
 
 # 3.7
 
