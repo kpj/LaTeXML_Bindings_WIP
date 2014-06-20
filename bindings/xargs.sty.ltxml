@@ -55,9 +55,13 @@ DefParameterType(
 #########
 
 # generate $paramlist
-sub make_paramlist {
-	my ($keyval, $nargs) = @_;
+sub convertXArgsArgs {
+	my ($nargs, $keyval) = @_;
 	my @paramlist = ();
+
+        # fix $nargs
+        $nargs = $nargs->toString if ref $nargs;
+        $nargs = 0 unless $nargs;
 
 	for my $i (1 .. $nargs) {
 		my $val = ($keyval) ? $keyval->getValue($i) : undef;
@@ -93,7 +97,7 @@ sub make_paramlist {
 }
 
 # generate command prefix (\global, \long, ...; but not \outer)
-sub extract_prefix {
+sub getXArgsIsGlobal {
 	my ($star, $keyval) = @_;
 	my $prefix = '';
 
@@ -106,22 +110,7 @@ sub extract_prefix {
 		$prefix .= join('', map { ToString($_) } (ref $p eq 'ARRAY' ?  @$p : ($p)));
 	}
 
-	return $prefix;
-}
-
-# this function does stuff in order to decrease code redundancies
-sub do_stuff {
-        my ($nargs, $star, $defaults) = @_;
-
-        # fix $nargs
-        $nargs = $nargs->toString if ref $nargs;
-        $nargs = 0 unless $nargs;
-
-        # handle global prefix
-        my $prefix = extract_prefix($star, $defaults);
-        my $is_global = (index($prefix, 'global') != -1) ? 1 : 0;
-
-        return ($nargs, $is_global);
+	return (index($prefix, 'global') != -1) ? 1 : 0; # 1 if global in $prefix, 0 otherwise
 }
 
 
@@ -151,14 +140,11 @@ DefPrimitive(
 		}
 		AssignValue($key => 1);
 
-                my $is_global;
-                ($nargs, $is_global) = do_stuff($nargs, $star, $defaults);
-
 		DefMacroI(
 			$cs,
-			make_paramlist($defaults, $nargs),
+			convertXArgsArgs($nargs, $defaults),
 			$body,
-			($is_global ? (scope=>'global'):())
+			(getXArgsIsGlobal($star, $defaults) ? (scope=>'global'):())
 		);
 	}
 );
@@ -170,14 +156,11 @@ DefPrimitive(
 
 		AssignValue("defined:" . Stringify($cs) => 1);
 
-                my $is_global;
-                ($nargs, $is_global) = do_stuff($nargs, $star, $defaults);
-
 		DefMacroI(
 			$cs,
-			make_paramlist($defaults, $nargs),
+			convertXArgsArgs($nargs, $defaults),
 			$body,
-			($is_global ? (scope=>'global'):())
+			(getXArgsIsGlobal($star, $defaults) ? (scope=>'global'):())
 		);
 	}
 );
@@ -187,18 +170,17 @@ DefPrimitive(
 	sub {
 		my ($stomach, $star, $cs, $nargs, $defaults, $body) = @_;
 
-		if (LookupValue("defined:" . Stringify($cs)) || LookupDefinition($cs)) {
+                my $key = "defined:" . Stringify($cs);
+		if (LookupValue($key) || LookupDefinition($cs)) {
 			return;
 		}
-
-                my $is_global;
-                ($nargs, $is_global) = do_stuff($nargs, $star, $defaults);
+                AssignValue($key=>1);
 
 		DefMacroI(
 			$cs,
-			make_paramlist($defaults, $nargs),
+			convertXArgsArgs($nargs, $defaults),
 			$body,
-			($is_global ? (scope=>'global'):())
+			(getXArgsIsGlobal($star, $defaults) ? (scope=>'global'):())
 		);
 	}
 );
@@ -208,14 +190,11 @@ DefPrimitive(
 	sub {
 		my ($stomach, $star, $cs, $nargs, $defaults, $body) = @_;
 
-                my $is_global;
-                ($nargs, $is_global) = do_stuff($nargs, $star, $defaults);
-
 		DefMacroI(
 			$cs,
-			make_paramlist($defaults, $nargs),
+			convertXArgsArgs($nargs, $defaults),
 			$body,
-			($is_global ? (scope=>'global'):())
+			(getXArgsIsGlobal($star, $defaults) ? (scope=>'global'):())
 		);
 	}
 );
@@ -225,9 +204,6 @@ DefPrimitive(
 	'\newenvironmentx OptionalMatch:* {} [] OptionalKeyVals:xargs {}{}',
 	sub {
 		my ($stomach, $star, $cs, $nargs, $defaults, $preamble, $postamble) = @_;
-
-                my $is_global;
-                ($nargs, $is_global) = do_stuff($nargs, $star, $defaults);
 
 		if(LookupDefinition(T_CS("\\$cs"))) {
 			Error(
@@ -243,15 +219,15 @@ DefPrimitive(
 
 		DefMacroI(
 			T_CS("\\$cs"), 
-			make_paramlist($defaults, $nargs), 
+			convertXArgsArgs($nargs, $defaults), 
 			$preamble,
-			($is_global ? (scope=>'global'):())
+			(getXArgsIsGlobal($star, $defaults) ? (scope=>'global'):())
 		);
 		DefMacroI(
 			T_CS("\\end$cs"), 
 			undef, 
 			$postamble,
-			($is_global ? (scope=>'global'):())
+			(getXArgsIsGlobal($star, $defaults) ? (scope=>'global'):())
 		);
 	}
 );
@@ -261,24 +237,21 @@ DefPrimitive(
 	sub {
 		my ($stomach, $star, $cs, $nargs, $defaults, $preamble, $postamble) = @_;
 
-                my $is_global;
-                ($nargs, $is_global) = do_stuff($nargs, $star, $defaults);
-
 		AssignValue("defined:" . Stringify($cs) => 1);
 
 		$cs = ToString($cs);
 
 		DefMacroI(
 			T_CS("\\$cs"), 
-			make_paramlist($defaults, $nargs), 
+			convertXArgsArgs($nargs, $defaults), 
 			$preamble,
-			($is_global ? (scope=>'global'):())
+			(getXArgsIsGlobal($star, $defaults) ? (scope=>'global'):())
 		);
 		DefMacroI(
 			T_CS("\\end$cs"), 
 			undef, 
 			$postamble,
-			($is_global ? (scope=>'global'):())
+			(getXArgsIsGlobal($star, $defaults) ? (scope=>'global'):())
 		);
 	}
 );
