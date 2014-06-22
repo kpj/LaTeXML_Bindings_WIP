@@ -128,8 +128,7 @@ DefPrimitive(
 	sub {
 		my ($stomach, $star, $cs, $nargs, $defaults, $body) = @_;
 
-		my $key = "defined:" . Stringify($cs);
-		if(LookupValue($key)) {
+		if(!isDefinable($cs)) {
 			Error(
 				'ignore', 
 				$cs, 
@@ -138,7 +137,6 @@ DefPrimitive(
 			);
 			return;
 		}
-		AssignValue($key => 1);
 
 		DefMacroI(
 			$cs,
@@ -154,8 +152,6 @@ DefPrimitive(
 	sub {
 		my ($stomach, $star, $cs, $nargs, $defaults, $body) = @_;
 
-		AssignValue("defined:" . Stringify($cs) => 1);
-
 		DefMacroI(
 			$cs,
 			convertXArgsArgs($nargs, $defaults),
@@ -170,11 +166,7 @@ DefPrimitive(
 	sub {
 		my ($stomach, $star, $cs, $nargs, $defaults, $body) = @_;
 
-                my $key = "defined:" . Stringify($cs);
-		if (LookupValue($key) || LookupDefinition($cs)) {
-			return;
-		}
-                AssignValue($key=>1);
+        return unless isDefinable($cs);
 
 		DefMacroI(
 			$cs,
