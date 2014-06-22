@@ -228,9 +228,6 @@ DefPrimitive(
     '\renewenvironmentx OptionalMatch:* {} [] OptionalKeyVals:xargs {}{}',
     sub {
         my ($stomach, $star, $cs, $nargs, $defaults, $preamble, $postamble) = @_;
-
-        AssignValue("defined:" . Stringify($cs) => 1);
-
         $cs = ToString($cs);
 
         DefMacroI(
