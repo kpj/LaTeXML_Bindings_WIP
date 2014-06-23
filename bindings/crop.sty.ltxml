@@ -24,15 +24,8 @@ use LaTeXML::Package;
 
 ######################################################
 
-DefPrimitive(
-	'\crop []',
-	undef
-);
-
-DefPrimitive(
-	'\cropdef [] DefToken DefToken DefToken DefToken {}',
-	undef
-);
+DefPrimitive('\crop []',                                           undef);
+DefPrimitive('\cropdef [] DefToken DefToken DefToken DefToken {}', undef);
 
 ######################################################
 
