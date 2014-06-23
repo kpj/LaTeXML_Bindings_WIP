@@ -509,10 +509,20 @@ DefPrimitive(
         '\@MTSmatrix@bindings [] {} {}',
         sub {
                 my ($stomach, $col, $open, $close) = @_;
+                $open = ToString($open);
+                $close = ToString($close);
 
                 # handle column type
                 $col = ToString($col);
                 $col = ($col ne '') ? $col : 'c'; # defaults to [c]
+
+                # fix for \{ and \}
+                if(substr($open, 0, 1) eq '\\') {
+                    $open = substr($open, 1);
+                }
+                if(substr($close, 0, 1) eq '\\') {
+                    $close = substr($close, 1);
+                }
 
                 alignmentBindings(MTMatrixTemplate($col), 'math', attributes => { name => 'Matrix', open => $open, close => $close });
         }
