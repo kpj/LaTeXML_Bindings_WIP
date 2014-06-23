@@ -30,24 +30,14 @@ use LaTeXML::Package;
 
 # handle special mathtools options
 foreach my $option (qw(fixamsmath donotfixamsmathbugs allowspaces disallowspaces)) {
-	DeclareOption($option, undef);
-}
+  DeclareOption($option, undef); }
 
 # pass all other options to amsmath
-DeclareOption(
-	undef,
-	sub {
-		PassOptions(
-			'amsmath',
-			'sty',
-			ToString(Digest(T_CS('\CurrentOption')))
-		);
-	}
-);
+DeclareOption(undef, sub {
+    PassOptions('amsmath', 'sty', ToString(Digest(T_CS('\CurrentOption')))); });
 ProcessOptions();
 
 RequirePackage('amsmath', withoptions => 1);
-
 
 #########
 # Utils #
@@ -55,45 +45,33 @@ RequirePackage('amsmath', withoptions => 1);
 
 # alignment stuff
 sub MTMatrixTemplate {
-        my ($type) = @_;
-
-        my $alty = {};
-        if($type eq 'c') {
-                $alty = {before => Tokens(T_CS('\hfil')), after => Tokens(T_CS('\hfil'))};
-        } elsif ($type eq 'l') {
-                $alty = {after => Tokens(T_CS('\hfil'))};
-        } elsif ($type eq 'r') {
-                $alty = {before => Tokens(T_CS('\hfil'))};
-        }
-
-        my $stuff = LaTeXML::Core::Alignment::Template->new(
-                repeated => [$alty]
-        );
-        return $stuff;
-}
+  my ($type) = @_;
+  my $alty = {};
+  if ($type eq 'c') {
+    $alty = { before => Tokens(T_CS('\hfil')), after => Tokens(T_CS('\hfil')) }; }
+  elsif ($type eq 'l') {
+    $alty = { after => Tokens(T_CS('\hfil')) }; }
+  elsif ($type eq 'r') {
+    $alty = { before => Tokens(T_CS('\hfil')) }; }
+  my $stuff = LaTeXML::Core::Alignment::Template->new(repeated => [$alty]);
+  return $stuff; }
 
 # parse arguments and substitute them into $body
 sub parsePairedDelimiterArgs {
-    my ($nargs, $body, @args) = @_;
-
-    print "\n\n";
-    print "Args:\n";
-    for my $i (1 .. $nargs) {
-        print "'".ToString($args[$i-1])."\n";
-    }
-    print "\n";
-    print "$body\n";
-    for my $i (1 .. $nargs) {
-        my $arg = ToString($args[$i-1]);
-        $body =~ s/#$i/$arg/;
-        print "Replacing '#$i' with '$arg'\n";
-    }
-    print $body;
-    print "\n\n";
-
-    return $body;
-}
-
+  my ($nargs, $body, @args) = @_;
+  print "\n\n";
+  print "Args:\n";
+  for my $i (1 .. $nargs) {
+    print "'" . ToString($args[$i - 1]) . "\n"; }
+  print "\n";
+  print "$body\n";
+  for my $i (1 .. $nargs) {
+    my $arg = ToString($args[$i - 1]);
+    $body =~ s/#$i/$arg/;
+    print "Replacing '#$i' with '$arg'\n"; }
+  print $body;
+  print "\n\n";
+  return $body; }
 
 ##########
 # Macros #
@@ -101,432 +79,300 @@ sub parsePairedDelimiterArgs {
 
 # 3
 
-DefConstructor(
-        '\mathtoolsset {}',
-        ""
-);
+DefConstructor('\mathtoolsset {}', "");
 
 ## 3.1
 
-DefConstructor(
-	'\mathllap [] {}',
-	"#2"
-);
-DefConstructor(
-	'\mathrlap [] {}',
-	"#2"
-);
-DefConstructor(
-	'\mathmbox {}',
-	"#1"
-);
-DefConstructor(
-	'\mathclap [] {}',
-	"#2"
-);
-DefConstructor(
-	'\clap {}',
-	"#1"
-);
-DefConstructor(
-	'\mathmakebox [] [] {}',
-	"#3"
-);
+DefConstructor('\mathllap [] {}',       "#2");
+DefConstructor('\mathrlap [] {}',       "#2");
+DefConstructor('\mathmbox {}',          "#1");
+DefConstructor('\mathclap [] {}',       "#2");
+DefConstructor('\clap {}',              "#1");
+DefConstructor('\mathmakebox [] [] {}', "#3");
 
-DefConstructor(
-	'\cramped [] {}',
-	"#2"
-);
-DefConstructor(
-	'\crampedllap [] {}',
-	"#2"
-);
-DefConstructor(
-	'\crampedrlap [] {}',
-	"#2"
-);
-DefConstructor(
-	'\crampedclap [] {}',
-	"#2"
-);
+DefConstructor('\cramped [] {}',     "#2");
+DefConstructor('\crampedllap [] {}', "#2");
+DefConstructor('\crampedrlap [] {}', "#2");
+DefConstructor('\crampedclap [] {}', "#2");
 
-DefConstructor(
-        '\smashoperator [] {}',
-        "#2"
-);
+DefConstructor('\smashoperator [] {}', "#2");
 
-DefConstructor(
-        '\adjustlimits', # just some wrapper for \lim
-        ""
-);
+DefConstructor('\adjustlimits', "");    # just some wrapper for \lim
 
-DefConstructor(
-        '\SwapAboveDisplaySkip', # Undefined control sequence with pdflatex ?!
-        ""
-);
+DefConstructor('\SwapAboveDisplaySkip', "");
 
 ## 3.2
 
-DefPrimitive(
-        '\newtagform {} [] {} {}',
-        sub {
-                my ($stomach, $name, $style, $open, $close) = @_;
-                my $body = Tokens(
-                        T_CS('\def'),
-                        T_CS('\fnum@equation'),
-                        T_BEGIN,
-                        T_BEGIN,
-                        $open->unlist,
-                        (($style)?$style->unlist:()),
-                        T_BEGIN,
-                        T_CS('\theequation'),
-                        T_END,
-                        $close->unlist,
-                        T_END,
-                        T_END
-                );
-                my $cs = T_CS('\taggy' . ToString($name));
+DefPrimitive('\newtagform {} [] {} {}', sub {
+    my ($stomach, $name, $style, $open, $close) = @_;
+    my $body = Tokens(T_CS('\def'), T_CS('\fnum@equation'), T_BEGIN, T_BEGIN, $open->unlist, (($style) ? $style->unlist : ()), T_BEGIN, T_CS('\theequation'), T_END, $close->unlist, T_END, T_END);
+    my $cs  = T_CS('\taggy' . ToString($name));
+    my $key = "defined:" . Stringify($cs);
+    if (LookupValue($key)) {
+      Error('ignore', $cs, $stomach,
+        "Ignoring redefinition (\\newtagform) of '" . Stringify($cs) . "'");
+      return; }
+    AssignValue($key => 1);
+    DefMacroI($cs, undef, $body, scope => 'global'); });
 
-                my $key = "defined:" . Stringify($cs);
-                if(LookupValue($key)) {
-                        Error(
-                                'ignore', $cs, $stomach,
-                                "Ignoring redefinition (\\newtagform) of '" . Stringify($cs) . "'"
-                        );
-                        return;
-                }
-                AssignValue($key => 1);
+DefPrimitive('\renewtagform {} [] {} {}', sub {
+    my ($stomach, $name, $style, $open, $close) = @_;
+    my $body = Tokens(T_CS('\def'), T_CS('\fnum@equation'), T_BEGIN, T_BEGIN, $open->unlist, (($style) ? $style->unlist : ()), T_BEGIN, T_CS('\theequation'), T_END, $close->unlist, T_END, T_END);
+    my $cs  = T_CS('\taggy' . ToString($name));
+    my $key = "defined:" . Stringify($cs);
+    AssignValue($key => 1);
+    DefMacroI($cs, undef, $body, scope => 'global'); });
+DefMacro('\usetagform {}', '\csname taggy#1\endcsname');
 
-                DefMacroI(
-                        $cs,
-                        undef,
-                        $body,
-                        scope => 'global'
-                );
-        }
-);
-DefPrimitive(
-        '\renewtagform {} [] {} {}',
-        sub {
-                my ($stomach, $name, $style, $open, $close) = @_;
-                my $body = Tokens(
-                        T_CS('\def'),
-                        T_CS('\fnum@equation'),
-                        T_BEGIN,
-                        T_BEGIN,
-                        $open->unlist,
-                        (($style)?$style->unlist:()),
-                        T_BEGIN,
-                        T_CS('\theequation'),
-                        T_END,
-                        $close->unlist,
-                        T_END,
-                        T_END
-                );
-                my $cs = T_CS('\taggy' . ToString($name));
-
-                my $key = "defined:" . Stringify($cs);
-                AssignValue($key => 1);
-
-                DefMacroI(
-                        $cs,
-                        undef,
-                        $body,
-                        scope => 'global'
-                );
-        }
-);
-DefMacro(
-        '\usetagform {}',
-        '\csname taggy#1\endcsname'
-);
-
-Let(
-        '\refeq',
-        '\ref'
-);
+Let('\refeq', '\ref');
 
 ## 3.3
 
-DefConstructor(
-        '\xleftrightarrow[]{}', # not centered anymore
-        "?#1("
-                . "<ltx:XMApp role='METARELOP'>"
-                . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
-                . "<ltx:XMApp role='METARELOP'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xleftrightarrow' role='METARELOP'>\x{2194}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-                . "</ltx:XMApp>"
-                . ")("
-                . "<ltx:XMApp role='METARELOP'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xleftrightarrow' role='METARELOP'>\x{2194}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-        . ")",
-        properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } }
-);
+DefConstructor('\xleftrightarrow[]{}',    # not centered anymore
+  "?#1("
+    . "<ltx:XMApp role='METARELOP'>"
+    . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
+    . "<ltx:XMApp role='METARELOP'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xleftrightarrow' role='METARELOP'>\x{2194}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . "</ltx:XMApp>"
+    . ")("
+    . "<ltx:XMApp role='METARELOP'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xleftrightarrow' role='METARELOP'>\x{2194}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . ")",
+  properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } });
 
+DefConstructor('\xLeftarrow[]{}',
+  "?#1("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xLeftarrow' role='ARROW'>\x{21D0}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . "</ltx:XMApp>"
+    . ")("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xLeftarrow' role='ARROW'>\x{21D0}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . ")",
+  properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } });
 
-DefConstructor(
-        '\xLeftarrow[]{}',
-        "?#1("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xLeftarrow' role='ARROW'>\x{21D0}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-                . "</ltx:XMApp>"
-                . ")("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xLeftarrow' role='ARROW'>\x{21D0}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-        . ")",
-        properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } }
-);
+DefConstructor('\xRightarrow[]{}',
+  "?#1("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xRightarrow' role='ARROW'>\x{21D2}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . "</ltx:XMApp>"
+    . ")("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xRightarrow' role='ARROW'>\x{21D2}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . ")",
+  properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } });
 
-DefConstructor(
-        '\xRightarrow[]{}',
-        "?#1("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xRightarrow' role='ARROW'>\x{21D2}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-                . "</ltx:XMApp>"
-                . ")("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xRightarrow' role='ARROW'>\x{21D2}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-        . ")",
-        properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } }
-);
+DefConstructor('\xLeftrightarrow[]{}',    # looks stretched
+  "?#1("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xLeftrightarrow' role='ARROW'>\x{21D4}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . "</ltx:XMApp>"
+    . ")("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xLeftrightarrow' role='ARROW'>\x{21D4}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . ")",
+  properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } });
 
-DefConstructor(
-        '\xLeftrightarrow[]{}', # looks stretched
-        "?#1("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xLeftrightarrow' role='ARROW'>\x{21D4}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-                . "</ltx:XMApp>"
-                . ")("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xLeftrightarrow' role='ARROW'>\x{21D4}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-        . ")",
-        properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } }
-);
+DefConstructor('\xhookleftarrow[]{}',
+  "?#1("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xhookleftarrow' role='ARROW'>\x{21A9}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . "</ltx:XMApp>"
+    . ")("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xhookleftarrow' role='ARROW'>\x{21A9}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . ")",
+  properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } });
 
-DefConstructor(
-        '\xhookleftarrow[]{}',
-        "?#1("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xhookleftarrow' role='ARROW'>\x{21A9}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-                . "</ltx:XMApp>"
-                . ")("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xhookleftarrow' role='ARROW'>\x{21A9}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-        . ")",
-        properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } }
-);
+DefConstructor('\xhookrightarrow[]{}',
+  "?#1("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xhookrightarrow' role='ARROW'>\x{21AA}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . "</ltx:XMApp>"
+    . ")("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xhookrightarrow' role='ARROW'>\x{21AA}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . ")",
+  properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } });
 
-DefConstructor(
-        '\xhookrightarrow[]{}',
-        "?#1("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xhookrightarrow' role='ARROW'>\x{21AA}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-                . "</ltx:XMApp>"
-                . ")("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xhookrightarrow' role='ARROW'>\x{21AA}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-        . ")",
-        properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } }
-);
+DefConstructor('\xmapsto[]{}',
+  "?#1("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xmapsto' role='ARROW'>\x{21A6}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . "</ltx:XMApp>"
+    . ")("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xmapsto' role='ARROW'>\x{21A6}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . ")",
+  properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } });
 
-DefConstructor(
-        '\xmapsto[]{}',
-        "?#1("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xmapsto' role='ARROW'>\x{21A6}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-                . "</ltx:XMApp>"
-                . ")("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xmapsto' role='ARROW'>\x{21A6}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-        . ")",
-        properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } }
-);
+DefConstructor('\xrightharpoondown[]{}',
+  "?#1("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xrightharpoondown' role='ARROW'>\x{21C1}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . "</ltx:XMApp>"
+    . ")("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xrightharpoondown' role='ARROW'>\x{21C1}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . ")",
+  properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } });
 
-DefConstructor(
-        '\xrightharpoondown[]{}',
-        "?#1("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xrightharpoondown' role='ARROW'>\x{21C1}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-                . "</ltx:XMApp>"
-                . ")("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xrightharpoondown' role='ARROW'>\x{21C1}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-        . ")",
-        properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } }
-);
+DefConstructor('\xrightharpoonup[]{}',
+  "?#1("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xrightharpoonup' role='ARROW'>\x{21C0}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . "</ltx:XMApp>"
+    . ")("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xrightharpoonup' role='ARROW'>\x{21C0}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . ")",
+  properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } });
 
-DefConstructor(
-        '\xrightharpoonup[]{}',
-        "?#1("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xrightharpoonup' role='ARROW'>\x{21C0}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-                . "</ltx:XMApp>"
-                . ")("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xrightharpoonup' role='ARROW'>\x{21C0}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-        . ")",
-        properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } }
-);
+DefConstructor('\xleftharpoondown[]{}',
+  "?#1("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xleftharpoondown' role='ARROW'>\x{21BD}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . "</ltx:XMApp>"
+    . ")("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xlefttharpoondown' role='ARROW'>\x{21BD}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . ")",
+  properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } });
 
-DefConstructor(
-        '\xleftharpoondown[]{}',
-        "?#1("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xleftharpoondown' role='ARROW'>\x{21BD}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-                . "</ltx:XMApp>"
-                . ")("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xlefttharpoondown' role='ARROW'>\x{21BD}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-        . ")",
-        properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } }
-);
+DefConstructor('\xleftharpoonup[]{}',
+  "?#1("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xleftharpoonup' role='ARROW'>\x{21BC}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . "</ltx:XMApp>"
+    . ")("
+    . "<ltx:XMApp role='ARROW'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xleftharpoonup' role='ARROW'>\x{21BC}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . ")",
+  properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } });
 
-DefConstructor(
-        '\xleftharpoonup[]{}',
-        "?#1("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xleftharpoonup' role='ARROW'>\x{21BC}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-                . "</ltx:XMApp>"
-                . ")("
-                . "<ltx:XMApp role='ARROW'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xleftharpoonup' role='ARROW'>\x{21BC}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-        . ")",
-        properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } }
-);
+DefConstructor('\xrightleftharpoons[]{}',
+  "?#1("
+    . "<ltx:XMApp role='METARELOP'>"
+    . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
+    . "<ltx:XMApp role='METARELOP'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xrightleftharpoons' role='METARELOP'>\x{21CC}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . "</ltx:XMApp>"
+    . ")("
+    . "<ltx:XMApp role='METARELOP'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xrightleftharpoons' role='METARELOP'>\x{21CC}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . ")",
+  properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } });
 
-DefConstructor(
-        '\xrightleftharpoons[]{}',
-        "?#1("
-                . "<ltx:XMApp role='METARELOP'>"
-                . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
-                . "<ltx:XMApp role='METARELOP'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xrightleftharpoons' role='METARELOP'>\x{21CC}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-                . "</ltx:XMApp>"
-                . ")("
-                . "<ltx:XMApp role='METARELOP'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xrightleftharpoons' role='METARELOP'>\x{21CC}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-        . ")",
-        properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } }
-);
-
-DefConstructor(
-        '\xleftrightharpoons[]{}',
-        "?#1("
-                . "<ltx:XMApp role='METARELOP'>"
-                . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
-                . "<ltx:XMApp role='METARELOP'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xleftrightharpoons' role='METARELOP'>\x{21CB}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-                . "</ltx:XMApp>"
-                . ")("
-                . "<ltx:XMApp role='METARELOP'>"
-                . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
-                . "<ltx:XMTok name='xleftrightharpoons' role='METARELOP'>\x{21CB}</ltx:XMTok>"
-                . "</ltx:XMApp>"
-        . ")",
-        properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } }
-);
+DefConstructor('\xleftrightharpoons[]{}',
+  "?#1("
+    . "<ltx:XMApp role='METARELOP'>"
+    . "<ltx:XMWrap role='UNDERACCENT'>#1</ltx:XMWrap>"
+    . "<ltx:XMApp role='METARELOP'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xleftrightharpoons' role='METARELOP'>\x{21CB}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . "</ltx:XMApp>"
+    . ")("
+    . "<ltx:XMApp role='METARELOP'>"
+    . "<ltx:XMWrap role='OVERACCENT'>#2</ltx:XMWrap>"
+    . "<ltx:XMTok name='xleftrightharpoons' role='METARELOP'>\x{21CB}</ltx:XMTok>"
+    . "</ltx:XMApp>"
+    . ")",
+  properties => { font => sub { LookupValue('font')->specialize("\x{2026}"); } });
 
 DefMacro('\overbracket [] [] {}', '\@overbracket {#3}'); # args: [<rule thickness>] [<bracket height>] {<arg>}
 DefMacro('\underbracket [] [] {}', '\@underbracket {#3}');
-DefMath('\@overbracket Digested', "\x{FE48}", operator_role => 'OVERACCENT', scriptpos => 'mid');
+DefMath('\@overbracket Digested',  "\x{FE48}", operator_role => 'OVERACCENT',  scriptpos => 'mid');
 DefMath('\@underbracket Digested', "\x{FE47}", operator_role => 'UNDERACCENT', scriptpos => 'mid');
 Let('\LaTeXunderbrace', '\underbrace');
-Let('\LaTeXoverbrace', '\overbrace');
+Let('\LaTeXoverbrace',  '\overbrace');
 
 # 3.4
 
-DefPrimitive(
-        '\@MTSmatrix@bindings [] {} {}',
-        sub {
-                my ($stomach, $col, $open, $close) = @_;
-                $open = ToString($open);
-                $close = ToString($close);
+DefPrimitive('\@MTSmatrix@bindings [] {} {}', sub {
+    my ($stomach, $col, $open, $close) = @_;
+    $open  = ToString($open);
+    $close = ToString($close);
 
-                # handle column type
-                $col = ToString($col);
-                $col = ($col ne '') ? $col : 'c'; # defaults to [c]
+    # handle column type
+    $col = ToString($col);
+    $col = ($col ne '') ? $col : 'c';    # defaults to [c]
 
-                # fix for \{ and \}
-                if(substr($open, 0, 1) eq '\\') {
-                    $open = substr($open, 1);
-                }
-                if(substr($close, 0, 1) eq '\\') {
-                    $close = substr($close, 1);
-                }
-
-                alignmentBindings(MTMatrixTemplate($col), 'math', attributes => { name => 'Matrix', open => $open, close => $close });
-        }
-);
+    # fix for \{ and \}
+    if (substr($open, 0, 1) eq '\\') {
+      $open = substr($open, 1); }
+    if (substr($close, 0, 1) eq '\\') {
+      $close = substr($close, 1); }
+    alignmentBindings(MTMatrixTemplate($col), 'math', attributes => { name => 'Matrix', open => $open, close => $close }); });
 
 # starred normal matrices
 DefMacro('\csname matrix*\endcsname []', '\@MTSmatrix@bindings[#1]{}{}\@@MTSmatrix{matrix*}[#1]\@start@alignment');
@@ -534,9 +380,9 @@ DefMacro('\csname pmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{(}{)}\@@MTSm
 DefMacro('\csname bmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{[}{]}\@@MTSmatrix{bmatrix*}[#1]\@start@alignment');
 DefMacro('\csname Bmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{\{}{\}}\@@MTSmatrix{Bmatrix*}[#1]\@start@alignment');
 DefMacro('\csname vmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{|}{|}\@@MTSmatrix{vmatrix*}[#1]\@start@alignment');
-DefMacro('\csname Vmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{'."\x{2016}".'}{'."\x{2016}".'}\@@MTSmatrix{Vmatrix*}[#1]\@start@alignment');
+DefMacro('\csname Vmatrix*\endcsname []', '\@MTSmatrix@bindings[#1]{' . "\x{2016}" . '}{' . "\x{2016}" . '}\@@MTSmatrix{Vmatrix*}[#1]\@start@alignment');
 
-DefMacro('\csname endmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
+DefMacro('\csname endmatrix*\endcsname',  '\@finish@alignment\@end@MTSmatrix');
 DefMacro('\csname endpmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
 DefMacro('\csname endbmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
 DefMacro('\csname endBmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
@@ -545,14 +391,9 @@ DefMacro('\csname endVmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
 
 DefPrimitive('\@end@MTSmatrix', sub { $_[0]->egroup; });
 
-DefConstructor(
-        '\@@MTSmatrix {} [] DigestedBody',
-        '#3',
-        beforeDigest => sub {
-                $_[0]->bgroup;
-        },
-        reversion => '\begin{#1}[#2]#3\end{#1}'
-);
+DefConstructor('\@@MTSmatrix {} [] DigestedBody', '#3',
+  beforeDigest => sub { $_[0]->bgroup; },
+  reversion => '\begin{#1}[#2]#3\end{#1}');
 
 # starred small matrices
 DefMacro('\csname smallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{}{}\@@MTSmatrix{smallmatrix*}[#1]\@start@alignment');
@@ -560,7 +401,7 @@ DefMacro('\csname psmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix
 DefMacro('\csname bsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{[}{]}\@@MTSmatrix{bsmallmatrix*}[#1]\@start@alignment');
 DefMacro('\csname Bsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{\{}{\}}\@@MTSmatrix{Bsmallmatrix*}[#1]\@start@alignment');
 DefMacro('\csname vsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{|}{|}\@@MTSmatrix{vsmallmatrix*}[#1]\@start@alignment');
-DefMacro('\csname Vsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{'."\x{2016}".'}{'."\x{2016}".'}\@@MTSmatrix{Vsmallmatrix*}[#1]\@start@alignment');
+DefMacro('\csname Vsmallmatrix*\endcsname []', '\@hidden{\scriptsize}\@MTSmatrix@bindings[#1]{' . "\x{2016}" . '}{' . "\x{2016}" . '}\@@MTSmatrix{Vsmallmatrix*}[#1]\@start@alignment');
 
 DefMacro('\csname endsmallmatrix*\endcsname', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
 DefMacro('\csname endpsmallmatrix*\endcsname', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
@@ -574,14 +415,13 @@ DefMacro('\psmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{(}{)}\@@MTS
 DefMacro('\bsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{[}{]}\@@MTSmatrix{bsmallmatrix}[#1]\@start@alignment');
 DefMacro('\Bsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{\{}{\}}\@@MTSmatrix{Bsmallmatrix}[#1]\@start@alignment');
 DefMacro('\vsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{|}{|}\@@MTSmatrix{vsmallmatrix}[#1]\@start@alignment');
-DefMacro('\Vsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{'."\x{2016}".'}{'."\x{2016}".'}\@@MTSmatrix{Vsmallmatrix}[#1]\@start@alignment');
+DefMacro('\Vsmallmatrix', '\@hidden{\scriptsize}\@MTSmatrix@bindings{' . "\x{2016}" . '}{' . "\x{2016}" . '}\@@MTSmatrix{Vsmallmatrix}[#1]\@start@alignment');
 
 DefMacro('\endpsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
 DefMacro('\endbsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
 DefMacro('\endBsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
 DefMacro('\endvsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
 DefMacro('\endVsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
-
 
 # add {multilined} in here
 
@@ -590,149 +430,113 @@ DefMacro('\dcases{}', '\@@cases{\@start@alignment#1\@finish@alignment}');
 
 # 3.6
 
-DefPrimitive(
-    '\DeclarePairedDelimiter DefToken {}{}',
-    sub {
-        my ($stomach, $cs, $ldel, $rdel) = @_;
-        $cs = ToString($cs);
-        $ldel = ToString($ldel);
-        $rdel = ToString($rdel);
+DefPrimitive('\DeclarePairedDelimiter DefToken {}{}', sub {
+    my ($stomach, $cs, $ldel, $rdel) = @_;
+    $cs   = ToString($cs);
+    $ldel = ToString($ldel);
+    $rdel = ToString($rdel);
 
-        DefPrimitive(
-            $cs . ' OptionalMatch:* [] {}',
-            sub {
-                my ($stomach, $star, $size, $arg) = @_;
-                $arg = ToString($arg);
-                $size = ToString($size);
+    DefPrimitive($cs . ' OptionalMatch:* [] {}', sub {
+        my ($deepstomach, $star, $size, $arg) = @_;
+        $arg  = ToString($arg);
+        $size = ToString($size);
 
-                # starred (\left, \right) / optional arg ($size, $size) / normal ('', '') version
-                my $lsize = (defined $star) ? '\left' : $size;
-                my $rsize = (defined $star) ? '\right' : $size;
+        # starred (\left, \right) / optional arg ($size, $size) / normal ('', '') version
+        my $lsize = (defined $star) ? '\left'  : $size;
+        my $rsize = (defined $star) ? '\right' : $size;
 
-                return Digest($lsize . $ldel . $arg . $rsize . $rdel);
-            }
-        );
-    }
-);
+        return Digest($lsize . $ldel . $arg . $rsize . $rdel); }); });
 
-DefPrimitive(
-    '\DeclarePairedDelimiterX DefToken [] {} {} {}',
-    sub {
-        my ($stomach, $cs, $nargs, $ldel, $rdel, $body) = @_;
-        $cs = ToString($cs);
-        $ldel = ToString($ldel);
-        $rdel = ToString($rdel);
-        $body = ToString($body);
+DefPrimitive('\DeclarePairedDelimiterX DefToken [] {} {} {}', sub {
+    my ($stomach, $cs, $nargs, $ldel, $rdel, $body) = @_;
+    $cs   = ToString($cs);
+    $ldel = ToString($ldel);
+    $rdel = ToString($rdel);
+    $body = ToString($body);
 
-        # fix $nargs
-        $nargs = $nargs->toString if ref $nargs;
-        $nargs = 0 unless $nargs;
+    # fix $nargs
+    $nargs = $nargs->toString if ref $nargs;
+    $nargs = 0 unless $nargs;
 
-        my $argstr = $cs . ' OptionalMatch:* []';
+    my $argstr = $cs . ' OptionalMatch:* []';
+    for my $i (1 .. $nargs) {
+      $argstr .= '{}'; }
 
-        for my $i (1 .. $nargs) {
-            $argstr .= '{}';
-        }
+    DefPrimitive($argstr, sub {
+        my ($deepstomach, $star, $size, @args) = @_;
+        $size = ToString($size);
 
-        DefPrimitive(
-            $argstr,
-            sub {
-                my ($stomach, $star, $size, @args) = @_;
-                $size = ToString($size);
+        # starred (\left, \right) / optional arg ($size, $size) / normal ('', '') version
+        my $lsize = (defined $star) ? '\left'  : $size;
+        my $rsize = (defined $star) ? '\right' : $size;
 
-                # starred (\left, \right) / optional arg ($size, $size) / normal ('', '') version
-                my $lsize = (defined $star) ? '\left' : $size;
-                my $rsize = (defined $star) ? '\right' : $size;
+        # handle arguments
+        $body = parsePairedDelimiterArgs($nargs, $body, @args);
 
-                # handle arguments
-                $body = parsePairedDelimiterArgs($nargs, $body, @args);
+        return Digest('{ \def\delimsize{' . $size . '}' . $lsize . $ldel . ' ' . $body . ' ' . $rsize . $rdel . ' }'); }); });
 
-                return Digest('{ \def\delimsize{'.$size.'}' . $lsize . $ldel . ' ' . $body . ' ' . $rsize . $rdel . ' }');
-            }
-        );
-    }
-);
+DefPrimitive('\DeclarePairedDelimiterXPP DefToken [] {} {} {} {} {}', sub {
+    my ($stomach, $cs, $nargs, $precode, $ldel, $rdel, $postcode, $body) = @_;
+    $cs       = ToString($cs);
+    $precode  = ToString($precode);
+    $ldel     = ToString($ldel);
+    $rdel     = ToString($rdel);
+    $postcode = ToString($postcode);
+    $body     = ToString($body);
 
-DefPrimitive(
-    '\DeclarePairedDelimiterXPP DefToken [] {} {} {} {} {}',
-    sub {
-        my ($stomach, $cs, $nargs, $precode, $ldel, $rdel, $postcode, $body) = @_;
-        $cs = ToString($cs);
-        $precode = ToString($precode);
-        $ldel = ToString($ldel);
-        $rdel = ToString($rdel);
-        $postcode = ToString($postcode);
-        $body = ToString($body);
+    # fix $nargs
+    $nargs = $nargs->toString if ref $nargs;
+    $nargs = 0 unless $nargs;
 
-        # fix $nargs
-        $nargs = $nargs->toString if ref $nargs;
-        $nargs = 0 unless $nargs;
+    my $argstr = $cs . ' OptionalMatch:* []';
+    for my $i (1 .. $nargs) {
+      $argstr .= '{}'; }
 
-        my $argstr = $cs . ' OptionalMatch:* []';
+    DefPrimitive($argstr, sub {
+        my ($deepstomach, $star, $size, @args) = @_;
+        $size = ToString($size);
 
-        for my $i (1 .. $nargs) {
-            $argstr .= '{}';
-        }
+        # starred (\left, \right) / optional arg ($size, $size) / normal ('', '') version
+        my $lsize = (defined $star) ? '\left'  : $size;
+        my $rsize = (defined $star) ? '\right' : $size;
 
-        DefPrimitive(
-            $argstr,
-            sub {
-                my ($stomach, $star, $size, @args) = @_;
-                $size = ToString($size);
+        # handle arguments
+        $body = parsePairedDelimiterArgs($nargs, $body, @args);
 
-                # starred (\left, \right) / optional arg ($size, $size) / normal ('', '') version
-                my $lsize = (defined $star) ? '\left' : $size;
-                my $rsize = (defined $star) ? '\right' : $size;
+        return Digest('{ \def\delimsize{' . $size . '}' . $precode . $lsize . $ldel . ' ' . $body . ' ' . $rsize . $rdel . $postcode . ' }'); }); });
 
-                # handle arguments
-                $body = parsePairedDelimiterArgs($nargs, $body, @args);
-
-                return Digest('{ \def\delimsize{'.$size.'}' . $precode . $lsize . $ldel . ' ' . $body . ' ' . $rsize . $rdel . $postcode . ' }');
-            }
-        );
-    }
-);
-
-DefPrimitive(
-    '\reDeclarePairedDelimiterInnerWrapper DefToken {} {}',
-    sub {
-        my ($stomach, $cs, $nstar, $body) = @_;
-
-        
-    }
-);
+DefPrimitive('\reDeclarePairedDelimiterInnerWrapper DefToken {} {}', sub {
+    my ($stomach, $cs, $nstar, $body) = @_; });
 
 # 3.7
 
 DefMath('\lparen', '(', role => 'OPEN',  stretchy => 'false');
 DefMath('\rparen', ')', role => 'CLOSE', stretchy => 'false');
 
-DefMathI('\vcentcolon',     undef, ':',  role => 'RELOP');
-DefMathI('\ordinarycolon',  undef, ':',  role => 'RELOP');
+DefMathI('\vcentcolon',    undef, ':', role => 'RELOP');
+DefMathI('\ordinarycolon', undef, ':', role => 'RELOP');
 
 DefMath('\dblcolon', "::", role => 'RELOP');
 # taken from txfonts.sty.ltxml
-DefMath('\coloneqq',        "\x{2254}",         role => 'RELOP');
-DefMath('\Coloneqq',        "\x{2A74}",         role => 'RELOP');
-DefMath('\coloneq',         ":-",               role => 'RELOP');
-DefMath('\Coloneq',         "::-",              role => 'RELOP');
-DefMath('\eqqcolon',        "\x{2255}",         role => 'RELOP');
-DefMath('\Eqqcolon',        "=::",              role => 'RELOP');
-DefMath('\eqcolon',         "-:",               role => 'RELOP');
-DefMath('\Eqcolon',         "-::",              role => 'RELOP');
-DefMath('\colonapprox',     ":\x{2248}",        role => 'RELOP');
-DefMath('\Colonapprox',     "::\x{2248}",       role => 'RELOP');
-DefMath('\colonsim',        ":\x{223C}",        role => 'RELOP');
-DefMath('\Colonsim',        "::\x{223C}",       role => 'RELOP');
+DefMath('\coloneqq',    "\x{2254}",   role => 'RELOP');
+DefMath('\Coloneqq',    "\x{2A74}",   role => 'RELOP');
+DefMath('\coloneq',     ":-",         role => 'RELOP');
+DefMath('\Coloneq',     "::-",        role => 'RELOP');
+DefMath('\eqqcolon',    "\x{2255}",   role => 'RELOP');
+DefMath('\Eqqcolon',    "=::",        role => 'RELOP');
+DefMath('\eqcolon',     "-:",         role => 'RELOP');
+DefMath('\Eqcolon',     "-::",        role => 'RELOP');
+DefMath('\colonapprox', ":\x{2248}",  role => 'RELOP');
+DefMath('\Colonapprox', "::\x{2248}", role => 'RELOP');
+DefMath('\colonsim',    ":\x{223C}",  role => 'RELOP');
+DefMath('\Colonsim',    "::\x{223C}", role => 'RELOP');
 
-DefMathI('\nuparrow',   undef, UTF(0x2909), role => 'ARROW'); # could not find arrow with vertical line
-DefMathI('\ndownarrow', undef, UTF(0x2908), role => 'ARROW'); # see above
-DefMathI('\bigtimes',   undef, UTF(0xD7),   role => 'MULOP', font => { size => 'Big' }, scriptpos => \&doScriptpos);
-
+DefMathI('\nuparrow', undef, UTF(0x2909), role => 'ARROW'); # could not find arrow with vertical line
+DefMathI('\ndownarrow', undef, UTF(0x2908), role => 'ARROW');    # see above
+DefMathI('\bigtimes', undef, UTF(0xD7), role => 'MULOP', font => { size => 'Big' }, scriptpos => \&doScriptpos);
 
 ######################################################
 
 1;
-
 
 # vim: ft=perl: expandtab:
