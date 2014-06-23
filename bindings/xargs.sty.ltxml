@@ -36,8 +36,7 @@ DefParameterType('XArgsOptional', sub {
 
     if (($usedefault && ToString($value) eq ToString($usedefault)) ||
       (!defined $usedefault && ToString($value) eq '')) {
-      $value = $default;
-    }
+      $value = $default; }
 
     $value; },
   optional => 1);
