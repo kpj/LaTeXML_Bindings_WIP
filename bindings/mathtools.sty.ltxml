@@ -36,7 +36,6 @@ foreach my $option (qw(fixamsmath donotfixamsmathbugs allowspaces disallowspaces
 DeclareOption(undef, sub {
     PassOptions('amsmath', 'sty', ToString(Digest(T_CS('\CurrentOption')))); });
 ProcessOptions();
-
 RequirePackage('amsmath', withoptions => 1);
 
 #########
@@ -89,16 +88,12 @@ DefConstructor('\mathmbox {}',          "#1");
 DefConstructor('\mathclap [] {}',       "#2");
 DefConstructor('\clap {}',              "#1");
 DefConstructor('\mathmakebox [] [] {}', "#3");
-
-DefConstructor('\cramped [] {}',     "#2");
-DefConstructor('\crampedllap [] {}', "#2");
-DefConstructor('\crampedrlap [] {}', "#2");
-DefConstructor('\crampedclap [] {}', "#2");
-
-DefConstructor('\smashoperator [] {}', "#2");
-
-DefConstructor('\adjustlimits', "");    # just some wrapper for \lim
-
+DefConstructor('\cramped [] {}',        "#2");
+DefConstructor('\crampedllap [] {}',    "#2");
+DefConstructor('\crampedrlap [] {}',    "#2");
+DefConstructor('\crampedclap [] {}',    "#2");
+DefConstructor('\smashoperator [] {}',  "#2");
+DefConstructor('\adjustlimits',         "");     # just some wrapper for \lim
 DefConstructor('\SwapAboveDisplaySkip', "");
 
 ## 3.2
@@ -386,7 +381,6 @@ DefMacro('\csname endvmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
 DefMacro('\csname endVmatrix*\endcsname', '\@finish@alignment\@end@MTSmatrix');
 
 DefPrimitive('\@end@MTSmatrix', sub { $_[0]->egroup; });
-
 DefConstructor('\@@MTSmatrix {} [] DigestedBody', '#3',
   beforeDigest => sub { $_[0]->bgroup; },
   reversion => '\begin{#1}[#2]#3\end{#1}');
@@ -431,7 +425,6 @@ DefPrimitive('\DeclarePairedDelimiter DefToken {}{}', sub {
     $cs   = ToString($cs);
     $ldel = ToString($ldel);
     $rdel = ToString($rdel);
-
     DefPrimitive($cs . ' OptionalMatch:* [] {}', sub {
         my ($deepstomach, $star, $size, $arg) = @_;
         $arg  = ToString($arg);
@@ -457,7 +450,6 @@ DefPrimitive('\DeclarePairedDelimiterX DefToken [] {} {} {}', sub {
     my $argstr = $cs . ' OptionalMatch:* []';
     for my $i (1 .. $nargs) {
       $argstr .= '{}'; }
-
     DefPrimitive($argstr, sub {
         my ($deepstomach, $star, $size, @args) = @_;
         $size = ToString($size);
@@ -487,7 +479,6 @@ DefPrimitive('\DeclarePairedDelimiterXPP DefToken [] {} {} {} {} {}', sub {
     my $argstr = $cs . ' OptionalMatch:* []';
     for my $i (1 .. $nargs) {
       $argstr .= '{}'; }
-
     DefPrimitive($argstr, sub {
         my ($deepstomach, $star, $size, @args) = @_;
         $size = ToString($size);
