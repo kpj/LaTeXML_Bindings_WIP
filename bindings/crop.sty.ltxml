@@ -31,5 +31,4 @@ DefPrimitive('\cropdef [] DefToken DefToken DefToken DefToken {}', undef);
 
 1;
 
-
 # vim: ft=perl: noexpandtab:
