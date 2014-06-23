@@ -106,21 +106,17 @@ DefConstructor('\SwapAboveDisplaySkip', "");
 DefPrimitive('\newtagform {} [] {} {}', sub {
     my ($stomach, $name, $style, $open, $close) = @_;
     my $body = Tokens(T_CS('\def'), T_CS('\fnum@equation'), T_BEGIN, T_BEGIN, $open->unlist, (($style) ? $style->unlist : ()), T_BEGIN, T_CS('\theequation'), T_END, $close->unlist, T_END, T_END);
-    my $cs  = T_CS('\taggy' . ToString($name));
-    my $key = "defined:" . Stringify($cs);
-    if (LookupValue($key)) {
+    my $cs = T_CS('\taggy' . ToString($name));
+    if (!isDefinable($cs)) {
       Error('ignore', $cs, $stomach,
         "Ignoring redefinition (\\newtagform) of '" . Stringify($cs) . "'");
       return; }
-    AssignValue($key => 1);
     DefMacroI($cs, undef, $body, scope => 'global'); });
-
 DefPrimitive('\renewtagform {} [] {} {}', sub {
     my ($stomach, $name, $style, $open, $close) = @_;
     my $body = Tokens(T_CS('\def'), T_CS('\fnum@equation'), T_BEGIN, T_BEGIN, $open->unlist, (($style) ? $style->unlist : ()), T_BEGIN, T_CS('\theequation'), T_END, $close->unlist, T_END, T_END);
     my $cs  = T_CS('\taggy' . ToString($name));
     my $key = "defined:" . Stringify($cs);
-    AssignValue($key => 1);
     DefMacroI($cs, undef, $body, scope => 'global'); });
 DefMacro('\usetagform {}', '\csname taggy#1\endcsname');
 
