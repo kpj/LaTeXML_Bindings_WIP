@@ -49,6 +49,52 @@ ProcessOptions();
 RequirePackage('amsmath', withoptions => 1);
 
 
+#########
+# Utils #
+#########
+
+# alignment stuff
+sub MTMatrixTemplate {
+        my ($type) = @_;
+
+        my $alty = {};
+        if($type eq 'c') {
+                $alty = {before => Tokens(T_CS('\hfil')), after => Tokens(T_CS('\hfil'))};
+        } elsif ($type eq 'l') {
+                $alty = {after => Tokens(T_CS('\hfil'))};
+        } elsif ($type eq 'r') {
+                $alty = {before => Tokens(T_CS('\hfil'))};
+        }
+
+        my $stuff = LaTeXML::Core::Alignment::Template->new(
+                repeated => [$alty]
+        );
+        return $stuff;
+}
+
+# parse arguments and substitute them into $body
+sub parsePairedDelimiterArgs {
+    my ($nargs, $body, @args) = @_;
+
+    print "\n\n";
+    print "Args:\n";
+    for my $i (1 .. $nargs) {
+        print "'".ToString($args[$i-1])."\n";
+    }
+    print "\n";
+    print "$body\n";
+    for my $i (1 .. $nargs) {
+        my $arg = ToString($args[$i-1]);
+        $body =~ s/#$i/$arg/;
+        print "Replacing '#$i' with '$arg'\n";
+    }
+    print $body;
+    print "\n\n";
+
+    return $body;
+}
+
+
 ##########
 # Macros #
 ##########
@@ -459,25 +505,6 @@ Let('\LaTeXoverbrace', '\overbrace');
 
 # 3.4
 
-# alignment stuff
-sub MTMatrixTemplate {
-        my ($type) = @_;
-
-        my $alty = {};
-        if($type eq 'c') {
-                $alty = {before => Tokens(T_CS('\hfil')), after => Tokens(T_CS('\hfil'))};
-        } elsif ($type eq 'l') {
-                $alty = {after => Tokens(T_CS('\hfil'))};
-        } elsif ($type eq 'r') {
-                $alty = {before => Tokens(T_CS('\hfil'))};
-        }
-
-        my $stuff = LaTeXML::Core::Alignment::Template->new(
-                repeated => [$alty]
-        );
-        return $stuff;
-}
-
 DefPrimitive(
         '\@MTSmatrix@bindings [] {} {}',
         sub {
@@ -575,6 +602,93 @@ DefPrimitive(
                 return Digest($lsize . $ldel . $arg . $rsize . $rdel);
             }
         );
+    }
+);
+
+DefPrimitive(
+    '\DeclarePairedDelimiterX DefToken [] {} {} {}',
+    sub {
+        my ($stomach, $cs, $nargs, $ldel, $rdel, $body) = @_;
+        $cs = ToString($cs);
+        $ldel = ToString($ldel);
+        $rdel = ToString($rdel);
+        $body = ToString($body);
+
+        # fix $nargs
+        $nargs = $nargs->toString if ref $nargs;
+        $nargs = 0 unless $nargs;
+
+        my $argstr = $cs . ' OptionalMatch:* []';
+
+        for my $i (1 .. $nargs) {
+            $argstr .= '{}';
+        }
+
+        DefPrimitive(
+            $argstr,
+            sub {
+                my ($stomach, $star, $size, @args) = @_;
+                $size = ToString($size);
+
+                # starred (\left, \right) / optional arg ($size, $size) / normal ('', '') version
+                my $lsize = (defined $star) ? '\left' : $size;
+                my $rsize = (defined $star) ? '\right' : $size;
+
+                # handle arguments
+                $body = parsePairedDelimiterArgs($nargs, $body, @args);
+
+                return Digest('{ \def\delimsize{'.$size.'}' . $lsize . $ldel . ' ' . $body . ' ' . $rsize . $rdel . ' }');
+            }
+        );
+    }
+);
+
+DefPrimitive(
+    '\DeclarePairedDelimiterXPP DefToken [] {} {} {} {} {}',
+    sub {
+        my ($stomach, $cs, $nargs, $precode, $ldel, $rdel, $postcode, $body) = @_;
+        $cs = ToString($cs);
+        $precode = ToString($precode);
+        $ldel = ToString($ldel);
+        $rdel = ToString($rdel);
+        $postcode = ToString($postcode);
+        $body = ToString($body);
+
+        # fix $nargs
+        $nargs = $nargs->toString if ref $nargs;
+        $nargs = 0 unless $nargs;
+
+        my $argstr = $cs . ' OptionalMatch:* []';
+
+        for my $i (1 .. $nargs) {
+            $argstr .= '{}';
+        }
+
+        DefPrimitive(
+            $argstr,
+            sub {
+                my ($stomach, $star, $size, @args) = @_;
+                $size = ToString($size);
+
+                # starred (\left, \right) / optional arg ($size, $size) / normal ('', '') version
+                my $lsize = (defined $star) ? '\left' : $size;
+                my $rsize = (defined $star) ? '\right' : $size;
+
+                # handle arguments
+                $body = parsePairedDelimiterArgs($nargs, $body, @args);
+
+                return Digest('{ \def\delimsize{'.$size.'}' . $precode . $lsize . $ldel . ' ' . $body . ' ' . $rsize . $rdel . $postcode . ' }');
+            }
+        );
+    }
+);
+
+DefPrimitive(
+    '\reDeclarePairedDelimiterInnerWrapper DefToken {} {}',
+    sub {
+        my ($stomach, $cs, $nstar, $body) = @_;
+
+        
     }
 );
 

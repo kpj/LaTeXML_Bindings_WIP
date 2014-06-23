@@ -186,6 +186,24 @@ c & d
 \abs{\frac{a}{b}} \quad \abs*{\frac{a}{b}} \quad \abs[\Bigg]{\frac{a}{b}}
 \]
 
+\DeclarePairedDelimiterX\innerp[2]{\langle}{\rangle}{#1,#2}
+\DeclarePairedDelimiterX\braket[3]{\langle}{\rangle}{#1\,\delimsize\vert\,#2\,\delimsize\vert\,#3}
+\[
+\innerp*{A}{ \frac{1}{2} } \quad
+\braket[\Big]{B}{\sum_{k} f_k}{C}
+\]
+
+\providecommand\given{}
+\newcommand\SetSymbol[1][]{#1\vert\allowbreak}
+\DeclarePairedDelimiterX\Set[1]\{\}{\renewcommand\given{\SetSymbol[\delimsize]}#1}
+\[ \Set*{ x \in X \given \frac {\sqrt{x}}{x^2+1} > 1 } \]
+
+\DeclarePairedDelimiterXPP\lnorm[1]{}\lVert\rVert{_2}{#1}
+\DeclarePairedDelimiterXPP\Prop[1]{\mathbb{P}}(){}{\renewcommand\given{\nonscript\:\delimsize\vert\nonscript\:}#1}
+\[
+\lnorm{\frac{\pi}{\int x dx}} \quad \Prop{foo \given bar}
+\]
+
 \horz
 
 \[
