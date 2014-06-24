@@ -421,20 +421,14 @@ DefMacro('\dcases{}', '\@@cases{\@start@alignment#1\@finish@alignment}');
 # 3.6
 
 DefPrimitive('\DeclarePairedDelimiter DefToken {}{}', sub {
-    my ($stomach, $cs, $ldel, $rdel) = @_;
-    $cs   = ToString($cs);
-    $ldel = ToString($ldel);
-    $rdel = ToString($rdel);
-    DefPrimitive($cs . ' OptionalMatch:* [] {}', sub {
-        my ($deepstomach, $star, $size, $arg) = @_;
-        $arg  = ToString($arg);
-        $size = ToString($size);
-
-        # starred (\left, \right) / optional arg ($size, $size) / normal ('', '') version
-        my $lsize = (defined $star) ? '\left'  : $size;
-        my $rsize = (defined $star) ? '\right' : $size;
-
-        return Digest($lsize . $ldel . $arg . $rsize . $rdel); }); });
+    my ($gullet, $cs, $ldel, $rdel) = @_;
+    DefMacroI($cs, 'OptionalMatch:* [] {}', sub {
+        my ($deepgullet, $star, $opt, $body) = @_;
+        return (($star ? (T_CS('\left')) : ((defined $opt) ? $opt->unlist : ())),
+          $ldel->unlist,
+          $body->unlist,
+          ($star ? (T_CS('\right')) : ((defined $opt) ? $opt->unlist : ())),
+          $rdel->unlist); }); });
 
 DefPrimitive('\DeclarePairedDelimiterX DefToken [] {} {} {}', sub {
     my ($stomach, $cs, $nargs, $ldel, $rdel, $body) = @_;
