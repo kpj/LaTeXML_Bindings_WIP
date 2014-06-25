@@ -415,35 +415,30 @@ DefPrimitive('\DeclarePairedDelimiter DefToken {}{}', sub {
 
 DefPrimitive('\DeclarePairedDelimiterX DefToken [] {} {} {}', sub {
     my ($stomach, $cs, $nargs, $ldel, $rdel, $body) = @_;
-    $cs = ToString($cs);
 
     # fix $nargs
     $nargs = $nargs->toString if ref $nargs;
     $nargs = 0 unless $nargs;
 
-    my @bod = $body->unlist;
-    push(@bod, T_CS($cs . '@after'));
-    DefMacro($cs . '@inner' . (join('', map { '{}' } (1 .. $nargs))), Tokens(@bod));
+    DefMacroI(T_CS(ToString($cs) . '@inner'), join('', map { '{}' } (1 .. $nargs)),
+      Tokens($body->unlist, T_CS($cs . '@after')));
     DefMacroI($cs, 'OptionalMatch:* []', sub {
         my ($gullet, $star, $opt) = @_;
         return (($star ? T_CS('\left') : ((defined $opt) ? $opt->unlist : ())),
           $ldel->unlist,
           T_CS('\def'), T_CS('\delimsize'), T_BEGIN, ($opt ? $opt->unlist : ()), T_END,
           T_CS('\def'), T_CS($cs . '@after'), T_BEGIN, ($star ? T_CS('\right') : ((defined $opt) ? $opt->unlist : ())), $rdel->unlist, T_END,
-          T_CS($cs . '@inner')); }); });
+          T_CS(ToString($cs) . '@inner')); }); });
 
 DefPrimitive('\DeclarePairedDelimiterXPP DefToken [] {} {} {} {} {}', sub {
     my ($stomach, $cs, $nargs, $precode, $ldel, $rdel, $postcode, $body) = @_;
-    $cs = ToString($cs);
 
     # fix $nargs
     $nargs = $nargs->toString if ref $nargs;
     $nargs = 0 unless $nargs;
 
-    my @bod = $body->unlist;
-    push(@bod, T_CS($cs . '@after'));
-    push(@bod, $postcode->unlist);
-    DefMacro($cs . '@inner' . (join('', map { '{}' } (1 .. $nargs))), Tokens(@bod));
+    DefMacroI(T_CS(ToString($cs) . '@inner'), join('', map { '{}' } (1 .. $nargs)),
+      Tokens($body->unlist, T_CS($cs . '@after'), $postcode->unlist));
     DefMacroI($cs, 'OptionalMatch:* []', sub {
         my ($gullet, $star, $opt) = @_;
         return ($precode->unlist,
@@ -451,7 +446,7 @@ DefPrimitive('\DeclarePairedDelimiterXPP DefToken [] {} {} {} {} {}', sub {
           $ldel->unlist,
           T_CS('\def'), T_CS('\delimsize'), T_BEGIN, ($opt ? $opt->unlist : ()), T_END,
           T_CS('\def'), T_CS($cs . '@after'), T_BEGIN, ($star ? T_CS('\right') : ((defined $opt) ? $opt->unlist : ())), $rdel->unlist, T_END,
-          T_CS($cs . '@inner')); }); });
+          T_CS(ToString($cs) . '@inner')); }); });
 
 DefPrimitive('\reDeclarePairedDelimiterInnerWrapper DefToken {} {}', sub {
     my ($stomach, $cs, $nstar, $body) = @_; });
