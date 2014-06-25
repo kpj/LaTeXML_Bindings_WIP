@@ -446,7 +446,7 @@ DefPrimitive('\DeclarePairedDelimiterXPP DefToken [] {} {} {} {} {}', sub {
     DefMacro($cs . '@inner' . (join('', map { '{}' } (1 .. $nargs))), Tokens(@bod));
     DefMacroI($cs, 'OptionalMatch:* []', sub {
         my ($gullet, $star, $opt) = @_;
-        return ($precode,
+        return ($precode->unlist,
           ($star ? T_CS('\left') : ((defined $opt) ? $opt->unlist : ())),
           $ldel->unlist,
           T_CS('\def'), T_CS('\delimsize'), T_BEGIN, ($opt ? $opt->unlist : ()), T_END,
