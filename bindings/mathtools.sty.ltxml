@@ -405,13 +405,19 @@ DefMacro('\dcases{}', '\@@cases{\@start@alignment#1\@finish@alignment}');
 
 DefPrimitive('\DeclarePairedDelimiter DefToken {}{}', sub {
     my ($gullet, $cs, $ldel, $rdel) = @_;
-    DefMacroI($cs, 'OptionalMatch:* [] {}', sub {
-        my ($deepgullet, $star, $opt, $body) = @_;
-        return (($star ? (T_CS('\left')) : ((defined $opt) ? $opt->unlist : ())),
-          $ldel->unlist,
-          $body->unlist,
-          ($star ? (T_CS('\right')) : ((defined $opt) ? $opt->unlist : ())),
-          $rdel->unlist); }); });
+    my $cmd = substr(ToString($cs), 1);
+
+    DefMacroI('\MT@delim@' . $cmd . '@star@wrapper', '{}{}{}',
+      '\mathopen{}\mathclose\bgroup #1 #2 \aftergroup\egroup #3');
+    DefMacroI('\MT@delim@' . $cmd . '@nostar@wrapper', '{}{}{}',
+      '\mathopen{#1}#2\mathclose{#3}');
+
+    DefMacroI('\MT@delim@' . $cmd . '@star', '{}',
+'\csname MT@delim@' . $cmd . '@star@wrapper\endcsname{\left' . ToString($ldel) . '}{#1}{\right' . ToString($rdel) . '}');
+    DefMacroI('\MT@delim@' . $cmd . '@nostar', '[]{}',
+'\csname MT@delim@' . $cmd . '@nostar@wrapper\endcsname{#1 ' . ToString($ldel) . '}{#2}{#1 ' . ToString($rdel) . '}');
+
+    DefMacro(ToString($cs), '\@ifstar{\MT@delim@' . $cmd . '@star}{\MT@delim@' . $cmd . '@nostar}'); });
 
 DefPrimitive('\DeclarePairedDelimiterX DefToken [] {} {} {}', sub {
     my ($stomach, $cs, $nargs, $ldel, $rdel, $body) = @_;
@@ -448,8 +454,10 @@ DefPrimitive('\DeclarePairedDelimiterXPP DefToken [] {} {} {} {} {}', sub {
           T_CS('\def'), T_CS($cs . '@after'), T_BEGIN, ($star ? T_CS('\right') : ((defined $opt) ? $opt->unlist : ())), $rdel->unlist, T_END,
           T_CS(ToString($cs) . '@inner')); }); });
 
+# only applies to macros defined with \DeclarePairedDelimiter
 DefPrimitive('\reDeclarePairedDelimiterInnerWrapper DefToken {} {}', sub {
-    my ($stomach, $cs, $nstar, $body) = @_; });
+    my ($stomach, $cs, $nstar, $body) = @_;
+    DefMacroI('\MT@delim@' . (substr(ToString($cs), 1)) . '@' . ToString($nstar) . '@wrapper', '{}{}{}', $body); });
 
 # 3.7
 
