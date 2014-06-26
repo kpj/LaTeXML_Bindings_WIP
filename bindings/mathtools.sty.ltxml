@@ -396,10 +396,32 @@ DefMacro('\endBsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSma
 DefMacro('\endvsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
 DefMacro('\endVsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
 
-# add {multilined} in here
+# {multlined}
 
-# some cases
-DefMacro('\dcases{}', '\@@cases{\@start@alignment#1\@finish@alignment}');
+# cases
+DefConstructor('\@@cases@mt DigestedBody',
+  '#1',
+  reversion    => '\begin{dcases*}#1\end{dcases*}',
+  beforeDigest => sub {
+    $_[0]->bgroup;
+
+    my $templ = LaTeXML::Core::Alignment::Template->new(columns => [
+        { before => Tokens(T_MATH, T_CS('\displaystyle')), after => Tokens(T_MATH, T_CS('\hfil')) },
+        { before => Tokens(T_MATH, T_CS('\textstyle')),    after => Tokens(T_MATH, T_CS('\hfil')) }
+    ]);
+
+    alignmentBindings($templ, 'math', attributes => { meaning => 'cases', open => '{' });
+  });
+
+# \@alignment@bindings[foo]\@@cases@mt
+DefMacro('\dcases',    '\@@cases\@start@alignment');
+DefMacro('\enddcases', '\@finish@alignment\@end@cases');
+
+DefMacro('\csname dcases*\endcsname',    '\@@cases@mt\@start@alignment');
+DefMacro('\csname enddcases*\endcsname', '\@finish@alignment\@end@cases');
+
+DefMacro('\csname rcases*\endcsname',    '\@@cases@mt\@start@alignment');
+DefMacro('\csname endrcases*\endcsname', '\@finish@alignment\@end@cases');
 
 # 3.6
 
