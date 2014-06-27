@@ -346,6 +346,7 @@ DefPrimitive('\@MTSmatrix@bindings [] {} {}', sub {
       $open = substr($open, 1); }
     if (substr($close, 0, 1) eq '\\') {
       $close = substr($close, 1); }
+
     alignmentBindings(MTMatrixTemplate($col), 'math', attributes => { name => 'Matrix', open => $open, close => $close }); });
 
 # starred normal matrices
@@ -401,27 +402,48 @@ DefMacro('\endVsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSma
 # cases
 DefConstructor('\@@cases@mt DigestedBody',
   '#1',
-  reversion    => '\begin{dcases*}#1\end{dcases*}',
+  reversion    => '\begin{somecases}#1\end{somecases}',
   beforeDigest => sub {
-    $_[0]->bgroup;
+    $_[0]->bgroup; });
+
+DefPrimitive('\@alignment@bindings@mt {}{}{}{}{}', sub {
+    my ($stomach, $style1, $style2, $open, $close, $type) = @_;    # $type = m | t
+    $open  = ToString($open);
+    $close = ToString($close);
+    $type  = ToString($type);
+
+    # fix for \{ and \}
+    if (substr($open, 0, 1) eq '\\') {
+      $open = substr($open, 1); }
+    if (substr($close, 0, 1) eq '\\') {
+      $close = substr($close, 1); }
 
     my $templ = LaTeXML::Core::Alignment::Template->new(columns => [
-        { before => Tokens(T_MATH, T_CS('\displaystyle')), after => Tokens(T_MATH, T_CS('\hfil')) },
-        { before => Tokens(T_MATH, T_CS('\textstyle')),    after => Tokens(T_MATH, T_CS('\hfil')) }
-    ]);
+        { before => Tokens($style1), after => Tokens(T_CS('\hfil')) },
+        { before => Tokens(($type eq 't') ? T_MATH : (), $style2), after => Tokens(($type eq 't') ? T_MATH : (), T_CS('\hfil')) }]);
 
-    alignmentBindings($templ, 'math', attributes => { meaning => 'cases', open => '{' });
-  });
+    alignmentBindings($templ, 'math', attributes => { meaning => 'cases', open => $open, close => $close }); });
 
-# \@alignment@bindings[foo]\@@cases@mt
-DefMacro('\dcases',    '\@@cases\@start@alignment');
+DefMacro('\dcases', '\@alignment@bindings@mt{\displaystyle}{\displaystyle}{\{}{}{m}\@@cases@mt\@start@alignment');
 DefMacro('\enddcases', '\@finish@alignment\@end@cases');
 
-DefMacro('\csname dcases*\endcsname',    '\@@cases@mt\@start@alignment');
+DefMacro('\csname dcases*\endcsname', '\@alignment@bindings@mt{\displaystyle}{\displaystyle}{\{}{}{t}\@@cases@mt\@start@alignment');
 DefMacro('\csname enddcases*\endcsname', '\@finish@alignment\@end@cases');
 
-DefMacro('\csname rcases*\endcsname',    '\@@cases@mt\@start@alignment');
+DefMacro('\csname rcases\endcsname', '\@alignment@bindings@mt{\textstyle}{\textstyle}{}{\}}{m}\@@cases@mt\@start@alignment');
+DefMacro('\csname endrcases\endcsname', '\@finish@alignment\@end@cases');
+
+DefMacro('\csname rcases*\endcsname', '\@alignment@bindings@mt{\textstyle}{\textstyle}{}{\}}{t}\@@cases@mt\@start@alignment');
 DefMacro('\csname endrcases*\endcsname', '\@finish@alignment\@end@cases');
+
+DefMacro('\csname drcases\endcsname', '\@alignment@bindings@mt{\displaystyle}{\displaystyle}{}{\}}{m}\@@cases@mt\@start@alignment');
+DefMacro('\csname enddrcases\endcsname', '\@finish@alignment\@end@cases');
+
+DefMacro('\csname drcases*\endcsname', '\@alignment@bindings@mt{\displaystyle}{\displaystyle}{}{\}}{t}\@@cases@mt\@start@alignment');
+DefMacro('\csname enddrcases*\endcsname', '\@finish@alignment\@end@cases');
+
+DefMacro('\csname cases*\endcsname', '\@alignment@bindings@mt{\textstyle}{\textstyle}{\{}{}{t}\@@cases@mt\@start@alignment');
+DefMacro('\csname endcases*\endcsname', '\@finish@alignment\@end@cases');
 
 # 3.6
 
