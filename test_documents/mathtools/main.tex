@@ -219,7 +219,7 @@ E = m c^2 & 5^6 \quad and so on \\
 \begin{rcases*}
 x^2 & for $\int x\,dx>0$\\
 x^3 & else
-\end{rcases*} \quad \Rightarrow \cdots
+\end{rcases*} \Rightarrow \cdots
 \]
 
 \[
@@ -233,7 +233,7 @@ E = m c^2 & 5^6 \quad and so on \\
 \begin{drcases*}
 x^2 & for $\int x\,dx>0$\\
 \int x^3\,x & else
-\end{drcases*} \quad \Rightarrow \cdots
+\end{drcases*} \Rightarrow \cdots
 \]
 
 \[
@@ -253,8 +253,8 @@ x^2 & for $\int x\,dx>0$\\
 \[
 \abs{\frac{a}{b}} \quad \abs*{\frac{a}{b}} \quad \abs[\big]{\frac{a}{b}} \quad \abs[\Bigg]{\frac{a}{b}}
 \]
-\reDeclarePairedDelimiterInnerWrapper\abs{star}{#1#3#2}
-\reDeclarePairedDelimiterInnerWrapper\abs{nostar}{#2#1#3}
+\reDeclarePairedDelimiterInnerWrapper\abs{star}{#1\_#2\_#3}
+\reDeclarePairedDelimiterInnerWrapper\abs{nostar}{#1@#2@#3}
 \[
 \abs{\pi} \quad \abs*{\phi}
 \]
@@ -274,7 +274,7 @@ x^2 & for $\int x\,dx>0$\\
 \DeclarePairedDelimiterXPP\lnorm[1]{}\lVert\rVert{_2}{#1}
 \DeclarePairedDelimiterXPP\Prop[1]{\mathbb{P}}(){}{\renewcommand\given{\delimsize\vert}#1}
 \[
-\lnorm{\frac{\pi}{\int x dx}} \quad \Prop{foo \given bar}
+\lnorm{\frac{\pi}{\int x dx}} \quad \Prop{foo}
 \]
 
 \horz
@@ -300,8 +300,8 @@ a \coloneqq b \quad c \Colonapprox d \quad e \dblcolon f
 \]
 
 \[
-\lim_{a\ndownarrow 0} f(a) \neq \bigtimes_n X_n \quad
-\frac{ \bigtimes_{k=1}^7 B_k \nuparrow \Omega }{2}
+\lim_{a\ndownarrow 0} f(a) \neq A \bigtimes B_n X_n \quad
+\frac{ C \bigtimes D_{k=1}^7 B_k \nuparrow \Omega }{2}
 \]
 
 \horz

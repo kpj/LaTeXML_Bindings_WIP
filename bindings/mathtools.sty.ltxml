@@ -452,9 +452,9 @@ DefPrimitive('\DeclarePairedDelimiter DefToken {}{}', sub {
     my $cmd = substr(ToString($cs), 1);
 
     DefMacroI('\MT@delim@' . $cmd . '@star@wrapper', '{}{}{}',
-      '\mathopen{}\mathclose\bgroup #1 #2 \aftergroup\egroup #3');
+      '#1#2#3');
     DefMacroI('\MT@delim@' . $cmd . '@nostar@wrapper', '{}{}{}',
-      '\mathopen{#1}#2\mathclose{#3}');
+      '\mathopen{#1} #2 \mathclose{#3}');
 
     DefMacroI('\MT@delim@' . $cmd . '@star', '{}',
 '\csname MT@delim@' . $cmd . '@star@wrapper\endcsname{\left' . ToString($ldel) . '}{#1}{\right' . ToString($rdel) . '}');
