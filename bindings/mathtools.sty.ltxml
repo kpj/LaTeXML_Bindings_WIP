@@ -400,9 +400,9 @@ DefMacro('\endVsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSma
 # {multlined}
 
 # cases
-DefConstructor('\@@cases@mt DigestedBody',
-  '#1',
-  reversion    => '\begin{somecases}#1\end{somecases}',
+DefConstructor('\@@cases@mt {} DigestedBody',
+  '#2',
+  reversion    => '\begin{#1}#2\end{#1}',
   beforeDigest => sub {
     $_[0]->bgroup; });
 
@@ -424,25 +424,25 @@ DefPrimitive('\@alignment@bindings@mt {}{}{}{}{}', sub {
 
     alignmentBindings($templ, 'math', attributes => { meaning => 'cases', open => $open, close => $close }); });
 
-DefMacro('\dcases', '\@alignment@bindings@mt{\displaystyle}{\displaystyle}{\{}{}{m}\@@cases@mt\@start@alignment');
+DefMacro('\dcases', '\@alignment@bindings@mt{\displaystyle}{\displaystyle}{\{}{}{m}\@@cases@mt{dcases}\@start@alignment');
 DefMacro('\enddcases', '\@finish@alignment\@end@cases');
 
-DefMacro('\csname dcases*\endcsname', '\@alignment@bindings@mt{\displaystyle}{\displaystyle}{\{}{}{t}\@@cases@mt\@start@alignment');
+DefMacro('\csname dcases*\endcsname', '\@alignment@bindings@mt{\displaystyle}{\displaystyle}{\{}{}{t}\@@cases@mt{dcases*}\@start@alignment');
 DefMacro('\csname enddcases*\endcsname', '\@finish@alignment\@end@cases');
 
-DefMacro('\csname rcases\endcsname', '\@alignment@bindings@mt{\textstyle}{\textstyle}{}{\}}{m}\@@cases@mt\@start@alignment');
+DefMacro('\csname rcases\endcsname', '\@alignment@bindings@mt{\textstyle}{\textstyle}{}{\}}{m}\@@cases@mt{rcases}\@start@alignment');
 DefMacro('\csname endrcases\endcsname', '\@finish@alignment\@end@cases');
 
-DefMacro('\csname rcases*\endcsname', '\@alignment@bindings@mt{\textstyle}{\textstyle}{}{\}}{t}\@@cases@mt\@start@alignment');
+DefMacro('\csname rcases*\endcsname', '\@alignment@bindings@mt{\textstyle}{\textstyle}{}{\}}{t}\@@cases@mt{rcases*}\@start@alignment');
 DefMacro('\csname endrcases*\endcsname', '\@finish@alignment\@end@cases');
 
-DefMacro('\csname drcases\endcsname', '\@alignment@bindings@mt{\displaystyle}{\displaystyle}{}{\}}{m}\@@cases@mt\@start@alignment');
+DefMacro('\csname drcases\endcsname', '\@alignment@bindings@mt{\displaystyle}{\displaystyle}{}{\}}{m}\@@cases@mt{drcases}\@start@alignment');
 DefMacro('\csname enddrcases\endcsname', '\@finish@alignment\@end@cases');
 
-DefMacro('\csname drcases*\endcsname', '\@alignment@bindings@mt{\displaystyle}{\displaystyle}{}{\}}{t}\@@cases@mt\@start@alignment');
+DefMacro('\csname drcases*\endcsname', '\@alignment@bindings@mt{\displaystyle}{\displaystyle}{}{\}}{t}\@@cases@mt{drcases*}\@start@alignment');
 DefMacro('\csname enddrcases*\endcsname', '\@finish@alignment\@end@cases');
 
-DefMacro('\csname cases*\endcsname', '\@alignment@bindings@mt{\textstyle}{\textstyle}{\{}{}{t}\@@cases@mt\@start@alignment');
+DefMacro('\csname cases*\endcsname', '\@alignment@bindings@mt{\textstyle}{\textstyle}{\{}{}{t}\@@cases@mt{cases*}\@start@alignment');
 DefMacro('\csname endcases*\endcsname', '\@finish@alignment\@end@cases');
 
 # 3.6
