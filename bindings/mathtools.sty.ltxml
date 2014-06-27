@@ -528,7 +528,7 @@ DefMath('\Colonsim',    "::\x{223C}", role => 'RELOP');
 
 DefMathI('\nuparrow', undef, UTF(0x2909), role => 'ARROW'); # could not find arrow with vertical line
 DefMathI('\ndownarrow', undef, UTF(0x2908), role => 'ARROW');    # see above
-DefMathI('\bigtimes', undef, UTF(0xD7), role => 'MULOP', font => { size => 'Big' }, scriptpos => \&doScriptpos);
+DefMathI('\bigtimes', undef, UTF(0xD7), role => 'MULOP', meaning => 'times', font => { size => 'Big' }, scriptpos => \&doScriptpos);
 
 ######################################################
 
