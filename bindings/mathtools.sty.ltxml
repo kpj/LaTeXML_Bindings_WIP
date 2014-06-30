@@ -447,7 +447,22 @@ DefMacro('\csname endcases*\endcsname', '\@finish@alignment\@end@cases');
 
 # 3.5
 
-Let('\shortintertext', '\@ams@intertext');
+DefMacro('\@mt@intertext{}',
+  '\@mt@newline\multicolumn{\@alignment@ncolumns}{l}{\@@mt@intertext{#1}}\nonumber\@mt@newline');
+DefConstructor('\@@mt@intertext{}',
+  "<ltx:p class='ltx_intertext'>#1</ltx:p>", mode => 'text');
+
+DefMacroI('\@mt@newline', undef, sub {
+    my ($gullet) = @_;
+    readNewlineArgs($gullet);
+    $gullet->skipSpaces();
+    my $next = $gullet->readToken();
+    if ($next && $next->equals(T_CS('\shortintertext'))) {
+      ($next); }
+    else {
+      (T_CS('\@alignment@newline@noskip'), $next); } });
+
+Let('\shortintertext', '\@mt@intertext');
 
 # 3.6
 
