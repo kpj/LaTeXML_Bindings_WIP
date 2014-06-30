@@ -61,7 +61,24 @@ sub MTMatrixTemplate {
 
 # 3
 
-DefConstructor('\mathtoolsset {}', "");
+DefPrimitive('\mathtoolsset RequiredKeyVals', sub {
+    my ($stomach, $keyval) = @_;
+
+    print "\n\n\n";
+    my @pairs = $keyval->getPairs();
+    while (@pairs) {
+      my ($key, $val) = (shift(@pairs), shift(@pairs));
+      $val = $val ? ToString($val) : '\@mt@true';
+      print "$key: $val\n";
+
+      DefMacro('\csname @mt@mathtoolsset@' . $key . '\endcsname', $val);
+    }
+    print "\n\n\n";
+
+    return; });
+
+#Lookup function for mathtoolsset
+DefMacro('\@mt@getmtoption{}{}', '\ifcsname @mt@mathtoolsset@#1\endcsname{\csname @mt@mathtoolsset@#1\endcsname{#2}}\else#2\fi');
 
 ## 3.1
 
@@ -560,7 +577,7 @@ DefMathI('\bigtimes', undef, UTF(0xD7), role => 'MULOP', meaning => 'times', fon
 
 # 4.2
 
-DefMathI('\prescript', '{}{}{}', '{}^{#1}_{#2}#3', scriptpos => 'pre');
+DefMathI('\prescript', '{}{}{}', '{}^{\@mt@getmtoption{prescript-sup-format}{#1}}_{\@mt@getmtoption{prescript-sub-format}{#2}}{\@mt@getmtoption{prescript-arg-format}{#3}}', scriptpos => 'pre');
 
 ######################################################
 
