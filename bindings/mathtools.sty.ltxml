@@ -445,6 +445,10 @@ DefMacro('\csname enddrcases*\endcsname', '\@finish@alignment\@end@cases');
 DefMacro('\csname cases*\endcsname', '\@cases@bindings{\textstyle}{\textstyle}{\{}{}{t}\@@cases@mt{cases*}\@start@alignment');
 DefMacro('\csname endcases*\endcsname', '\@finish@alignment\@end@cases');
 
+# 3.5
+
+Let('\shortintertext', '\@ams@intertext');
+
 # 3.6
 
 DefPrimitive('\DeclarePairedDelimiter DefToken {}{}', sub {
