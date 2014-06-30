@@ -398,6 +398,10 @@ DefMacro('\endvsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSma
 DefMacro('\endVsmallmatrix', '\@hidden{\scriptsize}\@finish@alignment\@end@MTSmatrix');
 
 # {multlined}
+#DefEnvironment('{multlined}[][]',
+#  "<ltx:XMHint name='multlined-begin'/>"
+#    . "#body"
+#    . "<ltx:XMHint name='multlined-end'/>");
 
 # cases
 DefConstructor('\@@cases@mt {} DigestedBody',
@@ -444,6 +448,11 @@ DefMacro('\csname enddrcases*\endcsname', '\@finish@alignment\@end@cases');
 
 DefMacro('\csname cases*\endcsname', '\@cases@bindings{\textstyle}{\textstyle}{\{}{}{t}\@@cases@mt{cases*}\@start@alignment');
 DefMacro('\csname endcases*\endcsname', '\@finish@alignment\@end@cases');
+
+#MoveEqLeft
+
+#Aboxed
+#DefMacro('\Aboxed{}', '#1');
 
 # 3.5
 
@@ -548,6 +557,10 @@ DefMath('\Colonsim',    "::\x{223C}", role => 'RELOP');
 DefMathI('\nuparrow', undef, UTF(0x2909), role => 'ARROW'); # could not find arrow with vertical line
 DefMathI('\ndownarrow', undef, UTF(0x2908), role => 'ARROW');    # see above
 DefMathI('\bigtimes', undef, UTF(0xD7), role => 'MULOP', meaning => 'times', font => { size => 'Big' }, scriptpos => \&doScriptpos);
+
+# 4.2
+
+DefMathI('\prescript', '{}{}{}', '{}^{#1}_{#2}#3', scriptpos => 'pre');
 
 ######################################################
 
