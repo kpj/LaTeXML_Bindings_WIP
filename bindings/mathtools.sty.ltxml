@@ -63,22 +63,18 @@ sub MTMatrixTemplate {
 
 DefPrimitive('\mathtoolsset RequiredKeyVals', sub {
     my ($stomach, $keyval) = @_;
-
-    print "\n\n\n";
     my @pairs = $keyval->getPairs();
     while (@pairs) {
       my ($key, $val) = (shift(@pairs), shift(@pairs));
       $val = $val ? ToString($val) : '\@mt@true';
-      print "$key: $val\n";
-
-      DefMacro('\csname @mt@mathtoolsset@' . $key . '\endcsname', $val);
-    }
-    print "\n\n\n";
-
+      DefMacro('\csname @mt@mathtoolsset@' . $key . '\endcsname', $val); }
     return; });
 
 #Lookup function for mathtoolsset
-DefMacro('\@mt@getmtoption{}{}', '\ifcsname @mt@mathtoolsset@#1\endcsname{\csname @mt@mathtoolsset@#1\endcsname{#2}}\else#2\fi');
+DefMacro('\@mt@getmtoption{}', '\ifcsname @mt@mathtoolsset@#1\endcsname'
+    . '\expandafter\let\expandafter\@mt@currentvalue\csname @mt@mathtoolsset@#1\endcsname\else'
+    . '\let\@mt@currentvalue\relax\fi'
+    . '\@mt@currentvalue');
 
 ## 3.1
 
@@ -347,7 +343,7 @@ DefMath('\@underbracket Digested', "\x{FE47}", operator_role => 'UNDERACCENT', s
 Let('\LaTeXunderbrace', '\underbrace');
 Let('\LaTeXoverbrace',  '\overbrace');
 
-# 3.4
+## 3.4
 
 DefPrimitive('\@MTSmatrix@bindings [] {} {}', sub {
     my ($stomach, $col, $open, $close) = @_;
@@ -471,7 +467,7 @@ DefMacro('\csname endcases*\endcsname', '\@finish@alignment\@end@cases');
 #Aboxed
 #DefMacro('\Aboxed{}', '#1');
 
-# 3.5
+## 3.5
 
 DefMacro('\@mt@intertext{}',
   '\@mt@newline\multicolumn{\@alignment@ncolumns}{l}{\@@mt@intertext{#1}}\nonumber\@mt@newline');
@@ -490,7 +486,7 @@ DefMacroI('\@mt@newline', undef, sub {
 
 Let('\shortintertext', '\@mt@intertext');
 
-# 3.6
+## 3.6
 
 DefPrimitive('\DeclarePairedDelimiter DefToken {}{}', sub {
     my ($gullet, $cs, $ldel, $rdel) = @_;
@@ -548,7 +544,7 @@ DefPrimitive('\reDeclarePairedDelimiterInnerWrapper DefToken {} {}', sub {
     my ($stomach, $cs, $nstar, $body) = @_;
     DefMacroI('\MT@delim@' . (substr(ToString($cs), 1)) . '@' . ToString($nstar) . '@wrapper', '{}{}{}', $body); });
 
-# 3.7
+## 3.7
 
 DefMath('\lparen', '(', role => 'OPEN',  stretchy => 'false');
 DefMath('\rparen', ')', role => 'CLOSE', stretchy => 'false');
@@ -575,7 +571,9 @@ DefMathI('\nuparrow', undef, UTF(0x2909), role => 'ARROW'); # could not find arr
 DefMathI('\ndownarrow', undef, UTF(0x2908), role => 'ARROW');    # see above
 DefMathI('\bigtimes', undef, UTF(0xD7), role => 'MULOP', meaning => 'times', font => { size => 'Big' }, scriptpos => \&doScriptpos);
 
-# 4.2
+# 4
+
+## 4.2
 
 DefMathI('\prescript', '{}{}{}', '{}^{\@mt@getmtoption{prescript-sup-format}{#1}}_{\@mt@getmtoption{prescript-sub-format}{#2}}{\@mt@getmtoption{prescript-arg-format}{#3}}', scriptpos => 'pre');
 
