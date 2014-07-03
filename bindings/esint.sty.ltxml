@@ -26,31 +26,31 @@ use LaTeXML::Package;
 
 DefMathI('\iint', undef, "\x{222C}",
   role      => 'INTOP',
-  meaning   => 'integral',
+  meaning   => 'double-integral',
   mathstyle => \&doVariablesizeOp);
 DefMathI('\iiint', undef, "\x{222D}",
   role      => 'INTOP',
-  meaning   => 'integral',
+  meaning   => 'triple-integral',
   mathstyle => \&doVariablesizeOp);
 DefMathI('\iiiint', undef, "\x{2A0C}",
   role      => 'INTOP',
-  meaning   => 'integral',
+  meaning   => 'quadruple-integral',
   mathstyle => \&doVariablesizeOp);
 DefMathI('\dotsint', undef, "\x{222B}\x{22EF}\x{222B}",
   role      => 'INTOP',
-  meaning   => 'integral',
+  meaning   => 'multiple-integral',
   mathstyle => \&doVariablesizeOp);
 DefMathI('\oint', undef, "\x{222E}",
   role      => 'INTOP',
-  meaning   => 'integral',
+  meaning   => 'contour-integral',
   mathstyle => \&doVariablesizeOp);
 DefMathI('\oiint', undef, "\x{222F}",
   role      => 'INTOP',
-  meaning   => 'integral',
+  meaning   => 'surface-integral',
   mathstyle => \&doVariablesizeOp);
 DefMathI('\varoiint', undef, "\x{222F}",
   role      => 'INTOP',
-  meaning   => 'integral',
+  meaning   => 'surface-integral',
   mathstyle => \&doVariablesizeOp);
 #DefMathI('\sqint', undef, "",
 #  role      => 'INTOP',
@@ -62,19 +62,19 @@ DefMathI('\varoiint', undef, "\x{222F}",
 #  mathstyle => \&doVariablesizeOp);
 DefMathI('\ointctrclockwise', undef, "\x{2233}",
   role      => 'INTOP',
-  meaning   => 'integral',
+  meaning   => 'counterclockwise-contour-integral',
   mathstyle => \&doVariablesizeOp);
 DefMathI('\ointclockwise', undef, "\x{2232}",
   role      => 'INTOP',
-  meaning   => 'integral',
+  meaning   => 'clockwise-contour-integral',
   mathstyle => \&doVariablesizeOp);
 DefMathI('\varointclockwise', undef, "\x{2232}",
   role      => 'INTOP',
-  meaning   => 'integral',
+  meaning   => 'clockwise-contour-integral',
   mathstyle => \&doVariablesizeOp);
 DefMathI('\varointctrclockwise', undef, "\x{2233}",
   role      => 'INTOP',
-  meaning   => 'integral',
+  meaning   => 'counterclockwise-contour-integral',
   mathstyle => \&doVariablesizeOp);
 #DefMathI('\fint', undef, "",
 #  role      => 'INTOP',
