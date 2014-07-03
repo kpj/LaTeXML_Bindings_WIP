@@ -1,0 +1,142 @@
+# -*- CPERL -*-
+# /=====================================================================\ #
+# | stmaryrd.sty                                                        | #
+# | Implementation for LaTeXML                                          | #
+# |=====================================================================| #
+# | Part of LaTeXML:                                                    | #
+# |  Public domain software, produced as part of work done by the       | #
+# |  United States Government & not subject to copyright in the US.     | #
+# |---------------------------------------------------------------------| #
+# | Thanks to Kim Philipp Jablonski <kpjkpjkpjkpjkpjkpj@gmail.com>      | #
+# | of the arXMLiv group for initial implementation                     | #
+# |    http://arxmliv.kwarc.info/                                       | #
+# | Released under the Gnu Public License                               | #
+# | Released to the Public Domain                                       | #
+# |---------------------------------------------------------------------| #
+# | Bruce Miller <bruce.miller@nist.gov>                        #_#     | #
+# | http://dlmf.nist.gov/LaTeXML/                              (o o)    | #
+# \=========================================================ooo==U==ooo=/ #
+
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+######################################################
+
+DefMathI('\Ydown',        undef, "\x{22A4}");
+DefMathI('\Yleft',        undef, "\x{22A3}");
+DefMathI('\Yright',       undef, "\x{22A2}");
+DefMathI('\Yup',          undef, "\x{22A5}");
+DefMathI('\baro',         undef, "\x{233D}");
+DefMathI('\bbslash',      undef, "\x{244a}");
+DefMathI('\binampersand', undef, UTF(0x26));
+DefMathI('\bindnasrepma', undef, "\x{214b}");
+#DefMathI('\boxast', undef, "");
+DefMathI('\boxbar', undef, "\x{25eb}");
+#DefMathI('\boxbox', undef, "");
+#DefMathI('\boxbslash', undef, "");
+#DefMathI('\boxcircle', undef, "");
+#DefMathI('\boxdot', undef, "");
+DefMathI('\boxempty', undef, "\x{25a1}");
+#DefMathI('\boxslash', undef, "");
+#DefMathI('\curlyveedownarrow', undef, "");
+#DefMathI('\curlyveeuparrow', undef, "");
+#DefMathI('\curlywedgedownarrow', undef, "");
+#DefMathI('\curlywedgeuparrow', undef, "");
+#DefMathI('\fatbslash', undef, "");
+DefMathI('\fatsemi', undef, "\x{2a1f}");
+#DefMathI('\fatslash', undef, "");
+DefMathI('\interleave', undef, "\x{2af4}");
+DefMathI('\leftslice',  undef, "\x{2aa6}");
+DefMathI('\merge',      undef, "\x{2a07}");
+DefMathI('\minuso',     undef, "\x{29b5}");
+#DefMathI('\moo', undef, "");
+#DefMathI('\nplus', undef, "");
+DefMathI('\obar',    undef, "\x{233d}");
+DefMathI('\oblong',  undef, "\x{2395}");
+DefMathI('\obslash', undef, "\x{2349}");
+#DefMathI('\ogreaterthan', undef, "");
+#DefMathI('\olessthan', undef, "");
+#DefMathI('\ovee', undef, "");
+#DefMathI('\owedge', undef, "");
+DefMathI('\rightslice',    undef, "\x{2aa7}");
+DefMathI('\sslash',        undef, "\x{20eb}");
+DefMathI('\talloblong',    undef, "\x{25AF}");
+DefMathI('\varbigcirc',    undef, "\x{25EF}");
+DefMathI('\varcurlyvee',   undef, "\x{22CE}");
+DefMathI('\varcurlywedge', undef, "\x{22CF}");
+DefMathI('\varoast',       undef, "\x{229B}");
+DefMathI('\varobar',       undef, "\x{29B6}");
+#DefMathI('\varobslash', undef, "");
+DefMathI('\varocircle', undef, "\x{229A}");
+DefMathI('\varodot',    undef, "\x{2299}");
+#DefMathI('\varogreaterthan', undef, "");
+#DefMathI('\varolessthan', undef, "");
+DefMathI('\varominus', undef, "\x{2296}");
+DefMathI('\varoplus',  undef, "\x{2295}");
+DefMathI('\varoslash', undef, "\x{2298}");
+DefMathI('\varotimes', undef, "\x{2297}");
+#DefMathI('\varovee', undef, "");
+#DefMathI('\varowedge', undef, "");
+DefMathI('\vartimes', undef, UTF(0xD7));
+
+DefMathI('\bigbox',        undef, "\x{25a1}", font => { size => 'Big' });
+DefMathI('\bigcurlywedge', undef, "\x{22CF}", font => { size => 'Big' });
+DefMathI('\bigcurlyvee',   undef, "\x{22CE}", font => { size => 'Big' });
+DefMathI('\biginterleave', undef, "\x{2af4}", font => { size => 'Big' });
+#DefMathI('\bignplus', undef, "", font => { size => 'Big' });
+DefMathI('\bigparallel',     undef, "\x{2016}", font => { size => 'Big' });
+DefMathI('\bigsqcap',        undef, "\x{2293}", font => { size => 'Big' });
+DefMathI('\bigtriangledown', undef, "\x{25BD}", font => { size => 'Big' });
+DefMathI('\bigtriangleup',   undef, "\x{25B3}", font => { size => 'Big' });
+
+DefMathI('\inplus',                undef, "\x{2A2D}");
+DefMathI('\niplus',                undef, "\x{2A2E}");
+DefMathI('\ntrianglelefteqslant',  undef, "\x{22EC}");
+DefMathI('\ntrianglerighteqslant', undef, "\x{22ED}");
+DefMathI('\subsetplus',            undef, "\x{2ABF}");
+#DefMathI('\subsetpluseq', undef, "");
+DefMathI('\supsetplus', undef, "\x{2AC0}");
+#DefMathI('\supsetpluseq', undef, "");
+DefMathI('\trianglelefteqslant',  undef, "\x{22B4}");
+DefMathI('\trianglerighteqslant', undef, "\x{22B5}");
+
+DefMathI('\Longmapsfrom',      undef, "\x{27FD}");
+DefMathI('\Longmapsto',        undef, "\x{27FE}");
+DefMathI('\Mapsfrom',          undef, "\x{2906}");
+DefMathI('\Mapsto',            undef, "\x{2907}");
+DefMathI('\leftarrowtriangle', undef, "\x{21FD}");
+#DefMathI('\leftrightarroweq', undef, "");
+DefMathI('\leftrightarrowtriangle', undef, "\x{21FF}");
+DefMathI('\lightning',              undef, "\x{21AF}");
+DefMathI('\longmapsfrom',           undef, "\x{27FB}");
+DefMathI('\mapsfrom',               undef, "\x{21A4}");
+#DefMathI('\nnearrow', undef, "");
+#DefMathI('\nnwarrow', undef, "");
+DefMathI('\rightarrowtriangle', undef, "\x{21FE}");
+DefMathI('\rrparenthesis',      undef, "\x{2988}");
+DefMathI('\shortdownarrow',     undef, "\x{2193}");
+DefMathI('\shortleftarrow',     undef, "\x{2190}");
+DefMathI('\shortrightarrow',    undef, "\x{2192}");
+DefMathI('\shortuparrow',       undef, "\x{2191}");
+#DefMathI('\ssearrow', undef, "");
+#DefMathI('\sswarrow', undef, "");
+
+DefMathI('\Lbag', undef, "\x{27C5}", font => {});    # adjust font somehow
+DefMathI('\Rbag', undef, "\x{27C6}", font => {});    # see above
+DefMathI('\lbag', undef, "\x{27C5}");
+DefMathI('\llbracket',     undef, "\x{27E6}");
+DefMathI('\llceil',        undef, "\x{2308}");       # need double bars?
+DefMathI('\llfloor',       undef, "\x{230A}");       # see \llceil
+DefMathI('\llparenthesis', undef, "\x{2987}");
+DefMathI('\rbag',          undef, "\x{27C6}");
+DefMathI('\rrbracket',     undef, "\x{27E7}");
+DefMathI('\rrceil',        undef, "\x{2309}");       # see \llceil
+DefMathI('\rrfloor',       undef, "\x{230B}");       # see \llceil
+
+######################################################
+
+1;
+
+# vim: ft=perl: noexpandtab:
