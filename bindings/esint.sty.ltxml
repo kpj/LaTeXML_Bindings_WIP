@@ -52,7 +52,7 @@ DefMathI('\varoiint', undef, "\x{222F}",
   role      => 'INTOP',
   meaning   => 'surface-integral',
   mathstyle => \&doVariablesizeOp);
-DefMathI('\sqint', undef, "2A16",
+DefMathI('\sqint', undef, "\x{2A16}",
   role      => 'INTOP',
   meaning   => 'quaternion-integral',
   mathstyle => \&doVariablesizeOp);
