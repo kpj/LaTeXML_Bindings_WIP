@@ -76,10 +76,10 @@ DefMathI('\varointctrclockwise', undef, "\x{2233}",
   role      => 'INTOP',
   meaning   => 'counterclockwise-contour-integral',
   mathstyle => \&doVariablesizeOp);
-#DefMathI('\fint', undef, "",
-#  role      => 'INTOP',
-#  meaning   => 'integral',
-#  mathstyle => \&doVariablesizeOp);
+DefMathI('\fint', undef, "\x{2A0D}",
+  role      => 'INTOP',
+  meaning   => 'finite-part-integral',
+  mathstyle => \&doVariablesizeOp);
 #DefMathI('\landupint', undef, "",
 #  role      => 'INTOP',
 #  meaning   => 'integral',
