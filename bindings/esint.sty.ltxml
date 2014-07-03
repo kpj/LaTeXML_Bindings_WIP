@@ -52,19 +52,19 @@ DefMathI('\varoiint', undef, "\x{222F}",
   role      => 'INTOP',
   meaning   => 'integral',
   mathstyle => \&doVariablesizeOp);
-DefMathI('\sqint', undef, "",
-  role      => 'INTOP',
-  meaning   => 'integral',
-  mathstyle => \&doVariablesizeOp);
-DefMathI('\sqiint', undef, "",
-  role      => 'INTOP',
-  meaning   => 'integral',
-  mathstyle => \&doVariablesizeOp);
+#DefMathI('\sqint', undef, "",
+#  role      => 'INTOP',
+#  meaning   => 'integral',
+#  mathstyle => \&doVariablesizeOp);
+#DefMathI('\sqiint', undef, "",
+#  role      => 'INTOP',
+#  meaning   => 'integral',
+#  mathstyle => \&doVariablesizeOp);
 DefMathI('\ointctrclockwise', undef, "\x{2233}",
   role      => 'INTOP',
   meaning   => 'integral',
   mathstyle => \&doVariablesizeOp);
-DefMathI('\ointclockwise', undef, "",
+DefMathI('\ointclockwise', undef, "\x{2232}",
   role      => 'INTOP',
   meaning   => 'integral',
   mathstyle => \&doVariablesizeOp);
@@ -72,22 +72,22 @@ DefMathI('\varointclockwise', undef, "\x{2232}",
   role      => 'INTOP',
   meaning   => 'integral',
   mathstyle => \&doVariablesizeOp);
-DefMathI('\varointctrclockwise', undef, "",
+DefMathI('\varointctrclockwise', undef, "\x{2233}",
   role      => 'INTOP',
   meaning   => 'integral',
   mathstyle => \&doVariablesizeOp);
-DefMathI('\fint', undef, "",
-  role      => 'INTOP',
-  meaning   => 'integral',
-  mathstyle => \&doVariablesizeOp);
-DefMathI('\landupint', undef, "",
-  role      => 'INTOP',
-  meaning   => 'integral',
-  mathstyle => \&doVariablesizeOp);
-DefMathI('\landdownint', undef, "",
-  role      => 'INTOP',
-  meaning   => 'integral',
-  mathstyle => \&doVariablesizeOp);
+#DefMathI('\fint', undef, "",
+#  role      => 'INTOP',
+#  meaning   => 'integral',
+#  mathstyle => \&doVariablesizeOp);
+#DefMathI('\landupint', undef, "",
+#  role      => 'INTOP',
+#  meaning   => 'integral',
+#  mathstyle => \&doVariablesizeOp);
+#DefMathI('\landdownint', undef, "",
+#  role      => 'INTOP',
+#  meaning   => 'integral',
+#  mathstyle => \&doVariablesizeOp);
 
 ######################################################
 
