@@ -33,13 +33,16 @@ DefMathI('\Yright', undef, "\x{22A2}",
 DefMathI('\Yup', undef, "\x{22A5}",
   role => 'RELOP');
 DefMathI('\baro', undef, "\x{233D}",
-  role => 'RELOP');
+  role    => 'RELOP',
+  meaning => 'apl-reversal');
 DefMathI('\bbslash', undef, "\x{244a}",
   role => 'RELOP');
 DefMathI('\binampersand', undef, UTF(0x26),
-  role => 'RELOP');
+  role    => 'RELOP',
+  meaning => 'additive-conjunction');
 DefMathI('\bindnasrepma', undef, "\x{214b}",
-  role => 'RELOP');
+  role    => 'RELOP',
+  meaning => 'multiplicative-disjunction');
 #DefMathI('\boxast', undef, "", role => 'MULOP');
 DefMathI('\boxbar', undef, "\x{25eb}",
   role => 'RELOP');
@@ -104,11 +107,13 @@ DefMathI('\varodot', undef, "\x{2299}",
 DefMathI('\varominus', undef, "\x{2296}",
   role => 'ADDOP');
 DefMathI('\varoplus', undef, "\x{2295}",
-  role => 'ADDOP');
+  role    => 'ADDOP',
+  meaning => 'additive-disjunction');
 DefMathI('\varoslash', undef, "\x{2298}",
   role => 'RELOP');
 DefMathI('\varotimes', undef, "\x{2297}",
-  role => 'MULOP');
+  role    => 'MULOP',
+  meaning => 'multiplicative-conjunction');
 #DefMathI('\varovee', undef, "");
 #DefMathI('\varowedge', undef, "");
 DefMathI('\vartimes', undef, UTF(0xD7),
