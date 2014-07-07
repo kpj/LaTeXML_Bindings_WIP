@@ -28,7 +28,7 @@ DefMathI('\Ydown', undef, "\x{22A4}",
   role => 'RELOP');
 DefMathI('\Yleft', undef, "\x{22A3}",
   role => 'RELOP');
-DefMathI('\Yright', undef, "\x{22A2}",
+DefMathI('\Yright', undef, "\x{2144}",
   role => 'RELOP');
 DefMathI('\Yup', undef, "\x{22A5}",
   role => 'RELOP');
@@ -43,16 +43,22 @@ DefMathI('\binampersand', undef, UTF(0x26),
 DefMathI('\bindnasrepma', undef, "\x{214b}",
   role    => 'RELOP',
   meaning => 'multiplicative-disjunction');
-#DefMathI('\boxast', undef, "", role => 'MULOP');
+DefMathI('\boxast', undef, "\x{29C6}",
+  role => 'BINOP');
 DefMathI('\boxbar', undef, "\x{25eb}",
   role => 'RELOP');
-#DefMathI('\boxbox', undef, "");
-#DefMathI('\boxbslash', undef, "");
-#DefMathI('\boxcircle', undef, "", role => 'MULOP');
-#DefMathI('\boxdot', undef, "", role => 'MULOP');
+DefMathI('\boxbox', undef, "\x{29C8}",
+  role => 'BINOP');
+DefMathI('\boxbslash', undef, "\x{29C5}",
+  role => 'BINOP');
+DefMathI('\boxcircle', undef, "\x{29C7}",
+  role => 'BINOP');
+DefMathI('\boxdot', undef, "\x{22A1}",
+  role => 'MULOP');
 DefMathI('\boxempty', undef, "\x{25a1}",
   role => 'RELOP');
-#DefMathI('\boxslash', undef, "");
+DefMathI('\boxslash', undef, "\x{29C4}",
+  role => 'BINOP');
 #DefMathI('\curlyveedownarrow', undef, "");
 #DefMathI('\curlyveeuparrow', undef, "");
 #DefMathI('\curlywedgedownarrow', undef, "");
@@ -71,21 +77,23 @@ DefMathI('\minuso', undef, "\x{29b5}",
   role => 'RELOP');
 #DefMathI('\moo', undef, "");
 #DefMathI('\nplus', undef, "");
-DefMathI('\obar', undef, "\x{233d}",
+DefMathI('\obar', undef, "\x{29B6}",
   role => 'RELOP');
 DefMathI('\oblong', undef, "\x{2395}",
   role => 'RELOP');
 DefMathI('\obslash', undef, "\x{2349}",
   role => 'RELOP');
-#DefMathI('\ogreaterthan', undef, "");
-#DefMathI('\olessthan', undef, "");
+DefMathI('\ogreaterthan', undef, "\x{29C1}",
+  role => 'RELOP');
+DefMathI('\olessthan', undef, "\x{29C0}",
+  role => 'RELOP');
 #DefMathI('\ovee', undef, "");
 #DefMathI('\owedge', undef, "");
 DefMathI('\rightslice', undef, "\x{2aa7}",
   role => 'RELOP');
-DefMathI('\sslash', undef, "\x{20eb}",
+DefMathI('\sslash', undef, "\x{2AFD}",
   role => 'RELOP');
-DefMathI('\talloblong', undef, "\x{25AF}",
+DefMathI('\talloblong', undef, "\x{2AFE}",
   role => 'RELOP');
 DefMathI('\varbigcirc', undef, "\x{25EF}",
   role => 'MULOP');
@@ -97,13 +105,16 @@ DefMathI('\varoast', undef, "\x{229B}",
   role => 'MULOP');
 DefMathI('\varobar', undef, "\x{29B6}",
   role => 'RELOP');
-#DefMathI('\varobslash', undef, "");
+DefMathI('\varobslash', undef, "\x{29B8}",
+  role => 'MULOP');
 DefMathI('\varocircle', undef, "\x{229A}",
   role => 'MULOP');
 DefMathI('\varodot', undef, "\x{2299}",
   role => 'MULOP');
-#DefMathI('\varogreaterthan', undef, "");
-#DefMathI('\varolessthan', undef, "");
+DefMathI('\varogreaterthan', undef, "\x{29C1}",
+  role => 'RELOP');
+DefMathI('\varolessthan', undef, "\x{29C0}",
+  role => 'RELOP');
 DefMathI('\varominus', undef, "\x{2296}",
   role => 'ADDOP');
 DefMathI('\varoplus', undef, "\x{2295}",
@@ -128,8 +139,8 @@ DefMathI('\bigcurlywedge', undef, "\x{22CF}",
 DefMathI('\bigcurlyvee', undef, "\x{22CE}",
   font => { size => 'Big' },
   role => 'BIGOP');
-DefMathI('\biginterleave', undef, "\x{2af4}",
-  font => { size => 'Big' },
+DefMathI('\biginterleave', undef, "\x{2AFC}",
+  #  font => { size => 'Big' },
   role => 'BIGOP');
 #DefMathI('\bignplus', undef, "", font => { size => 'Big' });
 DefMathI('\bigparallel', undef, "\x{2016}",
