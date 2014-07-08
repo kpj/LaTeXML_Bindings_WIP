@@ -76,7 +76,8 @@ DefMathI('\merge', undef, "\x{2a07}",
 DefMathI('\minuso', undef, "\x{29b5}",
   role => 'RELOP');
 #DefMathI('\moo', undef, "");
-#DefMathI('\nplus', undef, "");
+DefMathI('\nplus', undef, "\x{228E}",
+  role => 'ADDOP');
 DefMathI('\obar', undef, "\x{29B6}",
   role => 'RELOP');
 DefMathI('\oblong', undef, "\x{2395}",
@@ -142,7 +143,8 @@ DefMathI('\bigcurlyvee', undef, "\x{22CE}",
 DefMathI('\biginterleave', undef, "\x{2AFC}",
   #  font => { size => 'Big' },
   role => 'BIGOP');
-#DefMathI('\bignplus', undef, "", font => { size => 'Big' });
+DefMathI('\bignplus', undef, "\x{228E}",
+  font => { size => 'Big' });
 DefMathI('\bigparallel', undef, "\x{2016}",
   font => { size => 'Big' },
   role => 'BIGOP');
@@ -166,10 +168,10 @@ DefMathI('\ntrianglerighteqslant', undef, "\x{22ED}",
   role => 'RELOP');
 DefMathI('\subsetplus', undef, "\x{2ABF}",
   role => 'RELOP');
-#DefMathI('\subsetpluseq', undef, "");
+#DefMathI('\subsetpluseq', undef, ""); # not available in unicode
 DefMathI('\supsetplus', undef, "\x{2AC0}",
   role => 'RELOP');
-#DefMathI('\supsetpluseq', undef, "");
+#DefMathI('\supsetpluseq', undef, ""); # not available in unicode
 DefMathI('\trianglelefteqslant', undef, "\x{22B4}",
   role => 'RELOP');
 DefMathI('\trianglerighteqslant', undef, "\x{22B5}",
@@ -185,7 +187,7 @@ DefMathI('\Mapsto', undef, "\x{2907}",
   role => 'ARROW');
 DefMathI('\leftarrowtriangle', undef, "\x{21FD}",
   role => 'ARROW');
-#DefMathI('\leftrightarroweq', undef, "");
+#DefMathI('\leftrightarroweq', undef, ""); # not available in unicode
 DefMathI('\leftrightarrowtriangle', undef, "\x{21FF}",
   role => 'ARROW');
 DefMathI('\lightning', undef, "\x{21AF}",
@@ -194,8 +196,8 @@ DefMathI('\longmapsfrom', undef, "\x{27FB}",
   role => 'ARROW');
 DefMathI('\mapsfrom', undef, "\x{21A4}",
   role => 'ARROW');
-#DefMathI('\nnearrow', undef, "");
-#DefMathI('\nnwarrow', undef, "");
+#DefMathI('\nnearrow', undef, ""); # not available in unicode
+#DefMathI('\nnwarrow', undef, ""); # not available in unicode
 DefMathI('\rightarrowtriangle', undef, "\x{21FE}",
   role => 'ARROW');
 DefMathI('\rrparenthesis', undef, "\x{2988}",
@@ -208,8 +210,8 @@ DefMathI('\shortrightarrow', undef, "\x{2192}",
   role => 'ARROW');
 DefMathI('\shortuparrow', undef, "\x{2191}",
   role => 'ARROW');
-#DefMathI('\ssearrow', undef, "");
-#DefMathI('\sswarrow', undef, "");
+#DefMathI('\ssearrow', undef, ""); # not available in unicode
+#DefMathI('\sswarrow', undef, ""); # not available in unicode
 
 DefMathI('\Lbag', undef, "\x{27C5}",
   font => {},
