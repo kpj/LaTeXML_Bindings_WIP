@@ -24,14 +24,11 @@ use LaTeXML::Package;
 
 ######################################################
 
-DefMathI('\Ydown', undef, "\x{22A4}",
-  role => 'RELOP');
-DefMathI('\Yleft', undef, "\x{22A3}",
-  role => 'RELOP');
+#DefMathI('\Ydown', undef, "", role => 'RELOP');
+#DefMathI('\Yleft', undef, "", role => 'RELOP');
 DefMathI('\Yright', undef, "\x{2144}",
   role => 'RELOP');
-DefMathI('\Yup', undef, "\x{22A5}",
-  role => 'RELOP');
+#DefMathI('\Yup', undef, "", role => 'RELOP');
 DefMathI('\baro', undef, "\x{233D}",
   role    => 'RELOP',
   meaning => 'apl-reversal');
@@ -76,13 +73,12 @@ DefMathI('\merge', undef, "\x{2a07}",
 DefMathI('\minuso', undef, "\x{29b5}",
   role => 'RELOP');
 #DefMathI('\moo', undef, "");
-DefMathI('\nplus', undef, "\x{228E}",
-  role => 'ADDOP');
+#DefMathI('\nplus', undef, "", role => 'ADDOP');
 DefMathI('\obar', undef, "\x{29B6}",
   role => 'RELOP');
 DefMathI('\oblong', undef, "\x{2395}",
   role => 'RELOP');
-DefMathI('\obslash', undef, "\x{2349}",
+DefMathI('\obslash', undef, "\x{29B8}",
   role => 'RELOP');
 DefMathI('\ogreaterthan', undef, "\x{29C1}",
   role => 'RELOP');
@@ -94,7 +90,7 @@ DefMathI('\rightslice', undef, "\x{2aa7}",
   role => 'RELOP');
 DefMathI('\sslash', undef, "\x{2AFD}",
   role => 'RELOP');
-DefMathI('\talloblong', undef, "\x{2AFE}",
+DefMathI('\talloblong', undef, "\x{2AFF}",
   role => 'RELOP');
 DefMathI('\varbigcirc', undef, "\x{25EF}",
   role => 'MULOP');
@@ -143,8 +139,7 @@ DefMathI('\bigcurlyvee', undef, "\x{22CE}",
 DefMathI('\biginterleave', undef, "\x{2AFC}",
   #  font => { size => 'Big' },
   role => 'BIGOP');
-DefMathI('\bignplus', undef, "\x{228E}",
-  font => { size => 'Big' });
+#DefMathI('\bignplus', undef, "", font => { size => 'Big' });
 DefMathI('\bigparallel', undef, "\x{2016}",
   font => { size => 'Big' },
   role => 'BIGOP');
