@@ -1,26 +1,12 @@
+\listfiles
 \documentclass{article}
 
 \usepackage{tikz}
 
 \begin{document}
 
-\begin{tikzpicture}
-    \def\make#1#2#3#4{%
-        \def\xOne{(#3-#1)/3}
-        \def\yOne{(#4-#2)/3}
-        \def\xTwo{2*\xOne}
-        \def\yTwo{2*\yOne}
-
-        \coordinate(coordOne) at ({\xOne},{\yOne});
-        \coordinate(coordTwo) at ({\xTwo},{\yTwo});
-
-        \draw (#1,#2) -- (coordOne);
-        \draw (#3,#4) -- (coordTwo);
-        \begin{scope}[rotate around={60:(coordOne)}]
-            \draw[red] (coordOne) -- (coordTwo);
-        \end{scope}
-    }
-    \make0055
+\begin{tikzpicture}[scale=3,very thick]
+    \draw[color=red,domain=0:6.28,samples=200,smooth] plot (canvas polar cs:angle=\x r,radius={28-8*sin(3*\x r)});
 \end{tikzpicture}
 
 \end{document}
