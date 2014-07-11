@@ -1,0 +1,15 @@
+\documentclass{article}
+
+\usepackage{tikz}
+
+\newcommand{\calc}[3]{\csname #1\endcsname{#2}{#3}\pgfmathresult}
+
+\begin{document}
+
+\calc{pgfmathneg}{3}
+
+\begin{tikzpicture}
+    \draw (0,0) -- (3,0);
+\end{tikzpicture}
+
+\end{document}
