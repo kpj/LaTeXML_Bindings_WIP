@@ -34,6 +34,10 @@ use LaTeXML::Package;
 # pgfmath@operation@#1@infix
 # pgfmath@operation@#1@precedence
 
+sub num {
+  return ToString($_[0]);
+}
+
 DefMacro('\pgfmath@function@neg',             'neg');
 DefMacro('\pgfmath@operation@neg@type',       'function');
 DefMacro('\pgfmath@operation@neg@arity',      '1');
@@ -41,16 +45,27 @@ DefMacro('\pgfmath@operation@neg@infix',      'neg');
 DefMacro('\pgfmath@operation@neg@precedence', '500');
 DefMacroI('\pgfmathneg', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', -ToString($n)); });
+    DefMacro('\pgfmathresult', -num($n)); });
 
-RawTeX('\pgfmathdeclarefunction{add}{2}{%
-    \begingroup%
-    \pgfmath@x=#1pt\relax%
-    \pgfmath@y=#2pt\relax%
-    \advance\pgfmath@x by\pgfmath@y%
-    \pgfmath@returnone\pgfmath@x%
-  \endgroup%
-}
+DefMacro('\pgfmath@function@add',             'add');
+DefMacro('\pgfmath@operation@add@type',       'function');
+DefMacro('\pgfmath@operation@add@arity',      '2');
+DefMacro('\pgfmath@operation@add@infix',      'add');
+DefMacro('\pgfmath@operation@add@precedence', '1000');
+DefMacroI('\pgfmathadd', '{}{}', sub {
+    my ($gullet, $n1, $n2) = @_;
+    print "\n\n\n Res: " . (num($n1) + num($n2)) . "\n\n\n";
+    DefMacro('\pgfmathresult', num($n1) + num($n2)); });
+
+RawTeX('
+%\pgfmathdeclarefunction{add}{2}{%
+%    \begingroup%
+%    \pgfmath@x=#1pt\relax%
+%    \pgfmath@y=#2pt\relax%
+%    \advance\pgfmath@x by\pgfmath@y%
+%    \pgfmath@returnone\pgfmath@x%
+%  \endgroup%
+%}
 
 
 
@@ -804,7 +819,8 @@ RawTeX('\pgfmathdeclarefunction{add}{2}{%
         \edef\pgfmathresult{\pgfmath@tonumber{\pgfmath@x}}%
         \pgfmath@smuggleone\pgfmathresult%
     \endgroup%
-}');
+}'
+);
 
 ######################################################
 

@@ -2,14 +2,16 @@
 
 \usepackage{tikz}
 
-\newcommand{\calc}[3]{\csname #1\endcsname{#2}{#3}\pgfmathresult}
-
 \begin{document}
 
-\calc{pgfmathneg}{3}
+\noindent
+\pgfmathneg{3}\pgfmathresult \\
+\pgfmathadd{2}{6}\pgfmathresult \\
+\pgfmathsubtract{2}{6}\pgfmathresult \\
+\pgfmathsin{0.2}\pgfmathresult \\
 
 \begin{tikzpicture}
-    \draw (0,0) -- (3,0);
+    \draw[red] (-1,0) -- (3-1,0);
 \end{tikzpicture}
 
 \end{document}
