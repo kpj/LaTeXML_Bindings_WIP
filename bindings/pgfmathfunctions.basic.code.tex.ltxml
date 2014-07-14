@@ -45,128 +45,93 @@ sub pgfmathFactorial {
 
 DefMacroI('\pgfmathadd', '{}{}', sub {
     my ($gullet, $n1, $n2) = @_;
-    DefMacro('\pgfmathresult', ToString($n1) + ToString($n2)); });
-DefMacroI('\pgfmathadd@', '{}{}', sub {
-    my ($gullet, $n1, $n2) = @_;
-    return Tokens(T_CS('\pgfmathadd'), T_BEGIN, Expand($n1), T_END, T_BEGIN, Expand($n2), T_END); });
+    DefMacro('\pgfmathresult', ToString(Expand($n1)) + ToString(Expand($n2))); });
+Let('\pgfmathadd@', '\pgfmathadd');
 
 DefMacroI('\pgfmathsubtract', '{}{}', sub {
     my ($gullet, $n1, $n2) = @_;
-    DefMacro('\pgfmathresult', ToString($n1) - ToString($n2)); });
-DefMacroI('\pgfmathsubtract@', '{}{}', sub {
-    my ($gullet, $n1, $n2) = @_;
-    return Tokens(T_CS('\pgfmathsubtract'), T_BEGIN, Expand($n1), T_END, T_BEGIN, Expand($n2), T_END); });
+    DefMacro('\pgfmathresult', ToString(Expand($n1)) - ToString(Expand($n2))); });
+Let('\pgfmathsubtract@', '\pgfmathsubtract');
 
 DefMacroI('\pgfmathneg', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', -ToString($n)); });
-DefMacroI('\pgfmathneg@', '{}', sub {
-    my ($gullet, $n) = @_;
-    return Tokens(T_CS('\pgfmathneg'), T_BEGIN, Expand($n), T_END); });
+    DefMacro('\pgfmathresult', -ToString(Expand($n))); });
+Let('\pgfmathneg@', '\pgfmathneg');
 
 DefMacroI('\pgfmathmultiply', '{}{}', sub {
     my ($gullet, $n1, $n2) = @_;
-    DefMacro('\pgfmathresult', ToString($n1) * ToString($n2)); });
-DefMacroI('\pgfmathmultiply@', '{}{}', sub {
-    my ($gullet, $n1, $n2) = @_;
-    return Tokens(T_CS('\pgfmathmultiply'), T_BEGIN, Expand($n1), T_END, T_BEGIN, Expand($n2), T_END); });
+    DefMacro('\pgfmathresult', ToString(Expand($n1)) * ToString(Expand($n2))); });
+Let('\pgfmathmultiply@', '\pgfmathmultiply');
 
 DefMacroI('\pgfmathdivide', '{}{}', sub {
     my ($gullet, $n1, $n2) = @_;
-    DefMacro('\pgfmathresult', ToString($n1) / ToString($n2)); });
-DefMacroI('\pgfmathdivide@', '{}{}', sub {
-    my ($gullet, $n1, $n2) = @_;
-    return Tokens(T_CS('\pgfmathdivide'), T_BEGIN, Expand($n1), T_END, T_BEGIN, Expand($n2), T_END); });
+    DefMacro('\pgfmathresult', ToString(Expand($n1)) / ToString(Expand($n2))); });
+Let('\pgfmathdivide@', '\pgfmathdivide');
 
 DefMacroI('\pgfmathreciprocal', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', 1 / ToString($n)); });
-DefMacroI('\pgfmathreciprocal@', '{}', sub {
-    my ($gullet, $n) = @_;
-    return Tokens(T_CS('\pgfmathreciprocal'), T_BEGIN, Expand($n), T_END); });
+    DefMacro('\pgfmathresult', 1 / ToString(Expand($n))); });
+Let('\pgfmathreciprocal@', '\pgfmathreciprocal');
 
 DefMacroI('\pgfmathdiv', '{}{}', sub {
     my ($gullet, $n1, $n2) = @_;
-    DefMacro('\pgfmathresult', int(ToString($n1) / ToString($n2))); });
-DefMacroI('\pgfmathdiv@', '{}{}', sub {
-    my ($gullet, $n1, $n2) = @_;
-    return Tokens(T_CS('\pgfmathdiv'), T_BEGIN, Expand($n1), T_END, T_BEGIN, Expand($n2), T_END); });
+    DefMacro('\pgfmathresult', int(ToString(Expand($n1)) / ToString(Expand($n2)))); });
+Let('\pgfmathdiv@', '\pgfmathdiv');
 
 DefMacroI('\pgfmathmod', '{}{}', sub {
     my ($gullet, $n1, $n2) = @_;
     { use integer;    # very hacky solution (depends on implementation in C compiler)
-      DefMacro('\pgfmathresult', ToString($n1) % ToString($n2)); } });
-DefMacroI('\pgfmathmod@', '{}{}', sub {
-    my ($gullet, $n1, $n2) = @_;
-    return Tokens(T_CS('\pgfmathmod'), T_BEGIN, Expand($n1), T_END, T_BEGIN, Expand($n2), T_END); });
+      DefMacro('\pgfmathresult', ToString(Expand($n1)) % ToString(Expand($n2))); } });
+Let('\pgfmathmod@', '\pgfmathmod');
 
 DefMacroI('\pgfmathMod', '{}{}', sub {
     my ($gullet, $n1, $n2) = @_;
-    DefMacro('\pgfmathresult', ToString($n1) % ToString($n2)); });
-DefMacroI('\pgfmathMod@', '{}{}', sub {
-    my ($gullet, $n1, $n2) = @_;
-    return Tokens(T_CS('\pgfmathMod'), T_BEGIN, Expand($n1), T_END, T_BEGIN, Expand($n2), T_END); });
+    DefMacro('\pgfmathresult', ToString(Expand($n1)) % ToString(Expand($n2))); });
+Let('\pgfmathMod@', '\pgfmathMod');
 
 DefMacroI('\pgfmathabs', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', abs(ToString($n))); });
-DefMacroI('\pgfmathabs@', '{}', sub {
-    my ($gullet, $n) = @_;
-    return Tokens(T_CS('\pgfmathabs'), T_BEGIN, Expand($n), T_END); });
+    DefMacro('\pgfmathresult', abs(ToString(Expand($n)))); });
+Let('\pgfmathabs@', '\pgfmathabs');
 
 DefMacroI('\pgfmathe', undef, sub {
     DefMacro('\pgfmathresult', 2.718281828); });
-DefMacroI('\pgfmathe@', undef, sub {
-    return T_CS('\pgfmathe'); });
+Let('\pgfmathe@', '\pgfmathe');
 
 DefMacroI('\pgfmathln', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', log(ToString($n))); });    # log is the natural logarithm in perl
-DefMacroI('\pgfmathln@', '{}', sub {
-    my ($gullet, $n) = @_;
-    return Tokens(T_CS('\pgfmathln'), T_BEGIN, Expand($n), T_END); });
+    DefMacro('\pgfmathresult', log(ToString(Expand($n)))); });    # log is the natural logarithm in perl
+Let('\pgfmathln@', '\pgfmathln');
 
 DefMacroI('\pgfmathlog2', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', log(ToString($n) / log(2))); });
-DefMacroI('\pgfmathlog2@', '{}', sub {
-    my ($gullet, $n) = @_;
-    return Tokens(T_CS('\pgfmathlog2'), T_BEGIN, Expand($n), T_END); });
+    DefMacro('\pgfmathresult', log(ToString(Expand($n)) / log(2))); });
+Let('\pgfmathlog2@', '\pgfmathlog2');
 
 DefMacroI('\pgfmathlog10', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', log(ToString($n) / log(10))); });
-DefMacroI('\pgfmathlog10@', '{}', sub {
-    my ($gullet, $n) = @_;
-    return Tokens(T_CS('\pgfmathlog10'), T_BEGIN, Expand($n), T_END); });
+    DefMacro('\pgfmathresult', log(ToString(Expand($n)) / log(10))); });
+Let('\pgfmathlog10@', '\pgfmathlog10');
 
 DefMacroI('\pgfmathexp', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', exp(ToString($n))); });
-DefMacroI('\pgfmathexp@', '{}', sub {
-    my ($gullet, $n) = @_;
-    return Tokens(T_CS('\pgfmathexp'), T_BEGIN, Expand($n), T_END); });
+    DefMacro('\pgfmathresult', exp(ToString(Expand($n)))); });
+Let('\pgfmathexp@', '\pgfmathexp');
 
 DefMacroI('\pgfmathsqrt', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', sqrt(ToString($n))); });
-DefMacroI('\pgfmathsqrt@', '{}', sub {
-    my ($gullet, $n) = @_;
-    return Tokens(T_CS('\pgfmathsqrt'), T_BEGIN, Expand($n), T_END); });
+    DefMacro('\pgfmathresult', sqrt(ToString(Expand($n)))); });
+Let('\pgfmathsqrt@', '\pgfmathsqrt');
 
 DefMacroI('\pgfmathpow', '{}{}', sub {
     my ($gullet, $n1, $n2) = @_;
-    DefMacro('\pgfmathresult', ToString($n1)**ToString($n2)); });
-DefMacroI('\pgfmathpow@', '{}{}', sub {
-    my ($gullet, $n1, $n2) = @_;
-    return Tokens(T_CS('\pgfmathpow'), T_BEGIN, Expand($n1), T_END, T_BEGIN, Expand($n2), T_END); });
+    DefMacro('\pgfmathresult', ToString(Expand($n1))**ToString(Expand($n2))); });
+Let('\pgfmathpow@', '\pgfmathpow');
 
 DefMacroI('\pgfmathfactorial', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', pgfmathFactorial(ToString($n))); });
-DefMacroI('\pgfmathfactorial@', '{}', sub {
-    my ($gullet, $n) = @_;
-    return Tokens(T_CS('\pgfmathfactorial'), T_BEGIN, Expand($n), T_END); });
+    DefMacro('\pgfmathresult', pgfmathFactorial(ToString(Expand($n)))); });
+Let('\pgfmathfactorial@', '\pgfmathfactorial');
 
 ######################################################
 
