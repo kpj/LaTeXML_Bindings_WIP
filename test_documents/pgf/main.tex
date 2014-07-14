@@ -5,13 +5,30 @@
 \begin{document}
 
 \noindent
-\pgfmathneg{3}\pgfmathresult \\
 \pgfmathadd{2}{6}\pgfmathresult \\
 \pgfmathsubtract{2}{6}\pgfmathresult \\
+\pgfmathneg{-3}\pgfmathresult \\
+\pgfmathmultiply{2}{6}\pgfmathresult \\
+\pgfmathdivide{2}{6}\pgfmathresult \\
+\pgfmathreciprocal{3}\pgfmathresult \\
+\pgfmathdiv{2}{6}\pgfmathresult \\
+\pgfmathmod{-42}{5}\pgfmathresult \\
+\pgfmathMod{-42}{5}\pgfmathresult \\
+\pgfmathabs{-3}\pgfmathresult \\
+\pgfmathe\pgfmathresult \\
+\pgfmathln{5}\pgfmathresult \\
+\csname pgfmathlog2\endcsname{5}\pgfmathresult \\
+\csname pgfmathlog10\endcsname{5}\pgfmathresult \\
+\pgfmathexp{5}\pgfmathresult \\
+\pgfmathsqrt{5}\pgfmathresult \\
+\pgfmathpow{5}{3}\pgfmathresult \\
+\pgfmathfactorial{5}\pgfmathresult \\
+
+\noindent
 \pgfmathsin{0.2}\pgfmathresult \\
 
 \begin{tikzpicture}
-    \draw[red] (-1,0) -- (3-1,0);
+    \draw[red] (-1 + 2,0) -- (5 - 1,0);
 \end{tikzpicture}
 
 \end{document}
