@@ -1,0 +1,135 @@
+# -*- CPERL -*-
+# /=====================================================================\ #
+# | pgf.sty                                                             | #
+# | Implementation for LaTeXML                                          | #
+# |=====================================================================| #
+# | Part of LaTeXML:                                                    | #
+# |  Public domain software, produced as part of work done by the       | #
+# |  United States Government & not subject to copyright in the US.     | #
+# |---------------------------------------------------------------------| #
+# | Thanks to Kim Philipp Jablonski <kpjkpjkpjkpjkpjkpj@gmail.com>      | #
+# | of the arXMLiv group for initial implementation                     | #
+# |    http://arxmliv.kwarc.info/                                       | #
+# | Released under the Gnu Public License                               | #
+# | Released to the Public Domain                                       | #
+# |---------------------------------------------------------------------| #
+# | Bruce Miller <bruce.miller@nist.gov>                        #_#     | #
+# | http://dlmf.nist.gov/LaTeXML/                              (o o)    | #
+# \=========================================================ooo==U==ooo=/ #
+
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+use Math::Trig;
+
+InputDefinitions('pgfmathfunctions.trigonometric.code', type => 'tex', noltxml => 1);
+
+######################################################
+
+####################
+# Helper Functions #
+####################
+
+=pod
+## defined in Math::Trig
+use constant PI => 3.14159265358979;
+
+sub deg2rad {
+  return ($_[0] / 180) * PI;
+}
+
+sub rad2deg {
+  return ($_[0] / PI) * 180;
+}
+=cut
+
+##########
+# Macros #
+##########
+
+DefMacroI('\pgfmathpi', undef, sub {
+    DefMacro('\pgfmathresult', 3.141592654); });
+Let('\pgfmathpi@', '\pgfmathpi');
+
+# deprecated
+DefMacroI('\pgfmathradians', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', rad2deg(ToString($n))); });
+Let('\pgfmathradians@', '\pgfmathradians');
+
+DefMacroI('\pgfmathdeg', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', rad2deg(ToString($n))); });
+Let('\pgfmathdeg@', '\pgfmathdeg');
+
+DefMacroI('\pgfmathrad', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', deg2rad(ToString($n))); });
+Let('\pgfmathrad@', '\pgfmathrad');
+
+DefMacroI('\pgfmathsin', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', sin(deg2rad(ToString($n)))); });
+Let('\pgfmathsin@', '\pgfmathsin');
+
+DefMacroI('\pgfmathcos', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', cos(deg2rad(ToString($n)))); });
+Let('\pgfmathcos@', '\pgfmathcos');
+
+DefMacroI('\pgfmathsincos', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresulty', sin(deg2rad(ToString($n))));
+    DefMacro('\pgfmathresultx', cos(deg2rad(ToString($n)))); });
+Let('\pgfmathsincos@', '\pgfmathsincos');
+
+DefMacroI('\pgfmathtan', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', tan(deg2rad(ToString($n)))); });
+Let('\pgfmathtan@', '\pgfmathtan');
+
+DefMacroI('\pgfmathcosec', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', 1 / sin(deg2rad(ToString($n)))); });
+Let('\pgfmathcosec@', '\pgfmathcosec');
+
+DefMacroI('\pgfmathsec', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', 1 / cos(deg2rad(ToString($n)))); });
+Let('\pgfmathsec@', '\pgfmathsec');
+
+DefMacroI('\pgfmathcot', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', cos(deg2rad(ToString($n))) / sin(deg2rad(ToString($n)))); });
+Let('\pgfmathcot@', '\pgfmathcot');
+
+DefMacroI('\pgfmathasin', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', rad2deg(asin(ToString($n)))); });
+Let('\pgfmathasin@', '\pgfmathasin');
+
+DefMacroI('\pgfmathacos', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', rad2deg(acos(ToString($n)))); });
+Let('\pgfmathacos@', '\pgfmathacos');
+
+DefMacroI('\pgfmathatan', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', rad2deg(atan(ToString($n)))); });
+Let('\pgfmathatan@', '\pgfmathatan');
+
+# atan2(y, x)
+DefMacroI('\pgfmathatan2', '{}{}', sub {
+    my ($gullet, $y, $x) = @_;
+    DefMacro('\pgfmathresult', rad2deg(atan2(ToString($y), ToString($x)))); });
+Let('\pgfmathatan2@',   '\pgfmathatan2');
+Let('\pgfmathatantwo',  '\pgfmathatan2');
+Let('\pgfmathatantwo@', '\pgfmathatan2');
+
+######################################################
+
+1;
+
+# vim: ft=perl: noexpandtab:
