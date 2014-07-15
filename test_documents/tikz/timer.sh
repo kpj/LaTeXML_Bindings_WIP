@@ -13,6 +13,7 @@ function enableBindings {
         mv "$line" "${line%.not}"
     done
 }
+trap enableBindings 2
 
 function disableBindings {
     find "$bDir" -name "pgfmathfunctions*.ltxml" | while read line ; do
