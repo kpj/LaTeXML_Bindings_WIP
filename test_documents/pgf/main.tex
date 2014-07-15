@@ -4,6 +4,7 @@
 
 \begin{document}
 
+% pgfmathfunctions.basic.code.tex
 \noindent
 \pgfmathadd{2}{6}\pgfmathresult \\
 \pgfmathsubtract{2}{6}\pgfmathresult \\
@@ -24,6 +25,7 @@
 \pgfmathpow{5}{3}\pgfmathresult \\
 \pgfmathfactorial{5}\pgfmathresult \\
 
+% pgfmathfunctions.trigonometric.code.tex.ltxml
 \noindent
 \pgfmathpi\pgfmathresult \\
 \pgfmathdeg{0.2}\pgfmathresult \\
@@ -40,8 +42,17 @@
 \pgfmathatan{0.2}\pgfmathresult \\
 \pgfmathatantwo{0.2}{5}\pgfmathresult \\
 
-\begin{tikzpicture}
-    \draw[red] (-1 + 2,0) -- (5 - 1,0);
-\end{tikzpicture}
+% pgfmathfunctions.integerarithmetics.code.tex
+\noindent
+\pgfmathgcd{13}{377}\pgfmathresult \\
+\pgfmathisprime{1}\pgfmathresult \\
+\pgfmathisprime{2}\pgfmathresult \\
+\pgfmathisprime{3}\pgfmathresult \\
+\pgfmathisprime{4}\pgfmathresult \\
+\pgfmathisprime{13}\pgfmathresult \\
+\pgfmathisodd{9}\pgfmathresult \\
+\pgfmathisodd{12}\pgfmathresult \\
+\pgfmathiseven{9}\pgfmathresult \\
+\pgfmathiseven{12}\pgfmathresult \\
 
 \end{document}

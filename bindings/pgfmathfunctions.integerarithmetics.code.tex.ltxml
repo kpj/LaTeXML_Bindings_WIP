@@ -1,0 +1,75 @@
+# -*- CPERL -*-
+# /=====================================================================\ #
+# | pgfmathfunctions.integerarithmetics.code.tex                        | #
+# | Implementation for LaTeXML                                          | #
+# |=====================================================================| #
+# | Part of LaTeXML:                                                    | #
+# |  Public domain software, produced as part of work done by the       | #
+# |  United States Government & not subject to copyright in the US.     | #
+# |---------------------------------------------------------------------| #
+# | Thanks to Kim Philipp Jablonski <kpjkpjkpjkpjkpjkpj@gmail.com>      | #
+# | of the arXMLiv group for initial implementation                     | #
+# |    http://arxmliv.kwarc.info/                                       | #
+# | Released under the Gnu Public License                               | #
+# | Released to the Public Domain                                       | #
+# |---------------------------------------------------------------------| #
+# | Bruce Miller <bruce.miller@nist.gov>                        #_#     | #
+# | http://dlmf.nist.gov/LaTeXML/                              (o o)    | #
+# \=========================================================ooo==U==ooo=/ #
+
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+use Math::Trig;
+
+InputDefinitions('pgfmathfunctions.integerarithmetics.code', type => 'tex', noltxml => 1);
+
+######################################################
+
+####################
+# Helper Functions #
+####################
+
+# Euclid's algorithm
+sub pgfmathGCD {
+  my ($a, $b) = @_;
+  if ($b == 0) {
+    return $a; }
+  else {
+    return pgfmathGCD($b, $a % $b); } }
+
+# http://montreal.pm.org/tech/neil_kandalgaonkar.shtml
+sub pgfmathIsPrime {
+  return ((1 x shift) !~ /^1?$|^(11+?)\1+$/) ? 1 : 0 }
+
+##########
+# Macros #
+##########
+
+DefMacroI('\pgfmathgcd', '{}{}', sub {
+    my ($gullet, $n1, $n2) = @_;
+    DefMacro('\pgfmathresult', pgfmathGCD(ToString(Expand($n1)), ToString(Expand($n2)))); });
+Let('\pgfmathgcd@', '\pgfmathgcd');
+
+DefMacroI('\pgfmathisprime', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', pgfmathIsPrime(ToString(Expand($n)))); });
+Let('\pgfmathisprime@', '\pgfmathisprime');
+
+DefMacroI('\pgfmathisodd', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', (ToString(Expand($n)) % 2 == 0) ? 0 : 1); });
+Let('\pgfmathisodd@', '\pgfmathisodd');
+
+DefMacroI('\pgfmathiseven', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', (ToString(Expand($n)) % 2 == 0) ? 1 : 0); });
+Let('\pgfmathiseven@', '\pgfmathiseven');
+
+######################################################
+
+1;
+
+# vim: ft=perl: noexpandtab:
