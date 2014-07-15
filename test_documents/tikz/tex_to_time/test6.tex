@@ -1,142 +1,105 @@
-\documentclass{article}
+\documentclass[10pt]{article}
 \usepackage{tikz}
-% colors for the ruled rectangle
-\definecolor{color1}{RGB}{249,255,195}
-\definecolor{color2}{RGB}{251,245,160}
-% colors for the fulcrum
-\definecolor{color3}{RGB}{239,178,107}
-\definecolor{color4}{RGB}{214,96,0}
-% colors for the weights
-\definecolor{color5}{RGB}{191,203,224}
-\definecolor{color6}{RGB}{105,103,161}
-
-% A pic path for the weights
-\tikzset{
-Peso/.pic={
-  \coordinate (wll) at (-0.4cm,0);
-  \coordinate (wlr) at (0.4cm,0);
-  \coordinate (wul) at (-0.3cm,0.4cm);
-  \coordinate (wur) at (0.3cm,0.4cm);
-  \draw[fill=color5] 
-    (wll) -- (wlr) -- (wur) -- (wul) -- cycle;
-  \draw[fill=color6]
-    (wur) --
-    ++(-\Angle:6pt) --
-    ++(-75:0.4cm) --
-    (wlr) --
-    cycle;  
-  }
+%transforms all coordinates the same way when used (use it within a scope!)
+%(rotation is not 45 degress to avoid overlapping edges)
+% Input: point of origins x and y coordinate
+\newcommand{\myGlobalTransformation}[2]
+{
+    \pgftransformcm{1}{0}{0.4}{0.5}{\pgfpoint{#1cm}{#2cm}}
 }
 
-% counters to store the number of weights and the sum of
-% the given integers
-\newcounter{Number}
-\newcounter{Suma}
-
-% to perform a scaling along the x-axis (1cm=no scaling)
-\newlength\XFactor
-\setlength\XFactor{1cm}
-
-% the height of the rectangle
-\def\RectHt{1cm}
-% the angle for the 3D effect
-\def\Angle{20}
-% lengths controlling the help lines separation
-\def\Corr{1pt}
-\def\Gap{6pt}
-
-% the main environment
-\newenvironment{Balance}[1]
-{%
-  \medskip\par\noindent
-  \setcounter{Number}{0}%
-  \setcounter{Suma}{0}%
-  \begin{tikzpicture}[x=\XFactor]
-    \foreach \Valor in {#1}
-    {
-      \pic at (\Valor,\RectHt) {Peso};
-      \stepcounter{Number}%
-      \addtocounter{Suma}{\Valor}
-      \xdef\Steps{\Valor}
-    }
-    \def\RectWd{\numexpr\Steps+1\relax*\XFactor}%
-    \pgfmathsetmacro{\FulcrumCoord}{\theSuma/\theNumber}
-
-% The ruled rectangle
-    \coordinate (ll) at (0,0);%\node at ([xshift=-10pt]ll) {\FulcrumCoord};
-    \coordinate (ur) at (\RectWd,\RectHt);
-    \draw[fill=color1]
-      (ll) rectangle (ur);
-    \draw[fill=color2] 
-      (ur) -- 
-      ++(-\Angle:6pt) -- 
-      ++(0,-\RectHt) -- 
-      ++(-\RectWd,0) -- 
-      (ll) --
-      ++(\RectWd,0) --
-      cycle;   
-    \foreach \Valor in {1,...,\Steps}
-      \draw (\Valor,1) -- ++(0pt,-5pt) node[below] {\Valor};  
-    \draw (\RectWd,0) -- ++(-\Angle:6pt);
-
-% The fulcrum
-    \draw[fill=color3] 
-      (\FulcrumCoord,0) --
-      ++(240:1) --
-      ++(1,0) coordinate (aux) --
-      cycle;
-    \draw[fill=color4]  
-      (\FulcrumCoord,0) --
-      ++(-\Angle:6pt) --
-      ++(-60:1) --
-      ++(-1,0) --
-      ++(180-\Angle:6pt) --
-      ++(1,0) --
-      cycle;
-    \draw (aux) -- ++(-\Angle:6pt);
-    \coordinate (cotaFulc) 
-      at (\FulcrumCoord,\RectHt);
-    \draw[color4] 
-      (\FulcrumCoord,0) --
-      ++(0,2pt) 
-        node[above=-2pt] {\pgfmathprintnumber[precision=1]{\FulcrumCoord}};
+% draw a 4x4 helper grid in 3D
+% Input: point of origins x and y coordinate and additional drawing-parameters
+\newcommand{\gridThreeD}[3]
+{
+    \begin{scope}
+        \myGlobalTransformation{#1}{#2};
+        \draw [#3,step=2cm] grid (8,8);
+    \end{scope}
 }
-{\end{tikzpicture}\medskip\par\noindent}
 
-% the command to draw help lines
-\newcommand\Cotas[2][1]{
-\draw 
-  (\FulcrumCoord,\RectHt+#1\Corr+\number\numexpr#1-1\relax\Gap) -- 
-  ++(0,10pt);
-  \foreach \Valor in {#2}
-    {
-      \draw 
-        (\Valor,\RectHt+#1\Corr+\number\numexpr#1-1\relax\Gap) -- 
-          coordinate (cota\Valor) 
-        ++(0,10pt);
-      \draw[<->,>=latex,help lines] 
-        (cotaFulc|-cota\Valor) -- 
-          node[fill=white] {\footnotesize$\pgfmathparse{\Valor-\FulcrumCoord}%
-          \pgfmathprintnumber[precision=1]{\pgfmathresult}$} 
-        (cota\Valor);
-    }
+\tikzstyle myBG=[line width=3pt,opacity=1.0]
+
+% draws lines with white background to show which lines are closer to the
+% viewer (Hint: draw from bottom up and from back to front)
+%Input: start and end point
+\newcommand{\drawLinewithBG}[2]
+{
+    \draw[white,myBG]  (#1) -- (#2);
+    \draw[black,very thick] (#1) -- (#2);
 }
+
+% draws all horizontal graph lines within grid
+\newcommand{\graphLinesHorizontal}
+{
+    \drawLinewithBG{1,1}{7,1};
+    \drawLinewithBG{1,3}{7,3};
+    \drawLinewithBG{1,5}{7,5};
+    \drawLinewithBG{1,7}{7,7};
+}
+
+% draws all vertical graph lines within grid
+\newcommand{\graphLinesVertical}
+{
+    %swaps x and y coordinate (hence vertical lines):
+    \pgftransformcm{0}{1}{1}{0}{\pgfpoint{0cm}{0cm}}
+    \graphLinesHorizontal;
+}
+
+%draws nodes of the grid
+%Input: point of origins x and y coordinate
+\newcommand{\graphThreeDnodes}[2]
+{
+    \begin{scope}
+        \myGlobalTransformation{#1}{#2};
+        \foreach \x in {1,3,5,7} {
+            \foreach \y in {1,3,5,7} {
+                \node at (\x,\y) [circle,fill=black] {};
+                %this way circle of nodes will not be transformed
+            }
+        }
+    \end{scope}
+}
+
+
 \begin{document}
-\begin{flushleft}
-\begin{Balance}{3,4,8}
-  \Cotas{4,8}
-  \Cotas[2]{3}
-\end{Balance}
+\pagestyle{empty}
 
-\begin{Balance}{2,4,6,8,10}
-  \Cotas{4,8}
-  \Cotas[2]{2,10}
-\end{Balance}
 
-\begin{Balance}{1,4,5,8,10,12}
-  \Cotas{5,8}
-  \Cotas[2]{4,10}
-  \Cotas[3]{1,12}
-\end{Balance}
-\end{flushleft}
+\begin{tikzpicture}
+
+    %draws helper-grid:
+    \gridThreeD{0}{0}{black!50};
+    \gridThreeD{0}{4.25}{black!50};
+
+    %draws lower graph lines and those in z-direction:
+    \begin{scope}
+        \myGlobalTransformation{0}{0};
+        \graphLinesHorizontal;
+
+        %draws all graph lines in z-direction (reset transformation first!):
+        \foreach \x in {1,3,5,7} {
+            \foreach \y in {1,3,5,7} {
+                \node (thisNode) at (\x,\y) {};
+                {
+                    \pgftransformreset
+                    \draw[white,myBG]  (thisNode) -- ++(0,4.25);
+                    \draw[black,very thick] (thisNode) -- ++(0,4.25);
+                }
+            }
+        }
+    \end{scope}
+
+    %draws upper graph-lines:
+    \begin{scope}
+        \myGlobalTransformation{0}{4.25};
+        \graphLinesVertical;
+    \end{scope}
+
+    % draws all graph nodes:
+    \graphThreeDnodes{0}{0};
+    \graphThreeDnodes{0}{4.25};
+
+\end{tikzpicture}
+
 \end{document}
