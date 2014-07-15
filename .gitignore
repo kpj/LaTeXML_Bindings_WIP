@@ -1,4 +1,5 @@
 *.swp
+*.swo
 
 *.aux
 *.log
@@ -7,3 +8,8 @@
 *.html
 
 *.css
+*.bak
+
+*.olog
+*.tlog
+*.not
