@@ -26,6 +26,13 @@ def oprint(string):
 def now():
     return datetime.datetime.now().strftime('%m.%d.%Y_%H:%M:%S')
 
+def get_pgf_bindings():
+    res = []
+    for f in os.listdir('/home/knj1/Desktop/git_repo/bindings'):
+        if f.startswith('pgfmathfunctions.') and f.endswith('.code.tex.ltxml'):
+            res.append(f)
+    return res
+
 # read files
 for f in os.listdir(data_dir):
     if f.endswith('.tlog'):
@@ -94,4 +101,9 @@ if not os.path.isdir(result_dir):
     os.mkdir(result_dir)
 
 with open(os.path.join(result_dir, '%s|%s|results.txt' % (now(), data_dir[:-1])), 'w') as fd:
+    fd.write('Loaded pgf bindings:\n')
+    for b in sorted(get_pgf_bindings()):
+        fd.write(' > %s\n' % b)
+    fd.write('\n')
+
     fd.write(final_output)
