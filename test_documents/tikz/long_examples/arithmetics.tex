@@ -1,0 +1,13 @@
+\documentclass{article}
+
+\usepackage{tikz}
+
+\begin{document}
+
+\foreach \x in {1,...,100} {%
+    \foreach \y in {200,...,100} {%
+        \pgfmathadd{\x}{\y}
+    }
+}
+
+\end{document}

@@ -1,0 +1,12 @@
+\listfiles
+\documentclass{article}
+
+\usepackage{tikz}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=3,very thick]
+    \draw[color=red,domain=0:6.28,samples=200,smooth] plot (canvas polar cs:angle=\x r,radius={28-8*sin(3*\x r)});
+\end{tikzpicture}
+
+\end{document}
