@@ -2,10 +2,11 @@ set -e
 set -u
 
 
+[[ "$#" -eq 0 ]] && echo "Usage: $0 <dir/file> [<dir/file>]" && exit
+
 cwd="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$cwd"
 
-tDir="./complex_examples"
 bDir="/home/knj1/Desktop/git_repo/bindings"
 
 function enableBindings {
@@ -56,12 +57,15 @@ function testFile {
 #find "$tDir" -type f ! -name "*.tex" -delete
 
 # time it
-if [[ ( "$#" -eq 0 ) ]] ; then
-    find "$tDir" -name "*.tex" | while read line ; do
-        testFile "$line"
-    done
-else
-    for arg in "$@" ; do
+for arg in "$@" ; do
+    if [[ -d "$arg" ]] ; then
+        tDir="$arg"
+        find "$tDir" -name "*.tex" | while read line ; do
+            testFile "$line"
+        done
+    elif [[ -f "$arg" ]] ; then
         testFile "$arg"
-    done
-fi
+    else
+        echo "$0: cannot access $arg: No such file or directory"
+    fi
+done
