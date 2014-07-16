@@ -101,7 +101,7 @@ if not os.path.isdir(result_dir):
     os.mkdir(result_dir)
 
 with open(os.path.join(result_dir, '%s|%s|results.txt' % (now(), data_dir[:-1])), 'w') as fd:
-    fd.write('Loaded pgf bindings:\n')
+    fd.write('Loaded pgf-bindings:\n')
     for b in sorted(get_pgf_bindings()):
         fd.write(' > %s\n' % b)
     fd.write('\n')
