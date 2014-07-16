@@ -55,7 +55,7 @@ res = (min(deltas, key=lambda x: x[1])[1], readable(avg(nums)), max(deltas, key=
 # output results
 print('Time improvements using bindings')
 for f, r in deltas:
-    print('%s: %ss' % (f, r))
+    print(' > %s: %ss' % (f, r))
     
 print '--- overall statistics ---'
 print('min/avg/max/mdev = ' + '/'.join(res) + ' s')
