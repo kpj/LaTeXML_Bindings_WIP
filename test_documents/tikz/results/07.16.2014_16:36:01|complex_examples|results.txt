@@ -1,0 +1,18 @@
+Loaded pgf-bindings:
+ > pgfmathfunctions.basic.code.tex.ltxml
+ > pgfmathfunctions.integerarithmetics.code.tex.ltxml
+ > pgfmathfunctions.random.code.tex.ltxml
+ > pgfmathfunctions.round.code.tex.ltxml
+ > pgfmathfunctions.trigonometric.code.tex.ltxml
+
+Time improvements using bindings:
+ > egg: 0.00s (0.00%)
+ > circle_with_sine_radius: 8.67s (6.47%)
+ > circle_with_pi: 4.16s (2.45%)
+ > pythagoras: -0.21s (-0.43%)
+ > flower: -4.80s (-3.26%)
+ > rgb_mixing_circle: 5.90s (3.49%)
+ > noise_shaper_diagram: -0.22s (-0.21%)
+--- overall statistics ---
+min/avg/max/mdev = -4.80/1.93/8.67/4.22 s
+min/avg/max/mdev = -3.26/1.22/6.47/2.94 %
