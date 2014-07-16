@@ -33,7 +33,7 @@ function execute {
     outp=$((time $cmd) 2>&1)
     echo "$outp" > "$olog" # save output to log
 
-    if [[ $(echo "$outp" | grep 'Error') ]] ; then
+    if [[ $(echo "$outp" | grep '^Error:') ]] ; then
         echo 'error' # some fatal error occured in LaTeXML
     else
         echo "$outp" | grep -e 'real\s' -e 'user\s' -e 'sys\s' | tr '\t\n' ' \t' # print time
