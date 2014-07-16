@@ -1,0 +1,85 @@
+# -*- CPERL -*-
+# /=====================================================================\ #
+# | pgfmathfunctions.random.code.tex.ltxml                              | #
+# | Implementation for LaTeXML                                          | #
+# |=====================================================================| #
+# | Part of LaTeXML:                                                    | #
+# |  Public domain software, produced as part of work done by the       | #
+# |  United States Government & not subject to copyright in the US.     | #
+# |---------------------------------------------------------------------| #
+# | Thanks to Kim Philipp Jablonski <kpjkpjkpjkpjkpjkpj@gmail.com>      | #
+# | of the arXMLiv group for initial implementation                     | #
+# |    http://arxmliv.kwarc.info/                                       | #
+# | Released under the Gnu Public License                               | #
+# | Released to the Public Domain                                       | #
+# |---------------------------------------------------------------------| #
+# | Bruce Miller <bruce.miller@nist.gov>                        #_#     | #
+# | http://dlmf.nist.gov/LaTeXML/                              (o o)    | #
+# \=========================================================ooo==U==ooo=/ #
+
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+InputDefinitions('pgfmathfunctions.random.code', type => 'tex', noltxml => 1);
+
+######################################################
+
+####################
+# Helper Functions #
+####################
+
+sub pgfmathGetSeed {
+  return ToString(Expand(T_CS('\pgfmath@rnd@z')));
+}
+
+sub pgfmathTrim {
+  my ($str) = @_;
+  $str =~ s/^\s+//;
+  $str =~ s/\s+$//;
+  return $str;
+}
+
+##########
+# Macros #
+##########
+
+srand(pgfmathGetSeed());
+
+DefMacroI('\pgfmathrnd', undef, sub {
+    my ($gullet) = @_;
+    DefMacro('\pgfmathresult', rand(1)); });
+Let('\pgfmathrnd@', '\pgfmathrnd');
+
+DefMacroI('\pgfmathrand', undef, sub {
+    my ($gullet) = @_;
+    DefMacro('\pgfmathresult', 2 * rand(1) - 1); });
+Let('\pgfmathrand@', '\pgfmathrand');
+
+DefMacroI('\pgfmathrandom', '{}', sub {
+    my ($gullet, $ns) = @_;
+    $ns = ToString(Expand($ns));
+    my @vals = map { pgfmathTrim($_) } split(',', $ns);
+
+    my $res = 42;
+    if (scalar @vals == 2) {
+      $res = int(rand($vals[1] - $vals[0])) + $vals[0]; }
+    elsif (scalar @vals == 1) {
+      $res = int(rand($vals[0])); }
+    else {
+      $res = rand(1); }
+
+    DefMacro('\pgfmathresult', $res); });
+
+DefMacroI('\pgfmathrandominteger', 'DefToken {} {}', sub {
+    my ($gullet, $cs, $low, $high) = @_;
+    $low  = ToString($low);
+    $high = ToString($high);
+    DefMacroI($cs, undef, int(rand($high - $low)) + $low); });
+
+######################################################
+
+1;
+
+# vim: ft=perl: noexpandtab:
