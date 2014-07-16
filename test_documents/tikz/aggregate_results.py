@@ -51,7 +51,11 @@ def get_time(content):
     """
     pat = re.compile(r'.* bindings:.*' + time_type + r' ([^\s]+)\s.*')
     def parse_line(line):
-        return re.match(pat, line).group(1)
+        res = re.match(pat, line)
+        if res:
+            return re.match(pat, line).group(1)
+        else:
+            return None
 
     foo = content.split('\n')
     if len(foo) > 2:
@@ -61,11 +65,15 @@ def get_time(content):
 
 for f, fc in file_contents:
     res = get_time(fc)
-    if res[0]:
+    if res[0] and res[1]:
         times.append((f, get_time(fc)))
     else:
         oprint(' - Skipping %s...' % f)
         skipped = True
+
+if len(times) == 0:
+    oprint('All tlog-files skipped, aborting...')
+    sys.exit()
 
 # parse times
 def readable(t):

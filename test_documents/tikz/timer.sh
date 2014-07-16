@@ -1,6 +1,9 @@
-set -e
+#set -e
 set -u
 
+##
+# this script does not accept any errors produced by LaTeXML
+##
 
 [[ "$#" -eq 0 ]] && echo "Usage: $0 <dir/file> [<dir/file>]" && exit
 
@@ -29,7 +32,13 @@ function execute {
     #echo -e "\n> $cmd"
     outp=$((time $cmd) 2>&1)
     echo "$outp" > "$olog" # save output to log
-    echo "$outp" | grep -e 'real\s' -e 'user\s' -e 'sys\s' | tr '\t\n' ' \t' # print time
+
+    if [[ $(echo "$outp" | grep 'Error') ]] ; then
+        echo 'error' # some fatal error occured in LaTeXML
+    else
+        echo "$outp" | grep -e 'real\s' -e 'user\s' -e 'sys\s' | tr '\t\n' ' \t' # print time
+    fi
+
     echo
 }
 
