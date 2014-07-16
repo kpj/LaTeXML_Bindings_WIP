@@ -1,7 +1,7 @@
 import datetime, math, os, os.path, re
 
 
-data_dir = 'tex_to_time'
+data_dir = 'complex_examples'
 time_type = 'user'
 
 file_contents = []
