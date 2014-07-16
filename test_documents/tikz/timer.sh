@@ -5,7 +5,7 @@ set -u
 cwd="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$cwd"
 
-tDir="./tex_to_time"
+tDir="./complex_examples"
 bDir="/home/knj1/Desktop/git_repo/bindings"
 
 function enableBindings {
