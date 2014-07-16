@@ -25,7 +25,7 @@ def oprint(string):
     final_output += '%s\n' % string
 
 def now():
-    return datetime.datetime.now().strftime('%m.%d.%Y_%H:%M:%S')
+    return datetime.datetime.now().strftime('%Y.%m.%d_%H:%M:%S')
 
 def get_pgf_bindings():
     res = []
