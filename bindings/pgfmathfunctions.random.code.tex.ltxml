@@ -31,15 +31,13 @@ InputDefinitions('pgfmathfunctions.random.code', type => 'tex', noltxml => 1);
 ####################
 
 sub pgfmathGetSeed {
-  return ToString(Expand(T_CS('\pgfmath@rnd@z')));
-}
+  return ToString(Expand(T_CS('\pgfmath@rnd@z'))); }
 
 sub pgfmathTrim {
   my ($str) = @_;
   $str =~ s/^\s+//;
   $str =~ s/\s+$//;
-  return $str;
-}
+  return $str; }
 
 ##########
 # Macros #
