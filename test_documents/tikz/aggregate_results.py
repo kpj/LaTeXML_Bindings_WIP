@@ -1,8 +1,13 @@
-import datetime, math, os, os.path, re
+import datetime, math, os, os.path, re, sys
 
 
-data_dir = 'complex_examples'
-time_type = 'user'
+if len(sys.argv) != 2:
+    print('Usage: %s <dir>' % sys.argv[0])
+    sys.exit(1)
+
+data_dir = sys.argv[1]
+time_type = 'user' # CPU time in user-mode (of current process)
+skipped = False
 
 file_contents = []
 times = []
@@ -15,6 +20,10 @@ for f in os.listdir(data_dir):
         with open(os.path.join(data_dir, f), 'r') as fd:
             file_contents.append((f[:-5], fd.read()))
 
+if len(file_contents) == 0:
+    print('No tlog-files found, aborting...')
+    sys.exit()
+
 # extract times
 def get_time(content):
     """Returns tuple containing time with and without bindings
@@ -25,10 +34,18 @@ def get_time(content):
         return re.match(pat, line).group(1)
 
     foo = content.split('\n')
-    return (parse_line(foo[1]), parse_line(foo[2]))
+    if len(foo) > 2:
+        return (parse_line(foo[1]), parse_line(foo[2]))
+    else:
+        return (None, None)
 
 for f, fc in file_contents:
-    times.append((f, get_time(fc)))
+    res = get_time(fc)
+    if res[0]:
+        times.append((f, get_time(fc)))
+    else:
+        print(' - Skipping %s...' % f)
+        skipped = True
 
 # parse times
 def readable(t):
@@ -53,7 +70,7 @@ nums = [float(t) for f, t in deltas]
 res = (min(deltas, key=lambda x: x[1])[1], readable(avg(nums)), max(deltas, key=lambda x: x[1])[1], readable(mdev(nums)))
 
 # output results
-print('Time improvements using bindings')
+print(('\n' if skipped else '') + 'Time improvements using bindings')
 for f, r in deltas:
     print(' > %s: %ss' % (f, r))
     
