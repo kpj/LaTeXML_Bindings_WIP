@@ -13,7 +13,8 @@ result_dir = 'results'
 file_contents = []
 times = []
 deltas = []
-res = (0, 0, 0, 0) # min/avg/max/mdev
+res = (0, 0, 0, 0) # min/avg/max/mdev (absolute)
+resp = (0, 0, 0, 0) # min/avg/max/mdev (relative)
 
 # fubar functions
 final_output = ''
@@ -76,25 +77,36 @@ def str2time(string):
 
 def total_seconds(td):
     # because python >=2.7 is not available
-    return readable((td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / float(10**6))
+    if isinstance(td, datetime.timedelta):
+        return readable((td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / float(10**6)) # assuming nothing takes longer than a month
+    elif isinstance(td, datetime.datetime):
+        return 60 * float(td.strftime('%M')) + float(td.strftime('%S.%f')) # assuming nothing takes longer than a day
+    else:
+        return td
 
 for f, t in times:
-    deltas.append((f, total_seconds(str2time(t[0]) - str2time(t[1]))))
+    diff = total_seconds(str2time(t[0]) - str2time(t[1]))
+    perc = '%.2f%%' % (100.0 / total_seconds(str2time(t[0])) * float(diff))
+    deltas.append((f, diff, perc)) # (filename, absolute difference in seconds, relative difference in percent)
 
 # analyse results
 avg = lambda arr: sum(arr) / len(arr)
 mdev = lambda arr: math.sqrt(avg(map(lambda x: (x - avg(arr))**2, arr)))
 
-nums = [float(t) for f, t in deltas]
-res = (min(deltas, key=lambda x: x[1])[1], readable(avg(nums)), max(deltas, key=lambda x: x[1])[1], readable(mdev(nums)))
+nums = [float(t) for f, t, p in deltas]
+res = (min(deltas, key=lambda x: float(x[1]))[1], readable(avg(nums)), max(deltas, key=lambda x: float(x[1]))[1], readable(mdev(nums)))
+
+numsp = [float(p[:-1]) for f, t, p in deltas]
+resp = (min(deltas, key=lambda x: float(x[2][:-1]))[2][:-1], readable(avg(numsp)), max(deltas, key=lambda x: float(x[2][:-1]))[2][:-1], readable(mdev(numsp)))
 
 # output results
-oprint(('\n' if skipped else '') + 'Time improvements using bindings')
-for f, r in deltas:
-    oprint(' > %s: %ss' % (f, r))
+oprint(('\n' if skipped else '') + 'Time improvements using bindings:')
+for e in deltas:
+    oprint(' > %s: %ss (%s)' % e)
     
 oprint('--- overall statistics ---')
 oprint('min/avg/max/mdev = ' + '/'.join(res) + ' s')
+oprint('min/avg/max/mdev = ' + '/'.join(resp) + ' %')
 
 # save to file (say hello to awful filenames [-:)
 if not os.path.isdir(result_dir):
