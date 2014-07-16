@@ -10,7 +10,7 @@ set -u
 cwd="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$cwd"
 
-bDir="/home/knj1/Desktop/git_repo/bindings"
+bDir="../../bindings/"
 
 function enableBindings {
     find "$bDir" -name "pgfmathfunctions*.not" | while read line ; do

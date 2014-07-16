@@ -29,7 +29,8 @@ def now():
 
 def get_pgf_bindings():
     res = []
-    for f in os.listdir('/home/knj1/Desktop/git_repo/bindings'):
+    cwd = os.path.dirname(os.path.realpath(__file__))
+    for f in os.listdir(os.path.join(cwd, '../../bindings/')):
         if f.startswith('pgfmathfunctions.') and f.endswith('.code.tex.ltxml'):
             res.append(f)
     return res
