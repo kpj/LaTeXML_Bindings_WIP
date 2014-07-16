@@ -8,11 +8,23 @@ if len(sys.argv) != 2:
 data_dir = sys.argv[1]
 time_type = 'user' # CPU time in user-mode (of current process)
 skipped = False
+result_dir = 'results'
 
 file_contents = []
 times = []
 deltas = []
 res = (0, 0, 0, 0) # min/avg/max/mdev
+
+# fubar functions
+final_output = ''
+def oprint(string):
+    global final_output
+
+    print(string)
+    final_output += '%s\n' % string
+
+def now():
+    return datetime.datetime.now().strftime('%m.%d.%Y_%H:%M:%S')
 
 # read files
 for f in os.listdir(data_dir):
@@ -21,7 +33,7 @@ for f in os.listdir(data_dir):
             file_contents.append((f[:-5], fd.read()))
 
 if len(file_contents) == 0:
-    print('No tlog-files found, aborting...')
+    oprint('No tlog-files found, aborting...')
     sys.exit()
 
 # extract times
@@ -44,7 +56,7 @@ for f, fc in file_contents:
     if res[0]:
         times.append((f, get_time(fc)))
     else:
-        print(' - Skipping %s...' % f)
+        oprint(' - Skipping %s...' % f)
         skipped = True
 
 # parse times
@@ -70,9 +82,16 @@ nums = [float(t) for f, t in deltas]
 res = (min(deltas, key=lambda x: x[1])[1], readable(avg(nums)), max(deltas, key=lambda x: x[1])[1], readable(mdev(nums)))
 
 # output results
-print(('\n' if skipped else '') + 'Time improvements using bindings')
+oprint(('\n' if skipped else '') + 'Time improvements using bindings')
 for f, r in deltas:
-    print(' > %s: %ss' % (f, r))
+    oprint(' > %s: %ss' % (f, r))
     
-print '--- overall statistics ---'
-print('min/avg/max/mdev = ' + '/'.join(res) + ' s')
+oprint('--- overall statistics ---')
+oprint('min/avg/max/mdev = ' + '/'.join(res) + ' s')
+
+# save to file (say hello to awful filenames [-:)
+if not os.path.isdir(result_dir):
+    os.mkdir(result_dir)
+
+with open(os.path.join(result_dir, '%s|%s|results.txt' % (now(), data_dir[:-1])), 'w') as fd:
+    fd.write(final_output)
