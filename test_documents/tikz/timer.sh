@@ -62,9 +62,6 @@ function testFile {
     echo
 }
 
-# clean before use
-#find "$tDir" -type f ! -name "*.tex" -delete
-
 # time it
 for arg in "$@" ; do
     if [[ -d "$arg" ]] ; then
