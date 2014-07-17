@@ -76,6 +76,8 @@ DefMacroI('\pgfmathrandominteger', 'DefToken {} {}', sub {
     $high = ToString($high);
     DefMacroI($cs, undef, int(rand($high - $low)) + $low); });
 
+# TODO: implement lists and \def macros
+
 ######################################################
 
 1;
