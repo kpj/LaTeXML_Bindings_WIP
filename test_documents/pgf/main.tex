@@ -90,4 +90,21 @@
 \pgfmathrandominteger\myResult{100}{200}\myResult \\
 \pgfmathrandominteger\myOtherResult{200}{300}\myOtherResult \\
 
+% pgfmathfunctions.misc.code.tex
+\noindent
+\pgfmathparse{veclen(12,5)}\pgfmathresult \\
+\pgfmathparse{cosh(0.5)}\pgfmathresult \\
+\pgfmathparse{sinh(0.5)}\pgfmathresult \\
+\pgfmathparse{tanh(0.5)}\pgfmathresult \\
+\pgfmathscientific{1.23456789123}{4}\pgfmathresult \\
+\pgfmathparse{array({9,13,17,21},3)} \pgfmathresult \\
+\pgfmathparse{array({9,13,{17,34},21},2)} \pgfmathresult \\
+\pgfmathparse{dim({1,2,3})} \pgfmathresult \\
+\pgfmathparse{dim({{1,2,3},{4,5,6}})} \pgfmathresult \\
+\pgfmathparse{max(3,4,-2,250,-8,100)} \pgfmathresult \\
+%\pgfmathmax{3,4,-2}{250,-8,100}\pgfmathresult \\
+\pgfmathparse{min(3,4,-2,250,-8,100)} \pgfmathresult \\
+%\pgfmathmin{3,4,-2}{250,-8,100}\pgfmathresult \\
+
+
 \end{document}

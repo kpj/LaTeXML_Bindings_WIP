@@ -1,0 +1,108 @@
+# -*- CPERL -*-
+# /=====================================================================\ #
+# | pgfmathfunctions.misc.code.tex                                      | #
+# | Implementation for LaTeXML                                          | #
+# |=====================================================================| #
+# | Part of LaTeXML:                                                    | #
+# |  Public domain software, produced as part of work done by the       | #
+# |  United States Government & not subject to copyright in the US.     | #
+# |---------------------------------------------------------------------| #
+# | Thanks to Kim Philipp Jablonski <kpjkpjkpjkpjkpjkpj@gmail.com>      | #
+# | of the arXMLiv group for initial implementation                     | #
+# |    http://arxmliv.kwarc.info/                                       | #
+# | Released under the Gnu Public License                               | #
+# | Released to the Public Domain                                       | #
+# |---------------------------------------------------------------------| #
+# | Bruce Miller <bruce.miller@nist.gov>                        #_#     | #
+# | http://dlmf.nist.gov/LaTeXML/                              (o o)    | #
+# \=========================================================ooo==U==ooo=/ #
+
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+use Math::Trig;
+
+InputDefinitions('pgfmathfunctions.misc.code', type => 'tex', noltxml => 1);
+
+######################################################
+
+####################
+# Helper Functions #
+####################
+
+sub pgfmathParseArray {
+  my ($inp)    = @_;
+  my @out      = ();
+  my $cur      = '';
+  my $bracount = -1;
+  foreach (split('', $inp)) {
+    if ($_ eq '{') {
+      $bracount++; }
+    elsif ($_ eq '}') {
+      $bracount--; }
+    else {
+      $cur .= $_; }
+    if ($bracount == 0 && $cur ne '') {
+      push(@out, $cur);
+      $cur = ''; } }
+  return @out; }
+
+##########
+# Macros #
+##########
+
+DefMacroI('\pgfmathveclen', '{}{}', sub {
+    my ($gullet, $n1, $n2) = @_;
+    DefMacro('\pgfmathresult', sqrt(ToString(Expand($n1))**2 + ToString(Expand($n2))**2)); });
+Let('\pgfmathveclen@', '\pgfmathveclen');
+
+DefMacroI('\pgfmathcosh', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', cosh(ToString(Expand($n)))); });
+Let('\pgfmathcosh@', '\pgfmathcosh');
+
+DefMacroI('\pgfmathsinh', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', sinh(ToString(Expand($n)))); });
+Let('\pgfmathsinh@', '\pgfmathsinh');
+
+DefMacroI('\pgfmathtanh', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', tanh(ToString(Expand($n)))); });
+Let('\pgfmathtanh@', '\pgfmathtanh');
+
+DefMacroI('\pgfmathscientific', '{}{}', sub {
+    my ($gullet, $n1, $n2) = @_;
+    DefMacro('\pgfmathresult', sprintf("%.10g", ToString(Expand($n1)) . 'e' . ToString(Expand($n2)))); });
+
+# think about width, height, depth
+
+DefMacroI('\pgfmatharray', '{}{}', sub {
+    my ($gullet, $n1, $n2) = @_;
+    my @arr = pgfmathParseArray('{' . ToString(Expand($n1)) . '}');
+    DefMacro('\pgfmathresult', join(',', @arr[ToString(Expand($n2))])); });
+Let('\pgfmatharray@', '\pgfmatharray');
+
+DefMacroI('\pgfmathdim', '{}', sub {
+    my ($gullet, $n) = @_;
+    DefMacro('\pgfmathresult', scalar pgfmathParseArray(ToString(Expand($n)))); });
+Let('\pgfmathdim@', '\pgfmathdim');
+
+# "historical" reasons led to a weird argument number of \pgfmathmax and \pgfmathmin (TODO: implement them)
+DefMacroI('\pgfmathmax@', '{}', sub {
+    my ($gullet, $n) = @_;
+    my @arr = pgfmathParseArray('{' . ToString(Expand($n)) . '}');
+    DefMacro('\pgfmathresult', (sort { $b <=> $a } @arr)[0]); });
+
+DefMacroI('\pgfmathmin@', '{}', sub {
+    my ($gullet, $n) = @_;
+    my @arr = pgfmathParseArray('{' . ToString(Expand($n)) . '}');
+    DefMacro('\pgfmathresult', (sort { $a <=> $b } @arr)[0]); });
+
+######################################################
+
+1;
+
+# vim: ft=perl: noexpandtab:
