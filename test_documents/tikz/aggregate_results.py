@@ -36,10 +36,11 @@ def get_pgf_bindings():
     return res
 
 # read files
-for f in os.listdir(data_dir):
-    if f.endswith('.tlog'):
-        with open(os.path.join(data_dir, f), 'r') as fd:
-            file_contents.append((f[:-5], fd.read()))
+for root, sub, files in os.walk(data_dir):
+    for f in files:
+        if f.endswith('.tlog'):
+            with open(os.path.join(root, f), 'r') as fd:
+                file_contents.append((f[:-5], fd.read()))
 
 if len(file_contents) == 0:
     oprint('No tlog-files found, aborting...')
