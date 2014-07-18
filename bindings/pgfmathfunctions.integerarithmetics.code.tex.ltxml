@@ -48,22 +48,22 @@ sub pgfmathIsPrime {
 
 DefMacroI('\pgfmathgcd', '{}{}', sub {
     my ($gullet, $n1, $n2) = @_;
-    DefMacro('\pgfmathresult', pgfmathGCD(ToString(Expand($n1)), ToString(Expand($n2)))); });
+    DefMacroI('\pgfmathresult', undef, pgfmathGCD(ToString(Expand($n1)), ToString(Expand($n2)))); });
 Let('\pgfmathgcd@', '\pgfmathgcd');
 
 DefMacroI('\pgfmathisprime', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', pgfmathIsPrime(ToString(Expand($n)))); });
+    DefMacroI('\pgfmathresult', undef, pgfmathIsPrime(ToString(Expand($n)))); });
 Let('\pgfmathisprime@', '\pgfmathisprime');
 
 DefMacroI('\pgfmathisodd', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', (ToString(Expand($n)) % 2 == 0) ? 0 : 1); });
+    DefMacroI('\pgfmathresult', undef, (ToString(Expand($n)) % 2 == 0) ? 0 : 1); });
 Let('\pgfmathisodd@', '\pgfmathisodd');
 
 DefMacroI('\pgfmathiseven', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', (ToString(Expand($n)) % 2 == 0) ? 1 : 0); });
+    DefMacroI('\pgfmathresult', undef, (ToString(Expand($n)) % 2 == 0) ? 1 : 0); });
 Let('\pgfmathiseven@', '\pgfmathiseven');
 
 ######################################################

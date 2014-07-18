@@ -31,22 +31,22 @@ InputDefinitions('pgfmathfunctions.round.code', type => 'tex', noltxml => 1);
 DefMacroI('\pgfmathround', '{}', sub {
     my ($gullet, $n) = @_;
     $n = ToString(Expand($n));
-    DefMacro('\pgfmathresult', int($n + $n / abs($n * 2))); });
+    DefMacroI('\pgfmathresult', undef, int($n + $n / abs($n * 2))); });
 Let('\pgfmathround@', '\pgfmathround');
 
 DefMacroI('\pgfmathfloor', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', floor(ToString(Expand($n)))); });
+    DefMacroI('\pgfmathresult', undef, floor(ToString(Expand($n)))); });
 Let('\pgfmathfloor@', '\pgfmathfloor');
 
 DefMacroI('\pgfmathceil', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', ceil(ToString(Expand($n)))); });
+    DefMacroI('\pgfmathresult', undef, ceil(ToString(Expand($n)))); });
 Let('\pgfmathceil@', '\pgfmathceil');
 
 DefMacroI('\pgfmathint', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', int(ToString(Expand($n)))); });
+    DefMacroI('\pgfmathresult', undef, int(ToString(Expand($n)))); });
 Let('\pgfmathint@', '\pgfmathint');
 
 DefMacroI('\pgfmathfrac', '{}', sub {
@@ -56,7 +56,7 @@ DefMacroI('\pgfmathfrac', '{}', sub {
       $n =~ s/.*\./0\./; }
     else {
       $n = '0.0'; }
-    DefMacro('\pgfmathresult', $n); });
+    DefMacroI('\pgfmathresult', undef, $n); });
 Let('\pgfmathfrac@', '\pgfmathfrac');
 
 DefMacroI('\pgfmathreal', '{}', sub {
@@ -64,7 +64,7 @@ DefMacroI('\pgfmathreal', '{}', sub {
     $n = ToString(Expand($n));
     if (index($n, '.') == -1) {
       $n .= '.0'; }
-    DefMacro('\pgfmathresult', $n); });
+    DefMacroI('\pgfmathresult', undef, $n); });
 Let('\pgfmathreal@', '\pgfmathreal');
 
 ######################################################

@@ -47,12 +47,12 @@ srand(pgfmathGetSeed());
 
 DefMacroI('\pgfmathrnd', undef, sub {
     my ($gullet) = @_;
-    DefMacro('\pgfmathresult', rand(1)); });
+    DefMacroI('\pgfmathresult', undef, rand(1)); });
 Let('\pgfmathrnd@', '\pgfmathrnd');
 
 DefMacroI('\pgfmathrand', undef, sub {
     my ($gullet) = @_;
-    DefMacro('\pgfmathresult', 2 * rand(1) - 1); });
+    DefMacroI('\pgfmathresult', undef, 2 * rand(1) - 1); });
 Let('\pgfmathrand@', '\pgfmathrand');
 
 DefMacroI('\pgfmathrandom', '{}', sub {
@@ -68,7 +68,7 @@ DefMacroI('\pgfmathrandom', '{}', sub {
     else {
       $res = rand(1); }
 
-    DefMacro('\pgfmathresult', $res); });
+    DefMacroI('\pgfmathresult', undef, $res); });
 
 DefMacroI('\pgfmathrandominteger', 'DefToken {} {}', sub {
     my ($gullet, $cs, $low, $high) = @_;

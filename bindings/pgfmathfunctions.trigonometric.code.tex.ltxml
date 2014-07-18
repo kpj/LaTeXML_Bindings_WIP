@@ -50,80 +50,80 @@ sub rad2deg {
 ##########
 
 DefMacroI('\pgfmathpi', undef, sub {
-    DefMacro('\pgfmathresult', 3.141592654); });
+    DefMacroI('\pgfmathresult', undef, 3.141592654); });
 Let('\pgfmathpi@', '\pgfmathpi');
 
 # deprecated
 DefMacroI('\pgfmathradians', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', rad2deg(ToString(Expand($n)))); });
+    DefMacroI('\pgfmathresult', undef, rad2deg(ToString(Expand($n)))); });
 Let('\pgfmathradians@', '\pgfmathradians');
 
 DefMacroI('\pgfmathdeg', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', rad2deg(ToString(Expand($n)))); });
+    DefMacroI('\pgfmathresult', undef, rad2deg(ToString(Expand($n)))); });
 Let('\pgfmathdeg@', '\pgfmathdeg');
 
 DefMacroI('\pgfmathrad', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', deg2rad(ToString(Expand($n)))); });
+    DefMacroI('\pgfmathresult', undef, deg2rad(ToString(Expand($n)))); });
 Let('\pgfmathrad@', '\pgfmathrad');
 
 DefMacroI('\pgfmathsin', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', sin(deg2rad(ToString(Expand($n))))); });
+    DefMacroI('\pgfmathresult', undef, sin(deg2rad(ToString(Expand($n))))); });
 Let('\pgfmathsin@', '\pgfmathsin');
 
 DefMacroI('\pgfmathcos', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', cos(deg2rad(ToString(Expand($n))))); });
+    DefMacroI('\pgfmathresult', undef, cos(deg2rad(ToString(Expand($n))))); });
 Let('\pgfmathcos@', '\pgfmathcos');
 
 DefMacroI('\pgfmathsincos', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresulty', sin(deg2rad(ToString(Expand($n)))));
-    DefMacro('\pgfmathresultx', cos(deg2rad(ToString(Expand($n))))); });
+    DefMacroI('\pgfmathresulty', undef, sin(deg2rad(ToString(Expand($n)))));
+    DefMacroI('\pgfmathresultx', undef, cos(deg2rad(ToString(Expand($n))))); });
 Let('\pgfmathsincos@', '\pgfmathsincos');
 
 DefMacroI('\pgfmathtan', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', tan(deg2rad(ToString(Expand($n))))); });
+    DefMacroI('\pgfmathresult', undef, tan(deg2rad(ToString(Expand($n))))); });
 Let('\pgfmathtan@', '\pgfmathtan');
 
 DefMacroI('\pgfmathcosec', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', 1 / sin(deg2rad(ToString(Expand($n))))); });
+    DefMacroI('\pgfmathresult', undef, 1 / sin(deg2rad(ToString(Expand($n))))); });
 Let('\pgfmathcosec@', '\pgfmathcosec');
 
 DefMacroI('\pgfmathsec', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', 1 / cos(deg2rad(ToString(Expand($n))))); });
+    DefMacroI('\pgfmathresult', undef, 1 / cos(deg2rad(ToString(Expand($n))))); });
 Let('\pgfmathsec@', '\pgfmathsec');
 
 DefMacroI('\pgfmathcot', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', cos(deg2rad(ToString(Expand($n)))) / sin(deg2rad(ToString(Expand($n))))); });
+    DefMacroI('\pgfmathresult', undef, cos(deg2rad(ToString(Expand($n)))) / sin(deg2rad(ToString(Expand($n))))); });
 Let('\pgfmathcot@', '\pgfmathcot');
 
 DefMacroI('\pgfmathasin', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', rad2deg(asin(ToString(Expand($n))))); });
+    DefMacroI('\pgfmathresult', undef, rad2deg(asin(ToString(Expand($n))))); });
 Let('\pgfmathasin@', '\pgfmathasin');
 
 DefMacroI('\pgfmathacos', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', rad2deg(acos(ToString(Expand($n))))); });
+    DefMacroI('\pgfmathresult', undef, rad2deg(acos(ToString(Expand($n))))); });
 Let('\pgfmathacos@', '\pgfmathacos');
 
 DefMacroI('\pgfmathatan', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacro('\pgfmathresult', rad2deg(atan(ToString(Expand($n))))); });
+    DefMacroI('\pgfmathresult', undef, rad2deg(atan(ToString(Expand($n))))); });
 Let('\pgfmathatan@', '\pgfmathatan');
 
 # atan2(y, x)
 DefMacroI('\pgfmathatan2', '{}{}', sub {
     my ($gullet, $y, $x) = @_;
-    DefMacro('\pgfmathresult', rad2deg(atan2(ToString(Expand($y)), ToString(Expand($x))))); });
+    DefMacroI('\pgfmathresult', undef, rad2deg(atan2(ToString(Expand($y)), ToString(Expand($x))))); });
 Let('\pgfmathatan2@',   '\pgfmathatan2');
 Let('\pgfmathatantwo',  '\pgfmathatan2');
 Let('\pgfmathatantwo@', '\pgfmathatan2');
