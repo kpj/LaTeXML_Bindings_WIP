@@ -55,27 +55,27 @@ sub pgfmathParseArray {
 
 DefMacroI('\pgfmathveclen', '{}{}', sub {
     my ($gullet, $n1, $n2) = @_;
-    DefMacroI('\pgfmathresult', undef, sqrt(ToString(Expand($n1))**2 + ToString(Expand($n2))**2)); });
+    DefMacroI('\pgfmathresult', undef, pgfmathFormatNumber(sqrt(ToString(Expand($n1))**2 + ToString(Expand($n2))**2))); });
 Let('\pgfmathveclen@', '\pgfmathveclen');
 
 DefMacroI('\pgfmathcosh', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacroI('\pgfmathresult', undef, cosh(ToString(Expand($n)))); });
+    DefMacroI('\pgfmathresult', undef, pgfmathFormatNumber(cosh(ToString(Expand($n))))); });
 Let('\pgfmathcosh@', '\pgfmathcosh');
 
 DefMacroI('\pgfmathsinh', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacroI('\pgfmathresult', undef, sinh(ToString(Expand($n)))); });
+    DefMacroI('\pgfmathresult', undef, pgfmathFormatNumber(sinh(ToString(Expand($n))))); });
 Let('\pgfmathsinh@', '\pgfmathsinh');
 
 DefMacroI('\pgfmathtanh', '{}', sub {
     my ($gullet, $n) = @_;
-    DefMacroI('\pgfmathresult', undef, tanh(ToString(Expand($n)))); });
+    DefMacroI('\pgfmathresult', undef, pgfmathFormatNumber(tanh(ToString(Expand($n))))); });
 Let('\pgfmathtanh@', '\pgfmathtanh');
 
 DefMacroI('\pgfmathscientific', '{}{}', sub {
     my ($gullet, $n1, $n2) = @_;
-    DefMacroI('\pgfmathresult', undef, sprintf("%.10g", ToString(Expand($n1)) . 'e' . ToString(Expand($n2)))); });
+    DefMacroI('\pgfmathresult', undef, pgfmathFormatNumber(sprintf("%.10g", ToString(Expand($n1)) . 'e' . ToString(Expand($n2))))); });
 
 # think about width, height, depth
 
