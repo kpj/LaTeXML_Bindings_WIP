@@ -1,0 +1,34 @@
+\documentclass{article}
+
+\usepackage{ifthen}
+
+\begin{document}
+
+\noindent
+23 \ifthenelse{\isodd{23}}{is odd}{is even} \\
+42 \ifthenelse{\isodd{42}}{is odd}{is even} \\
+\ifthenelse{\isodd{23} \and \not \( 1 = 2 \) \and \( 3 > 2 \or 4 = 2 \) }{foo}{bar} \\
+\textbackslash foobar \ifthenelse{\isundefined{\foobar}}{is undefined}{is defined} \\
+\textbackslash string \ifthenelse{\isundefined{\string}}{is undefined}{is defined} \\
+
+\newboolean{myBool}
+\setboolean{myBool}{true}
+\noindent
+myBool is \ifthenelse{\boolean{myBool}}{true}{false} \\
+\setboolean{myBool}{false}
+myBool is \ifthenelse{\boolean{myBool}}{true}{false} \\
+\newboolean{myOtherBool}
+\setboolean{myOtherBool}{true}
+myOtherBool is \ifthenelse{\boolean{myOtherBool}}{true}{false} \\
+myBool $\&\&$ myOtherBool is \ifthenelse{\boolean{myBool} \and \boolean{myOtherBool}}{true}{false} \\
+myBool $|$$|$ myOtherBool is \ifthenelse{\boolean{myBool} \or \boolean{myOtherBool}}{true}{false} \\
+
+\noindent
+\ifthenelse{\equal{hello}{you}}{yay}{nay}
+\ifthenelse{\equal{hello}{hello}}{yay}{nay}
+\ifthenelse{1 = 1 \and \equal{hello}{hello}}{yay}{nay}
+\ifthenelse{1 = 1 \and \equal{hello}{hello} \or 2 < -1}{yay}{nay}
+\def\tok1{horray} \ifthenelse{\equal{\tok1}{horray}}{YAY}{NAY}
+\ifthenelse{\equal{\tok1}{\LaTeX}}{YAY}{NAY}
+
+\end{document}

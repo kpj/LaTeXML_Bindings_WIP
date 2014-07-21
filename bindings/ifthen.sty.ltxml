@@ -1,0 +1,140 @@
+# -*- CPERL -*-
+# /=====================================================================\ #
+# | ifthen.sty                                                            | #
+# | Implementation for LaTeXML                                          | #
+# |=====================================================================| #
+# | Part of LaTeXML:                                                    | #
+# |  Public domain software, produced as part of work done by the       | #
+# |  United States Government & not subject to copyright in the US.     | #
+# |---------------------------------------------------------------------| #
+# | Thanks to Kim Philipp Jablonski <kpjkpjkpjkpjkpjkpj@gmail.com>      | #
+# | of the arXMLiv group for initial implementation                     | #
+# |    http://arxmliv.kwarc.info/                                       | #
+# | Released under the Gnu Public License                               | #
+# | Released to the Public Domain                                       | #
+# |---------------------------------------------------------------------| #
+# | Bruce Miller <bruce.miller@nist.gov>                        #_#     | #
+# | http://dlmf.nist.gov/LaTeXML/                              (o o)    | #
+# \=========================================================ooo==U==ooo=/ #
+
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+######################################################
+
+####################
+# Helper Functions #
+####################
+
+# return ($res, $len)
+sub ifthenParseEqual {
+  my ($expr, $pos) = @_;
+  my ($res, $len) = ('', 0);
+  my ($bracount, $cur, @out) = (0, '', ());
+
+  $expr = substr($expr, $pos + 6);    # remove '^.*?\equal'
+  print "> Parsing: '$expr'\n";
+
+  foreach (split('', $expr)) {
+    if ($_ eq '{') {
+      $bracount++; }
+    elsif ($_ eq '}') {
+      $bracount--; }
+    else {
+      $cur .= $_; }
+    if ($bracount == 0 && $cur ne '') {
+      push(@out, $cur);
+      print "> Added: '$cur'\n";
+      $cur = ''; }
+    if (scalar @out == 2) {
+      last; } }
+  my ($first, $second) = @out;
+
+  $res = (ToString(Expand(Tokenize($first))) eq ToString(Expand(Tokenize($second)))) ? 1 : 0;
+  $len = 10 + length($first . $second);
+
+  print "> Result: '$res'\n";
+  print "> Length: '$len'\n";
+
+  return ($res, $len); }
+
+# 1 -> true | 0 -> false
+sub ifthenEvaluate {
+  my ($expr) = @_;
+  print "\n\n";
+
+  print "Evaluating: '" . $expr . "'\n";
+
+  $expr =~ s/\\isodd{(.*?)}/($1 % 2 == 0)?0:1/eg;
+  $expr =~ s/\\isundefined{(.*?)}/(isDefinable(T_CS($1)))?1:0/eg;
+  $expr =~ s/\\boolean{(.*?)}/ToString(Expand(Tokens(T_CS('\\if' . $1), Tokenize('1'), T_CS('\else'), Tokenize('0'), T_CS('\fi'))))/eg;
+
+  print "Executed functions: '" . $expr . "'\n";
+
+  my $pos = index($expr, '\\equal');
+  while ($pos != -1) {
+    my ($res, $len) = ifthenParseEqual($expr, $pos);
+    print ">> $expr - $len chars, starting at $pos\n";
+    substr($expr, $pos, $len) = '';    # remove \equal{..}{..}
+    substr($expr, $pos, 0) = $res;     # replace with new result
+    $pos = index($expr, '\\equal'); }
+
+  print "Handled \\equal{}{}: '" . $expr . "'\n";
+
+  $expr =~ s/\\and/&&/g;
+  $expr =~ s/\\AND/&&/g;
+  $expr =~ s/\\or/||/g;
+  $expr =~ s/\\OR/||/g;
+  $expr =~ s/\\not/!/g;
+  $expr =~ s/\\NOT/!/g;
+  $expr =~ s/\\\)/)/g;
+  $expr =~ s/\\\(/(/g;
+
+  print "Replaced connectives: '" . $expr . "'\n";
+
+  $expr =~ s/=/==/g;
+
+  print "Fixed atomic propositions: '" . $expr . "'\n";
+
+  print "\n\n";
+  my $res = eval $expr;    # surrounding $expr with {..} does weird stuff...
+  if ($@) { Error('foo', undef, undef, "ifthen conditional was errorneous"); }
+  return $res; }
+
+##########
+# Macros #
+##########
+
+DefMacro('\ifthenelse{}{}{}', sub {
+    my ($gullet, $condition, $then, $else) = @_;
+    if (ifthenEvaluate(ToString($condition)) == 1) {
+      return $then; }
+    else {
+      return $else; } });
+
+DefMacro('\newboolean{}', sub {
+    my ($gullet, $name) = @_;
+    my $cs = T_CS('\if' . ToString($name));
+    if (!isDefinable($cs)) {
+      Error('ignore', $cs, $gullet,
+        "Ignoring redefinition of boolean $name (ifthen package)");
+      return; }
+    return Tokens(T_CS('\newif'), $cs) });
+
+DefMacro('\provideboolean{}', sub {
+    my ($gullet, $name) = @_;
+    my $cs = T_CS('\if' . ToString($name));
+    return unless isDefinable($cs);
+    return Tokens(T_CS('\newif'), $cs) });
+
+DefMacro('\setboolean{}{}', sub {
+    my ($gullet, $name, $value) = @_;
+    return T_CS('\\' . ToString($name) . ToString($value)); });
+
+######################################################
+
+1;
+
+# vim: ft=perl: noexpandtab:
