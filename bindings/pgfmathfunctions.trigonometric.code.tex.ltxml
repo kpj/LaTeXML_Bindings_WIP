@@ -22,8 +22,6 @@ use strict;
 use warnings;
 use LaTeXML::Package;
 
-use Math::Trig;
-
 InputDefinitions('pgfmathfunctions.trigonometric.code', type => 'tex', noltxml => 1);
 
 ######################################################
@@ -32,7 +30,6 @@ InputDefinitions('pgfmathfunctions.trigonometric.code', type => 'tex', noltxml =
 # Helper Functions #
 ####################
 
-=pod
 ## defined in Math::Trig
 use constant PI => 3.14159265358979;
 
@@ -43,7 +40,6 @@ sub deg2rad {
 sub rad2deg {
   return ($_[0] / PI) * 180;
 }
-=cut
 
 ##########
 # Macros #

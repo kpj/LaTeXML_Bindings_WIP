@@ -22,8 +22,6 @@ use strict;
 use warnings;
 use LaTeXML::Package;
 
-use Math::Trig;
-
 InputDefinitions('pgfmathfunctions.misc.code', type => 'tex', noltxml => 1);
 
 ######################################################

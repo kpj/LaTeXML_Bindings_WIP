@@ -26,6 +26,12 @@ InputDefinitions('pgfmath.code', type => 'tex', noltxml => 1);
 
 ######################################################
 
+##################
+# Needed Imports #
+##################
+
+use POSIX;
+
 ####################
 # Helper Functions #
 ####################

@@ -22,8 +22,6 @@ use strict;
 use warnings;
 use LaTeXML::Package;
 
-use POSIX;
-
 InputDefinitions('pgfmathfunctions.round.code', type => 'tex', noltxml => 1);
 
 ######################################################
