@@ -30,11 +30,10 @@ function execute {
     local olog="$2"
 
     #echo -e "\n> $cmd"
-    outp=$((time $cmd) 2>&1)
-    echo "$outp" > "$olog" # save output to log
+    local outp=$((time $cmd) 2>&1 | tee -a "$olog")
 
     if [[ $(echo "$outp" | grep '^Error:') ]] ; then
-        echo 'error' # some fatal error occured in LaTeXML
+        echo 'error' # some error occured in LaTeXML
     else
         echo "$outp" | grep -e 'real\s' -e 'user\s' -e 'sys\s' | tr '\t\n' ' \t' # print time
     fi
@@ -43,21 +42,25 @@ function execute {
 }
 
 function testFile {
-    tex_file="$1"
-    lml="latexml --path=$bDir --dest=${tex_file/%tex/xml} $tex_file"
+    local tex_file="$1"
+    local time_log="${tex_file/%tex/tlog}"
+    local output_log="${tex_file/%tex/olog}"
+    local lml="latexml --path=$bDir --dest=${tex_file/%tex/xml} $tex_file"
 
-    exec > >(tee ${tex_file/%tex/tlog}) # print to stdout and log
+    exec > >(tee "$time_log") # print to stdout and log
 
-
+    rm -f "$output_log"
     echo "$tex_file"
 
     disableBindings
     echo -ne "Without bindings: "
-    execute "$lml" "${tex_file/%tex/olog}"
+    echo -ne "####################\n# Without bindings #\n####################\n" > "$output_log"
+    execute "$lml" "$output_log"
 
     enableBindings
     echo -ne "With bindings:\t  "
-    execute "$lml" "${tex_file/%tex/olog}"
+    echo -ne "\n\n#################\n# With bindings #\n#################\n" >> "$output_log"
+    execute "$lml" "$output_log"
 
     echo
 }
@@ -65,7 +68,7 @@ function testFile {
 # time it
 for arg in "$@" ; do
     if [[ -d "$arg" ]] ; then
-        tDir="$arg"
+        local tDir="$arg"
         find "$tDir" -name "*.tex" | while read line ; do
             testFile "$line"
         done
