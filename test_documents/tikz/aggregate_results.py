@@ -82,15 +82,22 @@ def readable(t):
     return '%.2f' % t
 
 def str2time(string):
-    frmt = '%Mm%S.%fs'
-    return datetime.datetime.strptime(string, frmt)
+    def m2hm(mins):
+        mins = int(mins)
+        return '%i:%i' % (int(mins / 60), mins % 60)
+    foo = string.split('m')
+    res = m2hm(foo[0])
+    tstr = '%sm%s' % (res, foo[1])
+
+    frmt = '%H:%Mm%S.%fs'
+    return datetime.datetime.strptime(tstr, frmt)
 
 def total_seconds(td):
     # because python >=2.7 is not available
     if isinstance(td, datetime.timedelta):
-        return readable((td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / float(10**6)) # assuming nothing takes longer than a month
+        return readable((td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / float(10**6))
     elif isinstance(td, datetime.datetime):
-        return 60 * float(td.strftime('%M')) + float(td.strftime('%S.%f')) # assuming nothing takes longer than a day
+        return 3600 * float(td.strftime('%H')) + 60 * float(td.strftime('%M')) + float(td.strftime('%S.%f'))
     else:
         return td
 
