@@ -1,0 +1,19 @@
+Loaded pgf-bindings:
+ > pgfmathfunctions.basic.code.tex.ltxml
+ > pgfmathfunctions.integerarithmetics.code.tex.ltxml
+ > pgfmathfunctions.misc.code.tex.ltxml
+ > pgfmathfunctions.random.code.tex.ltxml
+ > pgfmathfunctions.round.code.tex.ltxml
+ > pgfmathfunctions.trigonometric.code.tex.ltxml
+
+Time improvements using bindings:
+ > dipolar_magnetic_field: 652.40s (7.91%)
+ > logarithmic_spiral: 280.44s (28.21%)
+ > plane_section_of_cylinder: 123.30s (7.23%)
+ > pompeii_mosaic: 99.01s (6.53%)
+ > rhodonea_curve: 1448.91s (7.52%)
+ > circle_with_sine_radius: 8.97s (6.90%)
+ > ford_circle: 0.62s (1.65%)
+--- overall statistics ---
+min/avg/max/mdev = 0.62/373.38/1448.91/485.92 s
+min/avg/max/mdev = 1.65/9.42/28.21/7.92 %
