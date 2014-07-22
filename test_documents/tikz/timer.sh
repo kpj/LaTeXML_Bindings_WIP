@@ -68,7 +68,7 @@ function testFile {
 # time it
 for arg in "$@" ; do
     if [[ -d "$arg" ]] ; then
-        local tDir="$arg"
+        tDir="$arg"
         find "$tDir" -name "*.tex" | while read line ; do
             testFile "$line"
         done
