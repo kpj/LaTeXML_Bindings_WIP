@@ -4,7 +4,6 @@
 
 \begin{document}
 
-%\noindent
 \def\foo{23}
 23 \ifthenelse{\isodd{\foo}}{is odd}{is even} \\
 42 \ifthenelse{\isodd{42}}{is odd}{is even} \\
@@ -16,7 +15,6 @@
 \textbackslash foobar \ifthenelse{\isundefined{\foobar}}{is undefined}{is defined} \\
 ! \textbackslash string \ifthenelse{\not \isundefined{\string}}{is undefined}{is defined} \\
 %
-%\noindent
 21 = 21 : \ifthenelse{21 = 21}{true}{false} \\
 42 $>$ 21 : \ifthenelse{42 > 21}{true}{false} \\
 -3 $<$ 21 : \ifthenelse{-3 < 21}{true}{false} \\
@@ -24,19 +22,17 @@
 1 = 2 \&\& 2 = 2 : \ifthenelse{1 = 2 \and 2 = 2}{true}{false} \\
 1 = 2 $|$$|$ ! 2 = 2 : \ifthenelse{1 = 2 \or \not 2 = 2}{true}{false} \\
 %
-%\newboolean{myBool}
-%\setboolean{myBool}{true}
-%\noindent
-%myBool is \ifthenelse{\boolean{myBool}}{true}{false} \\
-%\setboolean{myBool}{false}
-%myBool is \ifthenelse{\boolean{myBool}}{true}{false} \\
-%\newboolean{myOtherBool}
-%\setboolean{myOtherBool}{true}
-%myOtherBool is \ifthenelse{\boolean{myOtherBool}}{true}{false} \\
-%myBool $\&\&$ myOtherBool is \ifthenelse{\boolean{myBool} \and \boolean{myOtherBool}}{true}{false} \\
-%myBool $|$$|$ myOtherBool is \ifthenelse{\boolean{myBool} \or \boolean{myOtherBool}}{true}{false} \\
+\newboolean{myBool}
+\setboolean{myBool}{true}
+myBool is \ifthenelse{\boolean{myBool}}{true}{false} \\
+\setboolean{myBool}{false}
+myBool is \ifthenelse{\boolean{myBool}}{true}{false} \\
+\newboolean{myOtherBool}
+\setboolean{myOtherBool}{true}
+myOtherBool is \ifthenelse{\boolean{myOtherBool}}{true}{false} \\
+myBool $\&\&$ myOtherBool is \ifthenelse{\boolean{myBool} \and \boolean{myOtherBool}}{true}{false} \\
+myBool $|$$|$ myOtherBool is \ifthenelse{\boolean{myBool} \or \boolean{myOtherBool}}{true}{false} \\
 %
-%\noindent
 \ifthenelse{\equal{hello}{you}}{yay}{nay}
 \ifthenelse{\equal{hello}{hello}}{yay}{nay}
 \ifthenelse{\not \equal{hello}{you}}{yay}{nay}
