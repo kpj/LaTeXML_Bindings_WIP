@@ -86,27 +86,20 @@ DefMacroI('\ifthenParseExpression', 'RequiredKeyVals {}', sub {
     my $catc = ($tok->unlist)[0]->getCatcode;
     if ($catc == 12) {
       $tok = ToString($tok);
-      if ($tok eq '=') {
+      if (index('=<>', $tok) != -1) {
         my $num = ToString($keyvalgetter->getValue('num'));
         $keyval = ifthenDeleteKeyVals('num', $keyval);
         $keyval = ifthenExtendKeyVals('firstnum', $num, $keyval);
 
-        $keyval = ifthenExtendKeyVals('comparator', 'eq', $keyval);
-        print "Found equal sign!\n"; }
-      elsif ($tok eq '<') {
-        my $num = ToString($keyvalgetter->getValue('num'));
-        $keyval = ifthenDeleteKeyVals('num', $keyval);
-        $keyval = ifthenExtendKeyVals('firstnum', $num, $keyval);
-
-        $keyval = ifthenExtendKeyVals('comparator', 'lt', $keyval);
-        print "Found less than sign!\n"; }
-      elsif ($tok eq '>') {
-        my $num = ToString($keyvalgetter->getValue('num'));
-        $keyval = ifthenDeleteKeyVals('num', $keyval);
-        $keyval = ifthenExtendKeyVals('firstnum', $num, $keyval);
-
-        $keyval = ifthenExtendKeyVals('comparator', 'gt', $keyval);
-        print "Found greater than sign!\n"; }
+        if ($tok eq '=') {
+          $keyval = ifthenExtendKeyVals('comparator', 'eq', $keyval);
+          print "Found equal sign!\n"; }
+        elsif ($tok eq '<') {
+          $keyval = ifthenExtendKeyVals('comparator', 'lt', $keyval);
+          print "Found less than sign!\n"; }
+        elsif ($tok eq '>') {
+          $keyval = ifthenExtendKeyVals('comparator', 'gt', $keyval);
+          print "Found greater than sign!\n"; } }
       else {
         my $num = ToString($keyvalgetter->getValue('num'));
         $keyval = ifthenDeleteKeyVals('num', $keyval);
