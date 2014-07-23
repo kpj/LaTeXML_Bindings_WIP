@@ -73,6 +73,7 @@ sub ifthenOr {
 ##########
 
 DefMacro('\ifthenelse{}{}{}', '\edef\ifthenResult{\ifthenParseExpression{negate=false} #1\ifthenStopExpressionParser}\typeout{Result: \ifthenResult}\expandafter\ifx\ifthenResult #2 \else #3 \fi');
+DefMacro('\whiledo{}{}', '\ifthenelse{#1}{#2\whiledo{#1}{#2}}{}');
 
 DefMacroI('\ifthenParseExpression', 'RequiredKeyVals {}', sub {
     my ($gullet, $keyval, $tok) = @_;

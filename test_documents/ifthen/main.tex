@@ -43,4 +43,6 @@ myBool $|$$|$ myOtherBool is \ifthenelse{\boolean{myBool} \or \boolean{myOtherBo
 1 = 1 \&\& hello = hello $|$$|$ 2 $<$ -1 \ifthenelse{1 = 1 \and \equal{hello}{hello} \or 2 < -1}{yay}{nay} \\
 1 = 1 \&\& hello = hello \&\& 2 $<$ -1 \ifthenelse{1 = 1 \and \equal{hello}{hello} \and 2 < -1}{yay}{nay} \\
 %
+\def\counter{c}
+\whiledo{\not \equal{\counter}{ccccccc}}{\counter - \let\tmp\counter\edef\counter{c\tmp}} \\
 \end{document}
