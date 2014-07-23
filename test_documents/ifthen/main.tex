@@ -5,9 +5,9 @@
 \begin{document}
 
 %\noindent
-%\def\foo{23}
-%23 \ifthenelse{\isodd{\foo}}{is odd}{is even} \\
-%42 \ifthenelse{\isodd{42}}{is odd}{is even} \\
+\def\foo{23}
+23 \ifthenelse{\isodd{\foo}}{is odd}{is even} \\
+42 \ifthenelse{\isodd{42}}{is odd}{is even} \\
 23 \&\& !42 \ifthenelse{\isodd{23} \and \not \isodd{42}}{true}{false} \\
 23 \&\& 33 \ifthenelse{\isodd{23} \AND \isodd{33}}{true}{false} \\
 23 $|$$|$ 42 \ifthenelse{\isodd{23} \or \isodd{42}}{true}{false} \\
@@ -17,7 +17,12 @@
 ! \textbackslash string \ifthenelse{\not \isundefined{\string}}{is undefined}{is defined} \\
 %
 %\noindent
-%1 = 1 : \ifthenelse{1 = 1 \and 2 = 2}{true}{false} \\
+21 = 21 : \ifthenelse{21 = 21}{true}{false} \\
+42 $>$ 21 : \ifthenelse{42 > 21}{true}{false} \\
+-3 $<$ 21 : \ifthenelse{-3 < 21}{true}{false} \\
+1 = 1 \&\& 2 = 2 : \ifthenelse{1 = 1 \and 2 = 2}{true}{false} \\
+1 = 2 \&\& 2 = 2 : \ifthenelse{1 = 2 \and 2 = 2}{true}{false} \\
+1 = 2 $|$$|$ ! 2 = 2 : \ifthenelse{1 = 2 \or \not 2 = 2}{true}{false} \\
 %
 %\newboolean{myBool}
 %\setboolean{myBool}{true}
@@ -36,9 +41,10 @@
 \ifthenelse{\equal{hello}{hello}}{yay}{nay}
 \ifthenelse{\not \equal{hello}{you}}{yay}{nay}
 \ifthenelse{\NOT \equal{hello}{hello}}{yay}{nay}
-%\ifthenelse{1 = 1 \and \equal{hello}{hello}}{yay}{nay}
-%\ifthenelse{1 = 1 \and \equal{hello}{hello} \or 2 < -1}{yay}{nay}
-%\def\tok1{horray} \ifthenelse{\equal{\tok1}{horray}}{YAY}{NAY}
-%\ifthenelse{\equal{\tok1}{\LaTeX}}{YAY}{NAY}
+\def\tok1{horray} \ifthenelse{\equal{\tok1}{horray}}{YAY}{NAY}
+\ifthenelse{\equal{\tok1}{\LaTeX}}{YAY}{NAY} \\
+1 = 1 \&\& hello = hello \ifthenelse{1 = 1 \and \equal{hello}{hello}}{yay}{nay} \\
+1 = 1 \&\& hello = hello $|$$|$ 2 $<$ -1 \ifthenelse{1 = 1 \and \equal{hello}{hello} \or 2 < -1}{yay}{nay} \\
+1 = 1 \&\& hello = hello \&\& 2 $<$ -1 \ifthenelse{1 = 1 \and \equal{hello}{hello} \and 2 < -1}{yay}{nay} \\
 %
 \end{document}

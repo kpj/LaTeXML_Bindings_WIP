@@ -46,12 +46,19 @@ sub ifthenGetValuesFromKeyVals {
 sub ifthenDeleteKeyVals {
   my ($key, $keyval) = @_;
   $keyval = ToString($keyval);
-  $keyval =~ s/$key=[^,]*,*//g;
+  $keyval =~ s/(^|[, ])$key=[^,]*,*//g;
   $keyval =~ s/^ *,//;
   $keyval =~ s/, *$//;
   $keyval =~ s/^\s+//;
   $keyval =~ s/\s+$//;
   return $keyval; }
+
+sub ifthenHandleNegate {
+  my ($keyval) = @_;
+  my $neg = ToString($keyval->getValue('negate'));
+  $keyval = ifthenDeleteKeyVals('negate', $keyval);
+  $keyval = ifthenExtendKeyVals('negate', 'false', $keyval);
+  return ($neg, $keyval); }
 
 sub ifthenAnd {
   my ($first, $second) = @_;
@@ -69,7 +76,8 @@ DefMacro('\ifthenelse{}{}{}', '\edef\ifthenResult{\ifthenParseExpression{negate=
 
 DefMacroI('\ifthenParseExpression', 'RequiredKeyVals {}', sub {
     my ($gullet, $keyval, $tok) = @_;
-    my $currentRes = '';
+    my $currentRes   = '';
+    my $keyvalgetter = $keyval;
 
     print "\n\n";
     print "{" . ToString($keyval) . "} - {" . ToString($tok) . "}\n";
@@ -77,12 +85,62 @@ DefMacroI('\ifthenParseExpression', 'RequiredKeyVals {}', sub {
     # parse numbers
     my $catc = ($tok->unlist)[0]->getCatcode;
     if ($catc == 12) {
-      print "Found number!\n"; }
+      $tok = ToString($tok);
+      if ($tok eq '=') {
+        my $num = ToString($keyvalgetter->getValue('num'));
+        $keyval = ifthenDeleteKeyVals('num', $keyval);
+        $keyval = ifthenExtendKeyVals('firstnum', $num, $keyval);
+
+        $keyval = ifthenExtendKeyVals('comparator', 'eq', $keyval);
+        print "Found equal sign!\n"; }
+      elsif ($tok eq '<') {
+        my $num = ToString($keyvalgetter->getValue('num'));
+        $keyval = ifthenDeleteKeyVals('num', $keyval);
+        $keyval = ifthenExtendKeyVals('firstnum', $num, $keyval);
+
+        $keyval = ifthenExtendKeyVals('comparator', 'lt', $keyval);
+        print "Found less than sign!\n"; }
+      elsif ($tok eq '>') {
+        my $num = ToString($keyvalgetter->getValue('num'));
+        $keyval = ifthenDeleteKeyVals('num', $keyval);
+        $keyval = ifthenExtendKeyVals('firstnum', $num, $keyval);
+
+        $keyval = ifthenExtendKeyVals('comparator', 'gt', $keyval);
+        print "Found greater than sign!\n"; }
+      else {
+        my $num = ToString($keyvalgetter->getValue('num'));
+        $keyval = ifthenDeleteKeyVals('num', $keyval);
+        $keyval = ifthenExtendKeyVals('num', $num . $tok, $keyval);
+        print "Found digit!\n"; } }
+    else {
+      my $comp = ToString($keyvalgetter->getValue('comparator'));
+      if ($comp ne '') {
+        my $first  = ToString($keyvalgetter->getValue('firstnum'));
+        my $second = ToString($keyvalgetter->getValue('num'));
+
+        my $neg;
+        ($neg, $keyval) = ifthenHandleNegate($keyval);
+
+        if ($comp eq 'eq') {
+          $currentRes = (($neg eq 'false') ? $first eq $second : $first ne $second) ? '\ifthenTrue' : '\ifthenFalse'; }
+        elsif ($comp eq 'lt') {
+          $currentRes = (($neg eq 'false') ? $first lt $second : $first ge $second) ? '\ifthenTrue' : '\ifthenFalse'; }
+        elsif ($comp eq 'gt') {
+          $currentRes = (($neg eq 'false') ? $first gt $second : $first le $second) ? '\ifthenTrue' : '\ifthenFalse'; }
+
+        # cleanup
+        $keyval = ifthenDeleteKeyVals('firstnum',   $keyval);
+        $keyval = ifthenDeleteKeyVals('comparator', $keyval);
+        $keyval = ifthenDeleteKeyVals('num',        $keyval);
+
+        print "Compare -> $currentRes\n"; } }
 
     # parse connectives
-    my $operator = ToString($keyval->getValue('action'));
+    my $operator = ToString($keyvalgetter->getValue('action'));
     if (defined $operator && $operator ne '') {
-      my @operands = ifthenGetValuesFromKeyVals('prev', $keyval);
+      my @operands = ifthenGetValuesFromKeyVals('prev', $keyvalgetter);
+      if ($currentRes ne '') {
+        push(@operands, $currentRes); }
       print "Parsing operator '$operator' with " . (scalar @operands) . " operands\n";
       if ($operator eq 'and' && scalar @operands == 2) {
         $keyval = ifthenDeleteKeyVals('prev',   $keyval);
@@ -92,25 +150,26 @@ DefMacroI('\ifthenParseExpression', 'RequiredKeyVals {}', sub {
         $keyval = ifthenDeleteKeyVals('prev',   $keyval);
         $keyval = ifthenDeleteKeyVals('action', $keyval);
         $currentRes = ifthenOr($operands[0], $operands[1]); } }
-    else {
-      $currentRes = ToString($keyval->getValue('prev'));
-      $keyval = ifthenDeleteKeyVals('prev', $keyval); }
 
     print "{" . ToString($keyval) . "} - {" . ToString($tok) . "}\n";
 
     if (ToString($tok) eq '\ifthenStopExpressionParser') {
       print "Stop parsing\n";
+      if ($currentRes eq '') {
+        $currentRes = ToString($keyvalgetter->getValue('prev')); }
       print "Fetching previous value: " . ToString($currentRes) . "\n\n\n";
       return Tokens(T_CS(ToString($currentRes)), T_CS('\ifthenTrue')); }
     else {
       print "Continue\n";
       if ($currentRes ne '') {
+        $keyval = ifthenDeleteKeyVals('prev', $keyval);
         $keyval = ifthenExtendKeyVals('prev', $currentRes, $keyval); }
-      return Tokens($tok, T_BEGIN, Tokenize(ToString($keyval)), T_END); } });
+      return Tokens((index(ToString($keyval), 'num') != -1) ? T_CS('\ifthenParseExpression') : $tok, T_BEGIN, Tokenize(ToString($keyval)), T_END); } });
 
 DefMacroI('\and', 'RequiredKeyVals', sub {
     my ($gullet, $keyval) = @_;
     $keyval = ifthenExtendKeyVals('action', 'and', $keyval);
+    print "AND: $keyval";
     return Tokens(T_CS('\ifthenParseExpression'), T_BEGIN, Tokenize($keyval), T_END); });
 Let('\AND', '\and');
 
