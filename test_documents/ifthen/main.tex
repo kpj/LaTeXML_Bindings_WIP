@@ -12,8 +12,8 @@
 23 \&\& 33 \ifthenelse{\isodd{23} \AND \isodd{33}}{true}{false} \\
 23 \&\& 42 \ifthenelse{\isodd{23} \or \isodd{42}}{true}{false} \\
 %\ifthenelse{\isodd{23} \and \not \( 1 = 2 \) \and \( 3 > 2 \or 4 = 2 \) }{foo}{bar} \\
-%\textbackslash foobar \ifthenelse{\isundefined{\foobar}}{is undefined}{is defined} \\
-%\textbackslash string \ifthenelse{\isundefined{\string}}{is undefined}{is defined} \\
+\textbackslash foobar \ifthenelse{\isundefined{\foobar}}{is undefined}{is defined} \\
+! \textbackslash string \ifthenelse{\not \isundefined{\string}}{is undefined}{is defined} \\
 %
 %\noindent
 %1 = 1 : \ifthenelse{1 = 1 \and 2 = 2}{true}{false} \\

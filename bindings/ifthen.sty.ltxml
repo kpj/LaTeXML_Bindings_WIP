@@ -154,6 +154,19 @@ DefMacroI('\equal', 'RequiredKeyVals {}{}', sub {
     $keyval = ifthenExtendKeyVals('negate', 'false', $keyval);
     return Tokens(T_CS('\ifthenParseExpression'), T_BEGIN, Tokenize(ifthenExtendKeyVals('prev', $res, $keyval)), T_END); });
 
+DefMacroI('\isundefined', 'RequiredKeyVals {}', sub {
+    my ($gullet, $keyval, $tok) = @_;
+    print "Calling \\isundefined\n";
+    my $neg = ToString($keyval->getValue('negate'));
+    my $res;
+    if (isDefinable(T_CS(ToString($tok)))) {
+      $res = ($neg eq 'false') ? '\ifthenTrue' : '\ifthenFalse'; }
+    else {
+      $res = ($neg eq 'false') ? '\ifthenFalse' : '\ifthenTrue'; }
+    $keyval = ifthenDeleteKeyVals('negate', $keyval);
+    $keyval = ifthenExtendKeyVals('negate', 'false', $keyval);
+    return Tokens(T_CS('\ifthenParseExpression'), T_BEGIN, Tokenize(ifthenExtendKeyVals('prev', $res, $keyval)), T_END); });
+
 # some tex primitives to be able to deal with \ifx (there might be a better choice?)
 Let('\ifthenTrue',  '\relax');
 Let('\ifthenFalse', '\undefined');
