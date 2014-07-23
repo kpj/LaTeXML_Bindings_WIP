@@ -30,72 +30,128 @@ use LaTeXML::Package;
 
 sub ifthenExtendKeyVals {
   my ($key, $val, $keyval) = @_;
-  return ToString($keyval) . ",$key=$val"; }
+  $keyval = ToString($keyval) . ",$key=$val";
+  $keyval =~ s/^ *,//;
+  return $keyval; }
+
+sub ifthenGetValuesFromKeyVals {
+  my ($key, $keyval) = @_;
+  my @vals     = ();
+  my @rawpairs = $keyval->getPairs;
+  while (@rawpairs) {
+    if (ToString(shift(@rawpairs)) eq $key) {
+      push(@vals, ToString(shift(@rawpairs))); } }
+  return @vals; }
 
 sub ifthenDeleteKeyVals {
   my ($key, $keyval) = @_;
   $keyval = ToString($keyval);
   $keyval =~ s/$key=[^,]*,*//g;
-  $keyval =~ s/^,//;
+  $keyval =~ s/^ *,//;
+  $keyval =~ s/, *$//;
+  $keyval =~ s/^\s+//;
+  $keyval =~ s/\s+$//;
   return $keyval; }
+
+sub ifthenAnd {
+  my ($first, $second) = @_;
+  return ($first eq '\ifthenTrue' && $second eq '\ifthenTrue') ? '\ifthenTrue' : '\ifthenFalse'; }
+
+sub ifthenOr {
+  my ($first, $second) = @_;
+  return ($first eq '\ifthenTrue' || $second eq '\ifthenTrue') ? '\ifthenTrue' : '\ifthenFalse'; }
 
 ##########
 # Macros #
 ##########
 
-DefMacro('\ifthenelse{}{}{}', '\edef\ifthenResult{\ifthenParseExpression{} #1\ifthenStopExpressionParser}\typeout{Result: \ifthenResult}\expandafter\ifx\ifthenResult #2 \else #3 \fi');
+DefMacro('\ifthenelse{}{}{}', '\edef\ifthenResult{\ifthenParseExpression{negate=false} #1\ifthenStopExpressionParser}\typeout{Result: \ifthenResult}\expandafter\ifx\ifthenResult #2 \else #3 \fi');
 
 DefMacroI('\ifthenParseExpression', 'RequiredKeyVals {}', sub {
     my ($gullet, $keyval, $tok) = @_;
+    my $currentRes = '';
 
     print "\n\n";
     print "{" . ToString($keyval) . "} - {" . ToString($tok) . "}\n";
 
+    # parse numbers
     my $catc = ($tok->unlist)[0]->getCatcode;
     if ($catc == 12) {
       print "Found number!\n"; }
 
-    #    if (defined $tok && defined $mem) {
-    #      print "Parsing both\n"; }
-    #    elsif (defined $mem) {
-    #      print "Parsing memory\n"; }
+    # parse connectives
+    my $operator = ToString($keyval->getValue('action'));
+    if (defined $operator && $operator ne '') {
+      my @operands = ifthenGetValuesFromKeyVals('prev', $keyval);
+      print "Parsing operator '$operator' with " . (scalar @operands) . " operands\n";
+      if ($operator eq 'and' && scalar @operands == 2) {
+        $keyval = ifthenDeleteKeyVals('prev',   $keyval);
+        $keyval = ifthenDeleteKeyVals('action', $keyval);
+        $currentRes = ifthenAnd($operands[0], $operands[1]); }
+      elsif ($operator eq 'or' && scalar @operands == 2) {
+        $keyval = ifthenDeleteKeyVals('prev',   $keyval);
+        $keyval = ifthenDeleteKeyVals('action', $keyval);
+        $currentRes = ifthenOr($operands[0], $operands[1]); } }
+    else {
+      $currentRes = ToString($keyval->getValue('prev'));
+      $keyval = ifthenDeleteKeyVals('prev', $keyval); }
+
+    print "{" . ToString($keyval) . "} - {" . ToString($tok) . "}\n";
 
     if (ToString($tok) eq '\ifthenStopExpressionParser') {
       print "Stop parsing\n";
-      my $val = $keyval->getValue('prev');
-      if (defined $val) {
-        print "Fetching previous value: " . ToString($val) . "\n\n\n";
-        return Tokens(T_CS(ToString($val)), T_CS('\ifthenTrue')); }
-      else {
-        print "\n\n\n";
-        return T_CS('\ifthenTrue'); } }
+      print "Fetching previous value: " . ToString($currentRes) . "\n\n\n";
+      return Tokens(T_CS(ToString($currentRes)), T_CS('\ifthenTrue')); }
     else {
       print "Continue\n";
+      if ($currentRes ne '') {
+        $keyval = ifthenExtendKeyVals('prev', $currentRes, $keyval); }
       return Tokens($tok, T_BEGIN, Tokenize(ToString($keyval)), T_END); } });
 
 DefMacroI('\and', 'RequiredKeyVals', sub {
     my ($gullet, $keyval) = @_;
-    #$keyval = ifthenDeleteKeyVals('prev', $keyval);
-    return Tokens(T_CS('\ifthenParseExpression'), T_BEGIN, Tokenize(ToString($keyval)), T_END); });
+    $keyval = ifthenExtendKeyVals('action', 'and', $keyval);
+    return Tokens(T_CS('\ifthenParseExpression'), T_BEGIN, Tokenize($keyval), T_END); });
+Let('\AND', '\and');
+
+DefMacroI('\or', 'RequiredKeyVals', sub {
+    my ($gullet, $keyval) = @_;
+    $keyval = ifthenExtendKeyVals('action', 'or', $keyval);
+    return Tokens(T_CS('\ifthenParseExpression'), T_BEGIN, Tokenize($keyval), T_END); });
+Let('\OR', '\or');
+
+DefMacroI('\not', 'RequiredKeyVals', sub {
+    my ($gullet, $keyval) = @_;
+    my $neg = ToString($keyval->getValue('negate'));
+    $keyval = ifthenDeleteKeyVals('negate', $keyval);
+    $keyval = ifthenExtendKeyVals('negate', ($neg eq 'false') ? 'true' : 'false', $keyval);
+    return Tokens(T_CS('\ifthenParseExpression'), T_BEGIN, Tokenize($keyval), T_END); });
+Let('\NOT', '\not');
 
 DefMacroI('\isodd', 'RequiredKeyVals {}', sub {
     my ($gullet, $keyval, $num) = @_;
     print "Calling \\isodd\n";
+    my $neg = ToString($keyval->getValue('negate'));
     my $res;
     if (ToString(Expand($num)) % 2 != 0) {
-      $res = '\ifthenTrue'; }
+      $res = ($neg eq 'false') ? '\ifthenTrue' : '\ifthenFalse'; }
     else {
-      $res = '\ifthenFalse'; }
+      $res = ($neg eq 'false') ? '\ifthenFalse' : '\ifthenTrue'; }
+    $keyval = ifthenDeleteKeyVals('negate', $keyval);
+    $keyval = ifthenExtendKeyVals('negate', 'false', $keyval);
     return Tokens(T_CS('\ifthenParseExpression'), T_BEGIN, Tokenize(ifthenExtendKeyVals('prev', $res, $keyval)), T_END); });
 
 DefMacroI('\equal', 'RequiredKeyVals {}{}', sub {
     my ($gullet, $keyval, $first, $second) = @_;
     print "Calling \\equal\n";
+    my $neg = ToString($keyval->getValue('negate'));
     my $res;
     if (ToString(Expand($first)) eq ToString(Expand($second))) {
-      $res = '\ifthenTrue'; }
+      $res = ($neg eq 'false') ? '\ifthenTrue' : '\ifthenFalse'; }
     else {
-      $res = '\ifthenFalse'; }
+      $res = ($neg eq 'false') ? '\ifthenFalse' : '\ifthenTrue'; }
+    $keyval = ifthenDeleteKeyVals('negate', $keyval);
+    $keyval = ifthenExtendKeyVals('negate', 'false', $keyval);
     return Tokens(T_CS('\ifthenParseExpression'), T_BEGIN, Tokenize(ifthenExtendKeyVals('prev', $res, $keyval)), T_END); });
 
 # some tex primitives to be able to deal with \ifx (there might be a better choice?)

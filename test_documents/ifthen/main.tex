@@ -5,10 +5,12 @@
 \begin{document}
 
 %\noindent
-\def\foo{23}
-23 \ifthenelse{\isodd{\foo}}{is odd}{is even} \\
+%\def\foo{23}
+%23 \ifthenelse{\isodd{\foo}}{is odd}{is even} \\
 %42 \ifthenelse{\isodd{42}}{is odd}{is even} \\
-23 \&\& 42 \ifthenelse{\isodd{23} \and \isodd{42}}{true}{false} \\
+23 \&\& !42 \ifthenelse{\isodd{23} \and \not \isodd{42}}{true}{false} \\
+23 \&\& 33 \ifthenelse{\isodd{23} \AND \isodd{33}}{true}{false} \\
+23 \&\& 42 \ifthenelse{\isodd{23} \or \isodd{42}}{true}{false} \\
 %\ifthenelse{\isodd{23} \and \not \( 1 = 2 \) \and \( 3 > 2 \or 4 = 2 \) }{foo}{bar} \\
 %\textbackslash foobar \ifthenelse{\isundefined{\foobar}}{is undefined}{is defined} \\
 %\textbackslash string \ifthenelse{\isundefined{\string}}{is undefined}{is defined} \\
@@ -29,8 +31,10 @@
 %myBool $|$$|$ myOtherBool is \ifthenelse{\boolean{myBool} \or \boolean{myOtherBool}}{true}{false} \\
 %
 %\noindent
-%\ifthenelse{\equal{hello}{you}}{yay}{nay}
-%\ifthenelse{\equal{hello}{hello}}{yay}{nay}
+\ifthenelse{\equal{hello}{you}}{yay}{nay}
+\ifthenelse{\equal{hello}{hello}}{yay}{nay}
+\ifthenelse{\not \equal{hello}{you}}{yay}{nay}
+\ifthenelse{\NOT \equal{hello}{hello}}{yay}{nay}
 %\ifthenelse{1 = 1 \and \equal{hello}{hello}}{yay}{nay}
 %\ifthenelse{1 = 1 \and \equal{hello}{hello} \or 2 < -1}{yay}{nay}
 %\def\tok1{horray} \ifthenelse{\equal{\tok1}{horray}}{YAY}{NAY}
