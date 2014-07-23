@@ -253,4 +253,4 @@ DefMacro('\setboolean{}{}', sub {
 
 1;
 
-# vim: ft=perl: noexpandtab:
+# vim: ft=perl:
