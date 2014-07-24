@@ -173,7 +173,7 @@ DefMacroI('\ifthenParseExpression', 'RequiredKeyVals {}', sub {
     else {
       print "Continue\n";
 
-      # incorporate current result and handle sneaky negations
+      # incorporate current result
       if ($currentRes ne '') {
         $keyval = ifthenDeleteKeyVals('prev', $keyval);
         $keyval = ifthenExtendKeyVals('prev', $currentRes, $keyval); }
