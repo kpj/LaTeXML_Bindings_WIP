@@ -53,7 +53,7 @@ myBool $|$$|$ myOtherBool is \ifthenelse{\boolean{myBool} \or \boolean{myOtherBo
 ! ( ( 42 ) ) : \ifthenelse{\not \( \( \isodd{42} \) \)}{true}{false} \\
 ( !42 ) : \ifthenelse{\( \not \isodd{42} \)}{true}{false} \\
 ( ! ( 42 ) ) : \ifthenelse{\( \not \( \isodd{42} \) \)}{true}{false} \\
-( ! ( ( 42 ) ) ) : \ifthenelse{\( \not \( \( \isodd{42} \) \) \) }{true}{false} \\
+( ! ( ! ( !42 ) ) ) : \ifthenelse{\( \not \( \not \( \not \isodd{42} \) \) \) }{true}{false} \\
 %
 \ifthenelse{\( 1 = 1 \and 3 < 4 \) \or \( 5 = 5 \and 3 > 23 \)}{T}{F}
 \ifthenelse{\not \( 1 = 1 \and \( \not 1 < -1 \and 24 = 24 \) \)}{T}{F}
