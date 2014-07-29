@@ -24,8 +24,7 @@ use LaTeXML::Package;
 
 ######################################################
 
-RawTeX('\def\@defaultunits{\afterassignment\remove@to@nnil}');
-InputDefinitions('ifthen', type=>'sty', noltxml=>1);
+InputDefinitions('ifthen', type => 'sty', noltxml => 1);
 
 ######################################################
 

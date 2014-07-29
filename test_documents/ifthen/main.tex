@@ -7,6 +7,7 @@
 \def\foo{23}
 23 \ifthenelse{\isodd{\foo}}{is odd}{is even} \\
 42 \ifthenelse{\isodd{42}}{is odd}{is even} \\
+!42 \ifthenelse{\not \isodd{42}}{is odd}{is even} \\
 23 \&\& !42 \ifthenelse{\isodd{23} \and \not \isodd{42}}{true}{false} \\
 23 \&\& 33 \ifthenelse{\isodd{23} \AND \isodd{33}}{true}{false} \\
 23 $|$$|$ 42 \ifthenelse{\isodd{23} \or \isodd{42}}{true}{false} \\
