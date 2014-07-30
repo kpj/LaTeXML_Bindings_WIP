@@ -3,7 +3,7 @@ set -u
 
 
 function parse_id {
-    echo -n $(sed 's/[^0-9]*//' <<< "$1")
+    echo -n "$(sed 's/[^0-9]*//' <<< "$1")"
 }
 
 function load_paper {
@@ -14,7 +14,7 @@ function get_tex_from_tar {
     tar xf "$1"
     find . ! -name "*.tex" -delete
     local tex_name=$(ls)
-    mv *.tex "$2"
+    mv ./*.tex "$2"
     echo -n "$tex_name"
 }
 
