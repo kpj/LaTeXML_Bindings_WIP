@@ -11,12 +11,27 @@ function load_paper {
 }
 
 function get_tex_from_tar {
-    tar xf "$1" &> /dev/null || ( mv "$1" "$1.gz" && gunzip "$1.gz" &> /dev/null && exit 1 ) || mv "$1" "$1.tex"
+    local fn=''
+    tar xf "$1" &> /dev/null || ( mv "$1" "$1.gz" && gunzip "$1.gz" &> /dev/null && exit 1 || ( mv "$1.gz" "$1" && exit 1 ) ) || fn="$1"
+    
+    if [[ -f "$fn" ]] ; then
+        if [[ ${fn##*.} != "tex" ]] ; then
+            mv "$1" "$1.tex"
+            fn="$1.tex"
+        fi
+    fi
 
-    find . ! -name "*.tex" -delete
-    local tex_name=$(ls)
-    mv ./*.tex "$2"
-    echo -n "$tex_name"
+    if [[ -f "$fn" && ( \
+        "$(file "$fn")" =~ "PDF document" || \
+        "$(file "$fn")" =~ "HTML document text" \
+       ) ]] ; then
+        echo -n "undef"
+    else
+        find . ! -name "*.tex" -delete
+        local tex_name=$(ls)
+        mv ./*.tex "$2"
+        echo -n "$tex_name"
+    fi
 }
 
 
@@ -33,9 +48,13 @@ mkdir -p "$dw_dir"
 cd "$dw_dir"
 
 load_paper "$id"
-tex_name=$(get_tex_from_tar "$id" "$cwd")
+tex_name=$(get_tex_from_tar "$id" "$cwd" )
 
 cd "$cwd"
 rm -r "$dw_dir"
 
-echo "Gathered '$tex_name'"
+if [[ "$tex_name" != "undef" ]] ; then
+    echo "Gathered '$(echo -n $tex_name | tr '\n' ' ')'"
+else
+    echo "No tex file found"
+fi
