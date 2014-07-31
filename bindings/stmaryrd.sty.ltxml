@@ -32,16 +32,16 @@ sub stmaryrdPicture {
   my ($raw) = @_;
   return '\begin{picture}(0, 0)' . $raw . '\end{picture}'; }
 
-DefMacroI('\stmaryrd@Ydown', undef, stmaryrdPicture('\thicklines\put(0,0){\line(-1,1){2}}\put(0,0){\line(1,1){2}}\put(0,0){\line(0,-1){3}}'));
-DefMacroI('\stmaryrd@Yleft', undef, stmaryrdPicture('\thicklines\put(0,0){\line(1,1){2}}\put(0,0){\line(1,-1){2}}\put(0,0){\line(-1,0){3}}'));
-DefMacroI('\stmaryrd@Yright', undef, stmaryrdPicture('\thicklines\put(0,0){\line(1,1){2}}\put(0,0){\line(1,-1){2}}\put(0,0){\line(-1,0){3}}'));
-DefMacroI('\stdmaryrd@fatbslash', undef, stmaryrdPicture('\put(-2,2){\line(1,-3){5}}\put(1,2){\line(1,-3){5}}\put(-2,2){\line(1,0){3}}\put(6,-13){\line(-1,0){3}}'));
-DefMacroI('\stdmaryrd@fatslash', undef, stmaryrdPicture('\put(1,2){\line(-1,-3){5}}\put(-2,2){\line(-1,-3){5}}\put(-2,2){\line(1,0){3}}\put(-4,-13){\line(-1,0){3}}'));
-DefMacroI('\stmaryrd@leftrightarroweq', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(1,0){4}}\put(0,0){\vector(-1,0){4}}\put(-6,-3){\line(1,0){12}}'));
-DefMacroI('\stmaryrd@nnearrow', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(1,3){4}}'));
-DefMacroI('\stmaryrd@nnwarrow', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(-1,3){4}}'));
-DefMacroI('\stmaryrd@ssearrow', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(1,-3){4}}'));
-DefMacroI('\stmaryrd@sswarrow', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(-1,-3){4}}'));
+DefMathI('\stmaryrd@Ydown', undef, stmaryrdPicture('\thicklines\put(0,0){\line(-1,1){2}}\put(0,0){\line(1,1){2}}\put(0,0){\line(0,-1){3}}'));
+DefMathI('\stmaryrd@Yleft', undef, stmaryrdPicture('\thicklines\put(0,0){\line(1,1){2}}\put(0,0){\line(1,-1){2}}\put(0,0){\line(-1,0){3}}'));
+DefMathI('\stmaryrd@Yright', undef, stmaryrdPicture('\thicklines\put(0,0){\line(1,1){2}}\put(0,0){\line(1,-1){2}}\put(0,0){\line(-1,0){3}}'));
+DefMathI('\stdmaryrd@fatbslash', undef, stmaryrdPicture('\put(-2,2){\line(1,-3){5}}\put(1,2){\line(1,-3){5}}\put(-2,2){\line(1,0){3}}\put(6,-13){\line(-1,0){3}}'));
+DefMathI('\stdmaryrd@fatslash', undef, stmaryrdPicture('\put(1,2){\line(-1,-3){5}}\put(-2,2){\line(-1,-3){5}}\put(-2,2){\line(1,0){3}}\put(-4,-13){\line(-1,0){3}}'));
+DefMathI('\stmaryrd@leftrightarroweq', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(1,0){4}}\put(0,0){\vector(-1,0){4}}\put(-6,-3){\line(1,0){12}}'));
+DefMathI('\stmaryrd@nnearrow', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(1,3){4}}'));
+DefMathI('\stmaryrd@nnwarrow', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(-1,3){4}}'));
+DefMathI('\stmaryrd@ssearrow', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(1,-3){4}}'));
+DefMathI('\stmaryrd@sswarrow', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(-1,-3){4}}'));
 
 ##########
 # Macros #
