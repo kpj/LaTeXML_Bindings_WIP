@@ -24,11 +24,34 @@ use LaTeXML::Package;
 
 ######################################################
 
-#DefMathI('\Ydown', undef, "", role => 'RELOP');
-#DefMathI('\Yleft', undef, "", role => 'RELOP');
-DefMathI('\Yright', undef, "\x{2144}",
+#################
+# Extra Symbols #
+#################
+
+sub stmaryrdPicture {
+  my ($raw) = @_;
+  return '\begin{picture}(0, 0)' . $raw . '\end{picture}'; }
+
+DefMacroI('\stmaryrd@Ydown', undef, stmaryrdPicture('\thicklines\put(0,0){\line(-1,1){2}}\put(0,0){\line(1,1){2}}\put(0,0){\line(0,-1){3}}'));
+DefMacroI('\stmaryrd@Yleft', undef, stmaryrdPicture('\thicklines\put(0,0){\line(1,1){2}}\put(0,0){\line(1,-1){2}}\put(0,0){\line(-1,0){3}}'));
+DefMacroI('\stmaryrd@Yright', undef, stmaryrdPicture('\thicklines\put(0,0){\line(1,1){2}}\put(0,0){\line(1,-1){2}}\put(0,0){\line(-1,0){3}}'));
+DefMacroI('\stdmaryrd@fatbslash', undef, stmaryrdPicture('\put(-2,2){\line(1,-3){5}}\put(1,2){\line(1,-3){5}}\put(-2,2){\line(1,0){3}}\put(6,-13){\line(-1,0){3}}'));
+DefMacroI('\stdmaryrd@fatslash', undef, stmaryrdPicture('\put(1,2){\line(-1,-3){5}}\put(-2,2){\line(-1,-3){5}}\put(-2,2){\line(1,0){3}}\put(-4,-13){\line(-1,0){3}}'));
+DefMacroI('\stmaryrd@leftrightarroweq', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(1,0){4}}\put(0,0){\vector(-1,0){4}}\put(-6,-3){\line(1,0){12}}'));
+DefMacroI('\stmaryrd@nnearrow', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(1,3){4}}'));
+DefMacroI('\stmaryrd@nnwarrow', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(-1,3){4}}'));
+DefMacroI('\stmaryrd@ssearrow', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(1,-3){4}}'));
+DefMacroI('\stmaryrd@sswarrow', undef, stmaryrdPicture('\thicklines\put(0,0){\vector(-1,-3){4}}'));
+
+##########
+# Macros #
+##########
+
+DefMacroI('\Ydown', undef, '\stmaryrd@Ydown', role => 'RELOP');    # not available in unicode
+DefMacroI('\Yleft', undef, '\stmaryrd@Yleft', role => 'RELOP');    # not available in unicode
+DefMathI('\Yup', undef, "\x{2144}",
   role => 'RELOP');
-#DefMathI('\Yup', undef, "", role => 'RELOP');
+DefMacroI('\Yright', undef, '\stmaryrd@Yright', role => 'RELOP');    # not available in unicode
 DefMathI('\baro', undef, "\x{233D}",
   role    => 'RELOP',
   meaning => 'apl-reversal');
@@ -60,10 +83,10 @@ DefMathI('\boxslash', undef, "\x{29C4}",
 #DefMathI('\curlyveeuparrow', undef, "");
 #DefMathI('\curlywedgedownarrow', undef, "");
 #DefMathI('\curlywedgeuparrow', undef, "");
-#DefMathI('\fatbslash', undef, "");
+DefMacroI('\fatbslash', undef, '\stdmaryrd@fatbslash');    # not available in unicode
 DefMathI('\fatsemi', undef, "\x{2a1f}",
   role => 'RELOP');
-#DefMathI('\fatslash', undef, "");
+DefMacroI('\fatslash', undef, '\stdmaryrd@fatslash');      # not available in unicode
 DefMathI('\interleave', undef, "\x{2af4}",
   role => 'RELOP');
 DefMathI('\leftslice', undef, "\x{2aa6}",
@@ -182,7 +205,7 @@ DefMathI('\Mapsto', undef, "\x{2907}",
   role => 'ARROW');
 DefMathI('\leftarrowtriangle', undef, "\x{21FD}",
   role => 'ARROW');
-#DefMathI('\leftrightarroweq', undef, ""); # not available in unicode
+DefMacroI('\leftrightarroweq', undef, '\stmaryrd@leftrightarroweq');    # not available in unicode
 DefMathI('\leftrightarrowtriangle', undef, "\x{21FF}",
   role => 'ARROW');
 DefMathI('\lightning', undef, "\x{21AF}",
@@ -191,8 +214,8 @@ DefMathI('\longmapsfrom', undef, "\x{27FB}",
   role => 'ARROW');
 DefMathI('\mapsfrom', undef, "\x{21A4}",
   role => 'ARROW');
-#DefMathI('\nnearrow', undef, ""); # not available in unicode
-#DefMathI('\nnwarrow', undef, ""); # not available in unicode
+DefMacroI('\nnearrow', undef, '\stmaryrd@nnearrow');                    # not available in unicode
+DefMacroI('\nnwarrow', undef, '\stmaryrd@nnwarrow');                    # not available in unicode
 DefMathI('\rightarrowtriangle', undef, "\x{21FE}",
   role => 'ARROW');
 DefMathI('\rrparenthesis', undef, "\x{2988}",
@@ -205,23 +228,23 @@ DefMathI('\shortrightarrow', undef, "\x{2192}",
   role => 'ARROW');
 DefMathI('\shortuparrow', undef, "\x{2191}",
   role => 'ARROW');
-#DefMathI('\ssearrow', undef, ""); # not available in unicode
-#DefMathI('\sswarrow', undef, ""); # not available in unicode
+DefMacroI('\ssearrow', undef, '\stmaryrd@ssearrow');    # not available in unicode
+DefMacroI('\sswarrow', undef, '\stmaryrd@sswarrow');    # not available in unicode
 
 DefMathI('\Lbag', undef, "\x{27C5}",
   font => {},
-  role => 'OPEN');    # adjust font somehow
+  role => 'OPEN');                                      # adjust font somehow
 DefMathI('\Rbag', undef, "\x{27C6}",
   font => {},
-  role => 'CLOSE');    # see above
+  role => 'CLOSE');                                     # see above
 DefMathI('\lbag', undef, "\x{27C5}",
   role => 'OPEN');
 DefMathI('\llbracket', undef, "\x{27E6}",
   role => 'OPEN');
 DefMathI('\llceil', undef, "\x{2308}",
-  role => 'OPEN');     # need double bars?
+  role => 'OPEN');                                      # need double bars?
 DefMathI('\llfloor', undef, "\x{230A}",
-  role => 'OPEN');     # see \llceil
+  role => 'OPEN');                                      # see \llceil
 DefMathI('\llparenthesis', undef, "\x{2987}",
   role => 'OPEN');
 DefMathI('\rrparenthesis', undef, "\x{2988}",
@@ -231,9 +254,9 @@ DefMathI('\rbag', undef, "\x{27C6}",
 DefMathI('\rrbracket', undef, "\x{27E7}",
   role => 'CLOSE');
 DefMathI('\rrceil', undef, "\x{2309}",
-  role => 'CLOSE');    # see \llceil
+  role => 'CLOSE');                                     # see \llceil
 DefMathI('\rrfloor', undef, "\x{230B}",
-  role => 'CLOSE');    # see \llceil
+  role => 'CLOSE');                                     # see \llceil
 
 ######################################################
 
