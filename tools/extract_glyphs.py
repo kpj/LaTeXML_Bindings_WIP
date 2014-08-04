@@ -25,4 +25,5 @@ finally:
 
 print('Encoding: ' + font.encoding)
 for glyph in font.glyphs():
+    print(glyph.glyphname, glyph.boundingBox())
     glyph.export('%s.svg' % glyph.glyphname)
