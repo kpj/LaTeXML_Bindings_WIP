@@ -1,5 +1,5 @@
 """
-call with ./fontforge -script $0 
+call with ./fontforge -script $0 <arg>
 fontforge module is provided
 """
 
@@ -8,6 +8,7 @@ import os, shutil, sys
 from fontforge import *
 
 
+# handle startup
 if len(sys.argv) != 2:
     print('Usage: %s <pfb font>' % sys.argv[0])
     sys.exit(1)
