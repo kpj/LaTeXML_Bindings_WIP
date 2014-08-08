@@ -3,10 +3,20 @@ call with ./fontforge -script $0 <arg>
 fontforge module is provided
 """
 
-import os, shutil, sys
+import os, sys
+from xml.etree import ElementTree as et
 
-from fontforge import *
+from fontforge import open as open_font
 
+
+# helper functions
+def getSVG(glyph):
+    tmp_name = 'myverysecretsvgfilewhichnoonewilleverknow.svg'
+    glyph.export(tmp_name)
+    with open(tmp_name, 'r') as fd:
+        content = fd.read()
+    os.remove(tmp_name)
+    return et.fromstring(content)
 
 # handle startup
 if len(sys.argv) != 2:
@@ -14,19 +24,18 @@ if len(sys.argv) != 2:
     sys.exit(1)
 fontfile = sys.argv[1]
 
-pfb_font = open(fontfile)
-
-# prepare working environment
-font_dir = pfb_font.fontname
-try:
-    shutil.rmtree(font_dir)
-except: # for compatibility with python 2 and 3
-    pass
-finally:
-    os.mkdir(font_dir)
-    os.chdir(font_dir)
+pfb_font = open_font(fontfile)
 
 # extract glyphs
+xml = et.Element('font')
 for glyph in pfb_font.glyphs():
-    print(glyph.glyphname, glyph.encoding)
-    glyph.export('%s.svg' % glyph.glyphname)
+    svg = getSVG(glyph)
+
+    g = et.Element('glyph', attrib={'index': str(glyph.encoding), 'name': glyph.glyphname})
+    g.append(svg)
+
+    xml.append(g)
+
+# save extracted glyphs
+with open('%s.xml' % pfb_font.fontname, 'w') as fd:
+    fd.write(et.tostring(xml))
