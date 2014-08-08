@@ -76,6 +76,12 @@ DefPrimitiveI('\sun',         undef, "\x{263C}");
 DefPrimitiveI('\checked',     undef, "\x{2713}");
 DefPrimitiveI('\bell',        undef, "\x{237E}");
 #DefPrimitiveI('\ataribox', undef, "\x{}");
+DefConstructor('\ataribox',
+  '<svg:svg version="1.1" height="14px" width="10px">' .
+    '<svg:g fill="currentColor" transform="scale(0.018)">' .
+'<svg:path d="M78 375l197 298l197 -298l-197 -298zM28 297l197 -297h-197v297zM28 750h197l-197 -298v298zM522 750v-298l-197 298h197zM522 0h-197l197 297v-297z" />' .
+    '</svg:g>' .
+    '</svg:svg>');
 DefPrimitiveI('\cent',          undef, UTF(0xA2));
 DefPrimitiveI('\permil',        undef, "\x{2030}");
 DefPrimitiveI('\brokenvert',    undef, UTF(0xA6));
@@ -171,7 +177,9 @@ DefPrimitiveI('\APLleftarrowbox',  undef, "\x{2347}");
 DefPrimitiveI('\APLrightarrowbox', undef, "\x{2348}");
 DefPrimitiveI('\notbackslash',     undef, "\x{2340}");
 DefPrimitiveI('\notslash',         undef, "\x{233F}");
-#DefPrimitiveI('\APLnot', '{}', '#1');
+
+DefMacroI('\APLnot', '{}', '#1\wasysym@APLnot');
+DefPrimitiveI('\wasysym@APLnot', undef, "\x{0334}");
 #DefPrimitiveI('\APLvert', '{}', "\x{}");
 #DefPrimitiveI('\APLcirc', '{}', "\x{}");
 #DefPrimitiveI('\APLminus', undef, "\x{}");
