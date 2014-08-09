@@ -24,6 +24,17 @@ use LaTeXML::Package;
 
 ######################################################
 
+my $path = pathname_find('foobar.xml', types => ['*'],
+  paths => [LookupValue('SEARCHPATHS')], installation_subdir => 'resources/SVGFonts');
+my $xmlparser = LaTeXML::Common::XML::Parser->new();
+my $fontdoc   = $xmlparser->parseFile($path);
+
+my $xpath = LaTeXML::Common::XML::XPath->new();
+$xpath->registerNS(svg => 'http://www.w3.org/2000/svg');
+
+my $glyphnode = $xpath->findnodes('glyph', $fontdoc);
+print "\n\n'$glyphnode'\n\n\n";
+
 DefMathI('\Join',       undef, "\x{2a1d}");
 DefMathI('\Box',        undef, "\x{25a1}");
 DefMathI('\Diamond',    undef, "\x{25c7}");
