@@ -24,16 +24,41 @@ use LaTeXML::Package;
 
 ######################################################
 
-my $path = pathname_find('foobar.xml', types => ['*'],
+#############
+# Parse XML #
+#############
+
+my $wasysym_path = pathname_find('wasyb10.xml', types => ['*'],
   paths => [LookupValue('SEARCHPATHS')], installation_subdir => 'resources/SVGFonts');
-my $xmlparser = LaTeXML::Common::XML::Parser->new();
-my $fontdoc   = $xmlparser->parseFile($path);
+my $wasysym_xmlparser = LaTeXML::Common::XML::Parser->new();
+my $wasysym_fontdoc   = $wasysym_xmlparser->parseFile($wasysym_path);
 
-my $xpath = LaTeXML::Common::XML::XPath->new();
-$xpath->registerNS(svg => 'http://www.w3.org/2000/svg');
+my $wasysym_xpath = LaTeXML::Common::XML::XPath->new();
+$wasysym_xpath->registerNS(svg => 'http://www.w3.org/2000/svg');
 
-my $glyphnode = $xpath->findnodes('glyph', $fontdoc);
-print "\n\n'$glyphnode'\n\n\n";
+####################
+# Helper functions #
+####################
+
+sub getSVG {
+  my ($index) = @_;
+  my $nlist = $wasysym_xpath->findnodes('/font/glyph[@index="' . $index . '"]', $wasysym_fontdoc);
+  if ($nlist->size() != 1) {
+    Error("Multiple glyphs with same index found, processing first match."); }
+  my $node = $nlist->shift->firstChild;
+
+  # handle node attributes (TODO: do this properly)
+  $node->removeAttribute('viewBox');
+  $node->setAttribute('width',  '10px');
+  $node->setAttribute('height', '14px');
+
+  return $node->toString; }
+
+###########
+# Symbols #
+###########
+
+print "\n\n" . getSVG(69) . "\n\n\n";
 
 DefMathI('\Join',       undef, "\x{2a1d}");
 DefMathI('\Box',        undef, "\x{25a1}");
@@ -174,7 +199,7 @@ DefPrimitiveI('\pisces',      undef, "\x{2653}");
 DefPrimitiveI('\conjunction', undef, "\x{260C}");
 DefPrimitiveI('\opposition',  undef, "\x{260D}");
 
-#DefPrimitiveI('\APLstar', undef, "\x{}");
+DefConstructor('\APLstar', getSVG(69));
 DefPrimitiveI('\APLlog',   undef, "\x{235F}");
 DefPrimitiveI('\APLbox',   undef, "\x{2395}");
 DefPrimitiveI('\APLup',    undef, "\x{234B}");
