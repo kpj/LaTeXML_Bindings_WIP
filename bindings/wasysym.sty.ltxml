@@ -40,25 +40,33 @@ $wasysym_xpath->registerNS(svg => 'http://www.w3.org/2000/svg');
 # Helper functions #
 ####################
 
-sub getSVG {
-  my ($index) = @_;
-  my $nlist = $wasysym_xpath->findnodes('/font/glyph[@index="' . $index . '"]', $wasysym_fontdoc);
-  if ($nlist->size() != 1) {
-    Error("Multiple glyphs with same index found, processing first match."); }
-  my $node = $nlist->shift->firstChild;
+sub getSVGGlyph {
+  my ($font, $codepoint) = @_;
+  my $fontobject = LookupValue('SVGFont:' . $font);
+  if (!$fontobject) {
+    my $nlist = $wasysym_xpath->findnodes('/font/glyph', $wasysym_fontdoc);
+    foreach my $node ($nlist->get_nodelist) {
+      $$fontobject{ $node->getAttribute("index") } = $node->firstChild; }
+    AssignValue('SVGFont:' . $font => $fontobject); }
+
+  if (!exists $$fontobject{$codepoint}) {
+    Error("Codepoint " . $codepoint . " not in " . $font);
+    return; }
+
+  my $node = $$fontobject{$codepoint};
 
   # handle node attributes (TODO: do this properly)
   $node->removeAttribute('viewBox');
   $node->setAttribute('width',  '10px');
   $node->setAttribute('height', '14px');
 
-  return $node->toString; }
+  return $node; }
 
 ###########
 # Symbols #
 ###########
 
-print "\n\n" . getSVG(69) . "\n\n\n";
+print "\n\n" . getSVGGlyph('wasyb10', 69)->toString . "\n\n\n";
 
 DefMathI('\Join',       undef, "\x{2a1d}");
 DefMathI('\Box',        undef, "\x{25a1}");
@@ -128,8 +136,8 @@ DefPrimitiveI('\agemO',         undef, "\x{2127}");
 DefPrimitiveI('\AC',  undef, "\x{223c}");    # don't use math symbol here
 DefPrimitiveI('\HF',  undef, "\x{2248}");    # don't use math symbol here
 DefPrimitiveI('\VHF', undef, "\x{224b}");    # don't use math symbol here
-#DefPrimitiveI('\photon', undef, "\x{}");
-#DefPrimitiveI('\gluon', undef, "\x{}");
+                                             #DefPrimitiveI('\photon', undef, "\x{}");
+                                             #DefPrimitiveI('\gluon', undef, "\x{}");
 
 DefPrimitiveI('\Square',     undef, "\x{25A1}");
 DefPrimitiveI('\XBox',       undef, "\x{2327}");
@@ -199,7 +207,9 @@ DefPrimitiveI('\pisces',      undef, "\x{2653}");
 DefPrimitiveI('\conjunction', undef, "\x{260C}");
 DefPrimitiveI('\opposition',  undef, "\x{260D}");
 
-DefConstructor('\APLstar', getSVG(69));
+DefConstructor('\APLstar', sub {
+    my ($document) = @_;
+    $document->appendTree($document->getNode, getSVGGlyph('wasyb10', 69)); });
 DefPrimitiveI('\APLlog',   undef, "\x{235F}");
 DefPrimitiveI('\APLbox',   undef, "\x{2395}");
 DefPrimitiveI('\APLup',    undef, "\x{234B}");
