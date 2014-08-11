@@ -56,17 +56,20 @@ sub getSVGGlyph {
   my $node = $$fontobject{$codepoint};
 
   # handle node attributes (TODO: do this properly)
-  $node->removeAttribute('viewBox');
   $node->setAttribute('width',  '10px');
   $node->setAttribute('height', '14px');
 
   return $node; }
 
+sub queryWasysymGlyph {
+  my ($document, $codepoint) = @_;
+  $document->appendTree($document->getElement, getSVGGlyph('wasyb10', $codepoint));
+  $document->closeElement('svg:svg');
+  return; }
+
 ###########
 # Symbols #
 ###########
-
-print "\n\n" . getSVGGlyph('wasyb10', 69)->toString . "\n\n\n";
 
 DefMathI('\Join',       undef, "\x{2a1d}");
 DefMathI('\Box',        undef, "\x{25a1}");
@@ -119,13 +122,9 @@ DefPrimitiveI('\blacksmiley', undef, "\x{263B}");
 DefPrimitiveI('\sun',         undef, "\x{263C}");
 DefPrimitiveI('\checked',     undef, "\x{2713}");
 DefPrimitiveI('\bell',        undef, "\x{237E}");
-#DefPrimitiveI('\ataribox', undef, "\x{}");
-DefConstructor('\ataribox',
-  '<svg:svg version="1.1" height="14px" width="10px">' .
-    '<svg:g fill="currentColor" transform="scale(0.018)">' .
-'<svg:path d="M78 375l197 298l197 -298l-197 -298zM28 297l197 -297h-197v297zM28 750h197l-197 -298v298zM522 750v-298l-197 298h197zM522 0h-197l197 297v-297z" />' .
-    '</svg:g>' .
-    '</svg:svg>');
+DefConstructor('\ataribox', sub {
+    my ($document) = @_;
+    queryWasysymGlyph($document, 109); });
 DefPrimitiveI('\cent',          undef, UTF(0xA2));
 DefPrimitiveI('\permil',        undef, "\x{2030}");
 DefPrimitiveI('\brokenvert',    undef, UTF(0xA6));
@@ -142,12 +141,18 @@ DefPrimitiveI('\VHF', undef, "\x{224b}");    # don't use math symbol here
 DefPrimitiveI('\Square',     undef, "\x{25A1}");
 DefPrimitiveI('\XBox',       undef, "\x{2327}");
 DefPrimitiveI('\CheckedBox', undef, "\x{2611}");
-#DefPrimitiveI('\hexagon', undef, "\x{}");
+DefConstructor('\hexagon', sub {
+    my ($document) = @_;
+    queryWasysymGlyph($document, 55); });
 DefPrimitiveI('\varhexagon', undef, "\x{2B21}");
 DefPrimitiveI('\pentagon',   undef, "\x{2B20}");
-#DefPrimitiveI('\octagon', undef, "\x{}");
+DefConstructor('\octagon', sub {
+    my ($document) = @_;
+    queryWasysymGlyph($document, 56); });
 DefPrimitiveI('\hexstar', undef, "\x{26b9}");
-#DefPrimitiveI('\varhexstar', undef, "\x{}");
+DefConstructor('\varhexstar', sub {
+    my ($document) = @_;
+    queryWasysymGlyph($document, 66); });
 DefPrimitiveI('\davidsstar', undef, "\x{2721}");
 
 DefPrimitiveI('\eighthnote',  undef, "\x{1D160}");
@@ -158,9 +163,13 @@ DefPrimitiveI('\twonotes',    undef, "\x{266B}");
 
 DefPrimitiveI('\Circle', undef, "\x{25CB}");
 DefPrimitiveI('\CIRCLE', undef, "\x{25CF}");
-#DefPrimitiveI('\Leftcircle', undef, "\x{}");
+DefConstructor('\Leftcircle', sub {
+    my ($document) = @_;
+    queryWasysymGlyph($document, 73); });
 DefPrimitiveI('\LEFTCIRCLE', undef, "\x{25D6}");
-#DefPrimitiveI('\Rightcircle', undef, "\x{}");
+DefConstructor('\Rightcircle', sub {
+    my ($document) = @_;
+    queryWasysymGlyph($document, 74); });
 DefPrimitiveI('\RIGHTCIRCLE', undef, "\x{25D7}");
 DefPrimitiveI('\LEFTcircle',  undef, "\x{25D0}");
 DefPrimitiveI('\RIGHTcircle', undef, "\x{25D1}");
@@ -209,13 +218,15 @@ DefPrimitiveI('\opposition',  undef, "\x{260D}");
 
 DefConstructor('\APLstar', sub {
     my ($document) = @_;
-    $document->appendTree($document->getNode, getSVGGlyph('wasyb10', 69)); });
+    queryWasysymGlyph($document, 69); });
 DefPrimitiveI('\APLlog',   undef, "\x{235F}");
 DefPrimitiveI('\APLbox',   undef, "\x{2395}");
 DefPrimitiveI('\APLup',    undef, "\x{234B}");
 DefPrimitiveI('\APLdown',  undef, "\x{2352}");
 DefPrimitiveI('\APLinput', undef, "\x{235e}");
-#DefPrimitiveI('\APLcomment', undef, "\x{}");
+DefConstructor('\APLcomment', sub {
+    my ($document) = @_;
+    queryWasysymGlyph($document, 127); });
 DefPrimitiveI('\APLinv',           undef, "\x{2339}");
 DefPrimitiveI('\APLuparrowbox',    undef, "\x{2350}");
 DefPrimitiveI('\APLdownarrowbox',  undef, "\x{2357}");
