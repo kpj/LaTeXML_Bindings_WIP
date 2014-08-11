@@ -11,12 +11,19 @@ from fontforge import open as open_font
 
 # helper functions
 def getSVG(glyph):
+    # convert glyph
     tmp_name = 'myverysecretsvgfilewhichnoonewilleverknow.svg'
     glyph.export(tmp_name)
     with open(tmp_name, 'r') as fd:
         content = fd.read()
     os.remove(tmp_name)
-    return et.fromstring(content)
+    svg = et.fromstring(content)
+
+    # set namespace (svg: http://www.w3.org/2000/svg)
+    for e in svg.getiterator():
+        e.tag = 'svg:' + e.tag
+
+    return svg
 
 # handle startup
 if len(sys.argv) != 2:
@@ -31,7 +38,7 @@ xml = et.Element('font')
 for glyph in pfb_font.glyphs():
     svg = getSVG(glyph)
 
-    g = et.Element('glyph', attrib={'index': str(glyph.encoding), 'name': glyph.glyphname})
+    g = et.Element('glyph', attrib={'index': str(glyph.encoding), 'name': glyph.glyphname, 'xmlns:svg': 'http://www.w3.org/2000/svg'})
     g.append(svg)
 
     xml.append(g)
