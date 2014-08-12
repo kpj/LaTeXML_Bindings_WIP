@@ -24,27 +24,25 @@ use LaTeXML::Package;
 
 ######################################################
 
-#############
-# Parse XML #
-#############
-
-my $wasysym_path = pathname_find('wasyb10.xml', types => ['*'],
-  paths => [LookupValue('SEARCHPATHS')], installation_subdir => 'resources/SVGFonts');
-my $wasysym_xmlparser = LaTeXML::Common::XML::Parser->new();
-my $wasysym_fontdoc   = $wasysym_xmlparser->parseFile($wasysym_path);
-
-my $wasysym_xpath = LaTeXML::Common::XML::XPath->new();
-$wasysym_xpath->registerNS(svg => 'http://www.w3.org/2000/svg');
-
 ####################
 # Helper functions #
 ####################
+
+sub loadGlyphFile {
+  my ($font) = @_;
+  my $path = pathname_find($font . '.xml', types => ['*'],
+    paths => [LookupValue('SEARCHPATHS')], installation_subdir => 'resources/SVGFonts');
+  my $xmlparser = LaTeXML::Common::XML::Parser->new();
+  my $fontdoc   = $xmlparser->parseFile($path);
+  my $xpath = LaTeXML::Common::XML::XPath->new();
+  $xpath->registerNS(svg => 'http://www.w3.org/2000/svg');
+  return $xpath->findnodes('/font/glyph', $fontdoc); }
 
 sub getSVGGlyph {
   my ($font, $codepoint) = @_;
   my $fontobject = LookupValue('SVGFont:' . $font);
   if (!$fontobject) {
-    my $nlist = $wasysym_xpath->findnodes('/font/glyph', $wasysym_fontdoc);
+    my $nlist = loadGlyphFile($font);
     foreach my $node ($nlist->get_nodelist) {
       $$fontobject{ $node->getAttribute("index") } = $node->firstChild; }
     AssignValue('SVGFont:' . $font => $fontobject); }
@@ -66,6 +64,16 @@ sub queryWasysymGlyph {
   $document->appendTree($document->getElement, getSVGGlyph('wasyb10', $codepoint));
   $document->closeElement('svg:svg');
   return; }
+
+sub DefSVGGlyph {
+  my ($cs, $font, $codepoint, %otherdefconstructoroptions) = @_;
+  DefConstructor($cs, sub {
+    my ($document) = @_;
+    my $node = $document->openElement('ltx:picture');
+    my $svgglyph = getSVGGlyph($font, $codepoint);
+    $document->appendTree($node, $svgglyph);
+    $document->closeElement('ltx:picture');
+    return; }); }
 
 ###########
 # Symbols #
@@ -224,9 +232,7 @@ DefPrimitiveI('\APLbox',   undef, "\x{2395}");
 DefPrimitiveI('\APLup',    undef, "\x{234B}");
 DefPrimitiveI('\APLdown',  undef, "\x{2352}");
 DefPrimitiveI('\APLinput', undef, "\x{235e}");
-DefConstructor('\APLcomment', sub {
-    my ($document) = @_;
-    queryWasysymGlyph($document, 127); });
+DefSVGGlyph('\APLcomment', 'wasyb10', 127);
 DefPrimitiveI('\APLinv',           undef, "\x{2339}");
 DefPrimitiveI('\APLuparrowbox',    undef, "\x{2350}");
 DefPrimitiveI('\APLdownarrowbox',  undef, "\x{2357}");
