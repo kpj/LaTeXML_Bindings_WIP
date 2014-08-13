@@ -51,12 +51,10 @@ sub getSVGGlyph {
     Error("Codepoint " . $codepoint . " not in " . $font);
     return; }
 
-  my $node = $$fontobject{$codepoint};
-
-  # handle node attributes (TODO: do this properly)
-  my @fsize = LookupValue('font')->getNominalSize();
-  $node->setAttribute('width', $fsize[0]->toString);
-  $node->setAttribute('height', (substr($fsize[1]->toString, 0, -2) + 3.3) . 'pt');    # *cough*
+  my $node  = $$fontobject{$codepoint};
+  my @fsize = $options{font}->getNominalSize();
+  $node->setAttribute('width',  $fsize[0]->toString);
+  $node->setAttribute('height', $fsize[1]->toString);
 
   return $node; }
 
@@ -64,10 +62,10 @@ sub DefSVGGlyph {
   my ($cs, $font, $codepoint, @cpoints) = @_;
   unshift(@cpoints, $codepoint);
   DefConstructor($cs, sub {
-      my ($document) = @_;
+      my ($document, %options) = @_;
       my $node = $document->openElement('ltx:picture');
       foreach (@cpoints) {
-        my $svgglyph = getSVGGlyph($font, $_);
+        my $svgglyph = getSVGGlyph($font, $_, %options);
         $document->appendTree($node, $svgglyph); }
       $document->closeElement('ltx:picture');
       return; });
