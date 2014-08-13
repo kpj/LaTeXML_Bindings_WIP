@@ -34,12 +34,12 @@ sub loadGlyphFile {
     paths => [LookupValue('SEARCHPATHS')], installation_subdir => 'resources/SVGFonts');
   my $xmlparser = LaTeXML::Common::XML::Parser->new();
   my $fontdoc   = $xmlparser->parseFile($path);
-  my $xpath = LaTeXML::Common::XML::XPath->new();
+  my $xpath     = LaTeXML::Common::XML::XPath->new();
   $xpath->registerNS(svg => 'http://www.w3.org/2000/svg');
   return $xpath->findnodes('/font/glyph', $fontdoc); }
 
 sub getSVGGlyph {
-  my ($font, $codepoint) = @_;
+  my ($font, $codepoint, %options) = @_;
   my $fontobject = LookupValue('SVGFont:' . $font);
   if (!$fontobject) {
     my $nlist = loadGlyphFile($font);
@@ -59,21 +59,16 @@ sub getSVGGlyph {
 
   return $node; }
 
-sub queryWasysymGlyph {
-  my ($document, $codepoint) = @_;
-  $document->appendTree($document->getElement, getSVGGlyph('wasyb10', $codepoint));
-  $document->closeElement('svg:svg');
-  return; }
-
 sub DefSVGGlyph {
-  my ($cs, $font, $codepoint, %otherdefconstructoroptions) = @_;
+  my ($cs, $font, $codepoint, %options) = @_;
   DefConstructor($cs, sub {
-    my ($document) = @_;
-    my $node = $document->openElement('ltx:picture');
-    my $svgglyph = getSVGGlyph($font, $codepoint);
-    $document->appendTree($node, $svgglyph);
-    $document->closeElement('ltx:picture');
-    return; }); }
+      my ($document) = @_;
+      my $node = $document->openElement('ltx:picture');
+      my $svgglyph = getSVGGlyph($font, $codepoint, %options);
+      $document->appendTree($node, $svgglyph);
+      $document->closeElement('ltx:picture');
+      return; });
+  return; }
 
 ###########
 # Symbols #
@@ -130,9 +125,7 @@ DefPrimitiveI('\blacksmiley', undef, "\x{263B}");
 DefPrimitiveI('\sun',         undef, "\x{263C}");
 DefPrimitiveI('\checked',     undef, "\x{2713}");
 DefPrimitiveI('\bell',        undef, "\x{237E}");
-DefConstructor('\ataribox', sub {
-    my ($document) = @_;
-    queryWasysymGlyph($document, 109); });
+DefSVGGlyph('\ataribox', 'wasyb10', 109);
 DefPrimitiveI('\cent',          undef, UTF(0xA2));
 DefPrimitiveI('\permil',        undef, "\x{2030}");
 DefPrimitiveI('\brokenvert',    undef, UTF(0xA6));
@@ -149,18 +142,12 @@ DefPrimitiveI('\VHF', undef, "\x{224b}");    # don't use math symbol here
 DefPrimitiveI('\Square',     undef, "\x{25A1}");
 DefPrimitiveI('\XBox',       undef, "\x{2327}");
 DefPrimitiveI('\CheckedBox', undef, "\x{2611}");
-DefConstructor('\hexagon', sub {
-    my ($document) = @_;
-    queryWasysymGlyph($document, 55); });
+DefSVGGlyph('\hexagon', 'wasyb10', 55);
 DefPrimitiveI('\varhexagon', undef, "\x{2B21}");
 DefPrimitiveI('\pentagon',   undef, "\x{2B20}");
-DefConstructor('\octagon', sub {
-    my ($document) = @_;
-    queryWasysymGlyph($document, 56); });
+DefSVGGlyph('\octagon', 'wasyb10', 56);
 DefPrimitiveI('\hexstar', undef, "\x{26b9}");
-DefConstructor('\varhexstar', sub {
-    my ($document) = @_;
-    queryWasysymGlyph($document, 66); });
+DefSVGGlyph('\varhexstar', 'wasyb10', 66);
 DefPrimitiveI('\davidsstar', undef, "\x{2721}");
 
 DefPrimitiveI('\eighthnote',  undef, "\x{1D160}");
@@ -171,13 +158,9 @@ DefPrimitiveI('\twonotes',    undef, "\x{266B}");
 
 DefPrimitiveI('\Circle', undef, "\x{25CB}");
 DefPrimitiveI('\CIRCLE', undef, "\x{25CF}");
-DefConstructor('\Leftcircle', sub {
-    my ($document) = @_;
-    queryWasysymGlyph($document, 73); });
+DefSVGGlyph('\Leftcircle', 'wasyb10', 73);
 DefPrimitiveI('\LEFTCIRCLE', undef, "\x{25D6}");
-DefConstructor('\Rightcircle', sub {
-    my ($document) = @_;
-    queryWasysymGlyph($document, 74); });
+DefSVGGlyph('\Rightcircle', 'wasyb10', 74);
 DefPrimitiveI('\RIGHTCIRCLE', undef, "\x{25D7}");
 DefPrimitiveI('\LEFTcircle',  undef, "\x{25D0}");
 DefPrimitiveI('\RIGHTcircle', undef, "\x{25D1}");
@@ -224,9 +207,7 @@ DefPrimitiveI('\pisces',      undef, "\x{2653}");
 DefPrimitiveI('\conjunction', undef, "\x{260C}");
 DefPrimitiveI('\opposition',  undef, "\x{260D}");
 
-DefConstructor('\APLstar', sub {
-    my ($document) = @_;
-    queryWasysymGlyph($document, 69); });
+DefSVGGlyph('\APLstar', 'wasyb10', 69);
 DefPrimitiveI('\APLlog',   undef, "\x{235F}");
 DefPrimitiveI('\APLbox',   undef, "\x{2395}");
 DefPrimitiveI('\APLup',    undef, "\x{234B}");
