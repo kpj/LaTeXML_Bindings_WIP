@@ -54,8 +54,9 @@ sub getSVGGlyph {
   my $node = $$fontobject{$codepoint};
 
   # handle node attributes (TODO: do this properly)
-  $node->setAttribute('width',  ($options{'width'}  // '10') . 'px');
-  $node->setAttribute('height', ($options{'height'} // '14') . 'px');
+  my @fsize = LookupValue('font')->getNominalSize();
+  $node->setAttribute('width', $fsize[0]->toString);
+  $node->setAttribute('height', (substr($fsize[1]->toString, 0, -2) + 3.3) . 'pt');    # *cough*
 
   return $node; }
 
