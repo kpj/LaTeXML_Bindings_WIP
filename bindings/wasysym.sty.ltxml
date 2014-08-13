@@ -54,18 +54,20 @@ sub getSVGGlyph {
   my $node = $$fontobject{$codepoint};
 
   # handle node attributes (TODO: do this properly)
-  $node->setAttribute('width',  '10px');
-  $node->setAttribute('height', '14px');
+  $node->setAttribute('width',  ($options{'width'}  // '10') . 'px');
+  $node->setAttribute('height', ($options{'height'} // '14') . 'px');
 
   return $node; }
 
 sub DefSVGGlyph {
-  my ($cs, $font, $codepoint, %options) = @_;
+  my ($cs, $font, $codepoint, @cpoints) = @_;
+  unshift(@cpoints, $codepoint);
   DefConstructor($cs, sub {
       my ($document) = @_;
       my $node = $document->openElement('ltx:picture');
-      my $svgglyph = getSVGGlyph($font, $codepoint, %options);
-      $document->appendTree($node, $svgglyph);
+      foreach (@cpoints) {
+        my $svgglyph = getSVGGlyph($font, $_);
+        $document->appendTree($node, $svgglyph); }
       $document->closeElement('ltx:picture');
       return; });
   return; }
@@ -136,8 +138,8 @@ DefPrimitiveI('\agemO',         undef, "\x{2127}");
 DefPrimitiveI('\AC',  undef, "\x{223c}");    # don't use math symbol here
 DefPrimitiveI('\HF',  undef, "\x{2248}");    # don't use math symbol here
 DefPrimitiveI('\VHF', undef, "\x{224b}");    # don't use math symbol here
-                                             #DefPrimitiveI('\photon', undef, "\x{}");
-                                             #DefPrimitiveI('\gluon', undef, "\x{}");
+DefSVGGlyph('\photon', 'wasyb10', 58, 58, 58, 58);
+DefSVGGlyph('\gluon', 'wasyb10', 81, 80, 80, 80, 80, 80, 80, 82);
 
 DefPrimitiveI('\Square',     undef, "\x{25A1}");
 DefPrimitiveI('\XBox',       undef, "\x{2327}");
