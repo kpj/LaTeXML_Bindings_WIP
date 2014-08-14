@@ -75,6 +75,17 @@ sub DefSVGGlyph {
 # Symbols #
 ###########
 
+DefSVGGlyph('\ataribox',    'wasyb10', 109);
+DefSVGGlyph('\hexagon',     'wasyb10', 55);
+DefSVGGlyph('\octagon',     'wasyb10', 56);
+DefSVGGlyph('\varhexstar',  'wasyb10', 66);
+DefSVGGlyph('\Leftcircle',  'wasyb10', 73);
+DefSVGGlyph('\Rightcircle', 'wasyb10', 74);
+DefSVGGlyph('\APLstar',     'wasyb10', 69);
+DefSVGGlyph('\APLcomment',  'wasyb10', 127);
+DefSVGGlyph('\photon',      'wasyb10', 58, 58, 58, 58);
+DefSVGGlyph('\gluon',       'wasyb10', 81, 80, 80, 80, 80, 80, 80, 82);
+
 DefMathI('\Join',       undef, "\x{2a1d}");
 DefMathI('\Box',        undef, "\x{25a1}");
 DefMathI('\Diamond',    undef, "\x{25c7}");
@@ -103,30 +114,29 @@ DefMathI('\iiint', undef, "\x{222D}", meaning => 'triple-integral', role => 'INT
 DefMathI('\oiint', undef, "\x{222F}", meaning => 'surface-integral', role => 'INTOP',
   mathstyle => \&doVariablesizeOp);
 
-DefPrimitiveI('\male',        undef, "\x{2642}");
-DefPrimitiveI('\female',      undef, "\x{2640}");
-DefPrimitiveI('\currency',    undef, UTF(0xA4));
-DefPrimitiveI('\phone',       undef, "\x{260E}");
-DefPrimitiveI('\recorder',    undef, "\x{2315}");
-DefPrimitiveI('\clock',       undef, "\x{231A}");    # or 1F552
-DefPrimitiveI('\lightning',   undef, "\x{2607}");
-DefPrimitiveI('\pointer',     undef, "\x{261E}");
-DefPrimitiveI('\RIGHTarrow',  undef, "\x{25B6}");
-DefPrimitiveI('\LEFTarrow',   undef, "\x{25C0}");
-DefPrimitiveI('\UParrow',     undef, "\x{25B2}");
-DefPrimitiveI('\DOWNarrow',   undef, "\x{25BC}");
-DefPrimitiveI('\diameter',    undef, "\x{2300}");
-DefPrimitiveI('\invdiameter', undef, "\x{29B0}");    # reversed empty set
-DefPrimitiveI('\varangle',    undef, "\x{2222}");
-DefPrimitiveI('\wasylozenge', undef, "\x{2311}");
-DefPrimitiveI('\kreuz',       undef, "\x{2720}");
-DefPrimitiveI('\smiley',      undef, "\x{263A}");
-DefPrimitiveI('\frownie',     undef, "\x{2639}");
-DefPrimitiveI('\blacksmiley', undef, "\x{263B}");
-DefPrimitiveI('\sun',         undef, "\x{263C}");
-DefPrimitiveI('\checked',     undef, "\x{2713}");
-DefPrimitiveI('\bell',        undef, "\x{237E}");
-DefSVGGlyph('\ataribox', 'wasyb10', 109);
+DefPrimitiveI('\male',          undef, "\x{2642}");
+DefPrimitiveI('\female',        undef, "\x{2640}");
+DefPrimitiveI('\currency',      undef, UTF(0xA4));
+DefPrimitiveI('\phone',         undef, "\x{260E}");
+DefPrimitiveI('\recorder',      undef, "\x{2315}");
+DefPrimitiveI('\clock',         undef, "\x{231A}");    # or 1F552
+DefPrimitiveI('\lightning',     undef, "\x{2607}");
+DefPrimitiveI('\pointer',       undef, "\x{261E}");
+DefPrimitiveI('\RIGHTarrow',    undef, "\x{25B6}");
+DefPrimitiveI('\LEFTarrow',     undef, "\x{25C0}");
+DefPrimitiveI('\UParrow',       undef, "\x{25B2}");
+DefPrimitiveI('\DOWNarrow',     undef, "\x{25BC}");
+DefPrimitiveI('\diameter',      undef, "\x{2300}");
+DefPrimitiveI('\invdiameter',   undef, "\x{29B0}");    # reversed empty set
+DefPrimitiveI('\varangle',      undef, "\x{2222}");
+DefPrimitiveI('\wasylozenge',   undef, "\x{2311}");
+DefPrimitiveI('\kreuz',         undef, "\x{2720}");
+DefPrimitiveI('\smiley',        undef, "\x{263A}");
+DefPrimitiveI('\frownie',       undef, "\x{2639}");
+DefPrimitiveI('\blacksmiley',   undef, "\x{263B}");
+DefPrimitiveI('\sun',           undef, "\x{263C}");
+DefPrimitiveI('\checked',       undef, "\x{2713}");
+DefPrimitiveI('\bell',          undef, "\x{237E}");
 DefPrimitiveI('\cent',          undef, UTF(0xA2));
 DefPrimitiveI('\permil',        undef, "\x{2030}");
 DefPrimitiveI('\brokenvert',    undef, UTF(0xA6));
@@ -137,18 +147,13 @@ DefPrimitiveI('\agemO',         undef, "\x{2127}");
 DefPrimitiveI('\AC',  undef, "\x{223c}");    # don't use math symbol here
 DefPrimitiveI('\HF',  undef, "\x{2248}");    # don't use math symbol here
 DefPrimitiveI('\VHF', undef, "\x{224b}");    # don't use math symbol here
-DefSVGGlyph('\photon', 'wasyb10', 58, 58, 58, 58);
-DefSVGGlyph('\gluon', 'wasyb10', 81, 80, 80, 80, 80, 80, 80, 82);
 
 DefPrimitiveI('\Square',     undef, "\x{25A1}");
 DefPrimitiveI('\XBox',       undef, "\x{2327}");
 DefPrimitiveI('\CheckedBox', undef, "\x{2611}");
-DefSVGGlyph('\hexagon', 'wasyb10', 55);
 DefPrimitiveI('\varhexagon', undef, "\x{2B21}");
 DefPrimitiveI('\pentagon',   undef, "\x{2B20}");
-DefSVGGlyph('\octagon', 'wasyb10', 56);
-DefPrimitiveI('\hexstar', undef, "\x{26b9}");
-DefSVGGlyph('\varhexstar', 'wasyb10', 66);
+DefPrimitiveI('\hexstar',    undef, "\x{26b9}");
 DefPrimitiveI('\davidsstar', undef, "\x{2721}");
 
 DefPrimitiveI('\eighthnote',  undef, "\x{1D160}");
@@ -157,11 +162,9 @@ DefPrimitiveI('\halfnote',    undef, "\x{1D15E}");
 DefPrimitiveI('\fullnote',    undef, "\x{1D15D}");
 DefPrimitiveI('\twonotes',    undef, "\x{266B}");
 
-DefPrimitiveI('\Circle', undef, "\x{25CB}");
-DefPrimitiveI('\CIRCLE', undef, "\x{25CF}");
-DefSVGGlyph('\Leftcircle', 'wasyb10', 73);
-DefPrimitiveI('\LEFTCIRCLE', undef, "\x{25D6}");
-DefSVGGlyph('\Rightcircle', 'wasyb10', 74);
+DefPrimitiveI('\Circle',      undef, "\x{25CB}");
+DefPrimitiveI('\CIRCLE',      undef, "\x{25CF}");
+DefPrimitiveI('\LEFTCIRCLE',  undef, "\x{25D6}");
 DefPrimitiveI('\RIGHTCIRCLE', undef, "\x{25D7}");
 DefPrimitiveI('\LEFTcircle',  undef, "\x{25D0}");
 DefPrimitiveI('\RIGHTcircle', undef, "\x{25D1}");
@@ -208,13 +211,11 @@ DefPrimitiveI('\pisces',      undef, "\x{2653}");
 DefPrimitiveI('\conjunction', undef, "\x{260C}");
 DefPrimitiveI('\opposition',  undef, "\x{260D}");
 
-DefSVGGlyph('\APLstar', 'wasyb10', 69);
-DefPrimitiveI('\APLlog',   undef, "\x{235F}");
-DefPrimitiveI('\APLbox',   undef, "\x{2395}");
-DefPrimitiveI('\APLup',    undef, "\x{234B}");
-DefPrimitiveI('\APLdown',  undef, "\x{2352}");
-DefPrimitiveI('\APLinput', undef, "\x{235e}");
-DefSVGGlyph('\APLcomment', 'wasyb10', 127);
+DefPrimitiveI('\APLlog',           undef, "\x{235F}");
+DefPrimitiveI('\APLbox',           undef, "\x{2395}");
+DefPrimitiveI('\APLup',            undef, "\x{234B}");
+DefPrimitiveI('\APLdown',          undef, "\x{2352}");
+DefPrimitiveI('\APLinput',         undef, "\x{235e}");
 DefPrimitiveI('\APLinv',           undef, "\x{2339}");
 DefPrimitiveI('\APLuparrowbox',    undef, "\x{2350}");
 DefPrimitiveI('\APLdownarrowbox',  undef, "\x{2357}");
