@@ -32,9 +32,8 @@ def getSVG(glyph):
 if len(sys.argv) != 2:
     print('Usage: %s <pfb font>' % sys.argv[0])
     sys.exit(1)
-fontfile = sys.argv[1]
 
-pfb_font = open_font(fontfile)
+pfb_font = open_font(sys.argv[1])
 
 # extract glyphs
 xml = et.Element('font')
