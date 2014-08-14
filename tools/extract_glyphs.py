@@ -19,9 +19,8 @@ def getSVG(glyph):
     os.remove(tmp_name)
     svg = et.fromstring(content)
 
-    svg.set('viewBox', '0, 0, 1000, 1000')
-    svg.set('preserveAspectRatio', 'xMidYMid meet')
-    svg.insert(0, et.Element('rect', attrib={'x': "0", 'y': "0", 'width': "1000", 'height': "1000", 'style': "fill:yellow;stroke-width:50;stroke:red"}))
+    svg.set('viewBox', '0 0 1000 1000')
+    svg.insert(0, et.Element('rect', attrib={'x': "0", 'y': "0", 'width': "1000", 'height': "1000", 'style': "fill:none;stroke-width:50;stroke:currentColor;"}))
 
     # set namespace (svg: http://www.w3.org/2000/svg)
     for e in svg.getiterator():
