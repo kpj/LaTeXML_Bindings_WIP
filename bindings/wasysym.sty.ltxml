@@ -63,11 +63,11 @@ sub DefSVGGlyph {
   unshift(@cpoints, $codepoint);
   DefConstructor($cs, sub {
       my ($document, %options) = @_;
-      my $node = $document->openElement('ltx:picture');
       foreach (@cpoints) {
+        my $node = $document->openElement('ltx:picture');
         my $svgglyph = getSVGGlyph($font, $_, %options);
-        $document->appendTree($node, $svgglyph); }
-      $document->closeElement('ltx:picture');
+        $document->appendTree($node, $svgglyph);
+        $document->closeElement('ltx:picture'); }
       return; });
   return; }
 
