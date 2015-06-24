@@ -1,0 +1,9 @@
+requires:
+  foo:
+    bar: wawaw
+  woah:
+    hoi: yup
+
+supersecret:
+  special:
+    option: hmm

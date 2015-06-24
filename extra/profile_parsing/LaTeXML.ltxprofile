@@ -2,3 +2,6 @@ requires:
   foo:
     bar: baz
     huha: fifi
+
+something:
+  generic: Iguess
