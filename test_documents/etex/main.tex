@@ -1,0 +1,42 @@
+\documentclass{article}
+
+\begin{document}
+
+% \protected (protect expansion in e.g. edef)
+\protected\def\foo{Hello}
+\def\bar{World}
+\edef\sayit{\foo\bar}
+\def\foo{Dumm}
+\def\bar{gelaufen}
+\sayit
+
+% \detokenize
+\detokenize{\hola}
+
+% unexpanded
+\def\foo{Hello}
+\def\bar{World}
+\edef\sayit{\foo\unexpanded{\bar}}
+\def\foo{Dumm}
+\def\bar{gelaufen}
+\sayit
+
+% [..]
+
+% \everyeof
+\everyeof={EO EO EO}
+
+% \middle
+\[
+\left( x \middle\vert y \right)
+\]
+
+% \unless
+\def\zahl{3}
+\unless\ifodd\zahl
+How odd
+\else
+I can't even
+\fi
+
+\end{document}
