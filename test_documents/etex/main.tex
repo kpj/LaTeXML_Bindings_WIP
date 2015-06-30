@@ -1,5 +1,11 @@
 \documentclass{article}
 
+\begin{filecontents*}{\jobname.tst}
+Hello
+wassup
+dawg
+\end{filecontents*}
+
 \begin{document}
 
 % \protected (protect expansion in e.g. edef)
@@ -20,6 +26,65 @@
 \def\foo{Dumm}
 \def\bar{gelaufen}
 \sayit
+
+% \readline
+\newread\file
+\openin\file=\jobname.tst
+\loop\unless\ifeof\file
+    \readline\file to\fileline
+    \_\fileline\_
+\repeat
+\closein\file
+
+% \scantokens
+\def\test#1{\begingroup\tt\catcode`\\=12
+    \scantokens{#1}\endgroup}
+\test{\abc\def}
+
+% \eTeXversion\eTeXrevision
+\the\eTeXversion\eTeXrevision
+
+% \currentgrouplevel
+\the\currentgrouplevel
+{\the\currentgrouplevel}
+{{\the\currentgrouplevel}}
+{{{\the\currentgrouplevel}}}
+{{\begingroup{\the\currentgrouplevel}\endgroup}}
+\begin{minipage}{1cm}
+    {
+        {
+            \begingroup
+                {
+                    \the\currentgrouplevel
+                }
+            \endgroup
+        }
+    }
+\end{minipage}
+
+% \currentgrouptype
+\the\currentgrouptype
+{\the\currentgrouptype}
+\begingroup\the\currentgrouptype\endgroup
+\begin{minipage}{1cm}\the\currentgrouptype\end{minipage}
+
+% \ifcsname
+\def\food{beef}
+\ifcsname food\endcsname
+Yum
+\else
+Bah
+\fi
+
+% \ifdefined
+\ifdefined\blablabla
+Yup
+\else
+Nop
+\fi
+
+% \lastnodetype
+\the\lastnodetype
 
 % [..]
 
