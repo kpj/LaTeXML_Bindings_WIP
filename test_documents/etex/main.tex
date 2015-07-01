@@ -8,6 +8,8 @@ dawg
 
 \begin{document}
 
+%%% 3.1 Additional control over expansion %%%
+
 % \protected (protect expansion in e.g. edef)
 \protected\def\foo{Hello}
 \def\bar{World}
@@ -27,6 +29,9 @@ dawg
 \def\bar{gelaufen}
 \sayit
 
+
+%%% 3.2 Provision for re-scanning already read text %%%
+
 % \readline
 \newread\file
 \openin\file=\jobname.tst
@@ -40,6 +45,9 @@ dawg
 \def\test#1{\begingroup\tt\catcode`\\=12
     \scantokens{#1}\endgroup}
 \test{\abc\def}
+
+
+%%% 3.3 Environmental enquiries %%%
 
 % \eTeXversion\eTeXrevision
 \the\eTeXversion\eTeXrevision
@@ -86,9 +94,14 @@ Nop
 % \lastnodetype
 \the\lastnodetype
 
+
+%%% 3.4 Generalisation of the \mark concept: a class of \marks %%%
+
 % \marks\... -> see end of document
 
-% TeX--XeT stuff
+
+%%% 3.5 Bi-directional typesetting: the TeX--XeT primitives %%%
+
 \the\TeXXeTstate
 \the\predisplaydirection
 
@@ -106,7 +119,9 @@ Rui
 \endR
 \TeXXeTstate=0
 
-% debugging
+
+%%% 3.6 Additional debugging features %%%
+
 \the\interactionmode
 %\showgroups
 %\showtokens{\hui}
@@ -114,6 +129,9 @@ Rui
 \the\tracinggroups
 \the\tracingifs
 \the\tracingscantokens 
+
+
+%%% 3.7 Miscellaneous primitives %%%
 
 % \everyeof
 \everyeof={EO EO EO}
