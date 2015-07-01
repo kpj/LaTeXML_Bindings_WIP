@@ -86,7 +86,34 @@ Nop
 % \lastnodetype
 \the\lastnodetype
 
-% [..]
+% \marks\... -> see end of document
+
+% TeX--XeT stuff
+\the\TeXXeTstate
+\the\predisplaydirection
+
+% \beginL,\endL
+\TeXXeTstate=1
+\beginL
+Lui
+\endL
+\TeXXeTstate=0
+
+% \beginR,\endR
+\TeXXeTstate=1
+\beginR
+Rui
+\endR
+\TeXXeTstate=0
+
+% debugging
+\the\interactionmode
+%\showgroups
+%\showtokens{\hui}
+\the\tracingassigns
+\the\tracinggroups
+\the\tracingifs
+\the\tracingscantokens 
 
 % \everyeof
 \everyeof={EO EO EO}
@@ -103,5 +130,19 @@ How odd
 \else
 I can't even
 \fi
+
+\newpage
+
+% \marks
+\noindent
+A\marks 42{A}\\
+B\marks 42{B}\\
+\newpage
+\noindent
+C\marks 42{C}\\
+D\marks 42{D}\\
+E\marks 42{E}\\
+Marks:\\
+bot: "\botmarks 42", first: "\firstmarks 42", top: "\topmarks 42", splitf: "\splitfirstmarks 42", splitb: "\splitbotmarks 42"
 
 \end{document}
