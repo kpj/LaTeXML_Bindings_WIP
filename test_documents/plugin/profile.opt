@@ -1,0 +1,13 @@
+# can be overwritten by dependencies
+defaults:
+  - foo: invisible
+  - hui: SEEME
+  - fubar: visible
+
+# load these profiles as well
+dependencies:
+  - /home/knj1/Desktop/git_repo/test_documents/plugin/profile_dep.opt
+
+# *cannot* be overwritten by dependencies
+requires:
+  - baz: required

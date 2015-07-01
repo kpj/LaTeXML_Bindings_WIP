@@ -1,0 +1,10 @@
+defaults:
+  - also_visible
+  - hui: dontseeme
+
+requires:
+  - foo: bar
+  - baz: qux
+  - blabla
+#  - profile: blub
+  - canyouseeme
