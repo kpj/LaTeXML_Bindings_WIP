@@ -1,0 +1,13 @@
+\begin{thebibliography}{1}
+
+\bibitem{foo}
+Mr. Foo.
+\newblock {\em The Adventures of Foo}.
+\newblock Foo Wonderland Journals, Foo Boulevard, 2015.
+
+\bibitem{foo2}
+Mrs. Foo.
+\newblock {\em The Dawn of Foo}.
+\newblock Foo Wonderland Journals, Foo Boulevard, 2015.
+
+\end{thebibliography}
