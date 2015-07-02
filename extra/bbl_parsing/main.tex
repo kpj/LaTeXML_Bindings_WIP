@@ -3,11 +3,16 @@
 \begin{document}
 
 A very remarkable claim \cite{foo}.
+But then again \cite{foo2}.
 
 \nocite{*}
 \bibliographystyle{plain}
 
-\bibliography{simple}
+%%% bib %%%
+%\bibliography{simple,simple2}
+\def\foo{simple}\bibliography{\foo,simple2}
+
+%%% bbl %%%
 %\bibliography{nonexistent,simple}
 %\bibliography{nonexistent}
 %\bibliography{}
