@@ -10,11 +10,19 @@ But then again \cite{foo2}.
 
 %%% bib %%%
 %\bibliography{simple,simple2}
-\def\foo{simple}\bibliography{\foo,simple2}
+%\def\foo{simple}\bibliography{\foo,simple2}
+%\def\bar{simple,simple2}\bibliography{\bar}
 
 %%% bbl %%%
 %\bibliography{nonexistent,simple}
+%\bibliography{nonexistent,simple,simple2}
 %\bibliography{nonexistent}
+%\bibliography{nonexistent,anothernonexistent}
+%\def\baz{nonexistent}\bibliography{\baz}
+%\bibliography{\foo,\baz}
+%\bibliography{\bar,nonexistent}
+
+%%% none %%%
 %\bibliography{}
 
 \end{document}
