@@ -31,9 +31,28 @@ DefPrimitive('\newrobustcmd OptionalMatch:* DefToken [Number][]{}', sub {
     DefMacroI($cs, convertLaTeXArgs($nargs, $opt), $body); },
   locked => 1);
 
-DefPrimitiveI('\preto', '{}{}', '', locked => 1);
-DefPrimitiveI('\appto', '{}{}', '', locked => 1);
+DefPrimitiveI('\preto',         'DefToken {}',       '', locked => 1);
+DefPrimitiveI('\appto',         'DefToken {}',       '', locked => 1);
+DefPrimitiveI('\pretocmd',      'DefToken {}{}{}',   '', locked => 1);
+DefPrimitiveI('\patchcmd',      'DefToken {}{}{}{}', '', locked => 1);
+DefPrimitiveI('\AtEndPreamble', '{}',                '', locked => 1);
 
+DefRegisterI('\numexpr', undef, Number(0),
+  getter => sub {
+    my $gullet = $STATE->getStomach->getGullet;
+    my @int_expr = (' ', '(', ')', '+', '-', '*', '/', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0');
+    my $expr;
+
+    while (my $tok = $gullet->readXToken) {
+      if (not $tok->getString ~~ @int_expr) {
+        $gullet->unread($tok) unless Equals($tok, T_CS('\relax'));
+        last; }
+      $expr .= $tok->getString; }
+
+    my $res = eval($expr);
+    $res = int($res + $res / abs($res * 2));    # round result
+
+    return Number($res); });
 
 InputDefinitions('etoolbox', type => 'sty', noltxml => 1);
 
