@@ -31,6 +31,9 @@ DefPrimitive('\newrobustcmd OptionalMatch:* DefToken [Number][]{}', sub {
     DefMacroI($cs, convertLaTeXArgs($nargs, $opt), $body); },
   locked => 1);
 
+DefPrimitiveI('\preto', '{}{}', '', locked => 1);
+DefPrimitiveI('\appto', '{}{}', '', locked => 1);
+
 
 InputDefinitions('etoolbox', type => 'sty', noltxml => 1);
 
