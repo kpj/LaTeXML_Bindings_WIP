@@ -1,0 +1,60 @@
+\documentclass{article}
+\usepackage{etoolbox}
+
+\begin{document}
+
+\newrobustcmd{\foo}{Hiiii}
+\foo
+
+\csdef{bar}{Byeeeee}
+\bar
+
+\numdef\baz{4+1}
+\baz
+
+\def\nomacro{hm}
+\def\qux{\nomacro}
+\expandonce{\qux}
+
+\newbool{foobool}
+\boolfalse{foobool}
+\ifbool{foobool}{yay}{nay}
+\booltrue{foobool}
+\ifbool{foobool}{yay}{nay}
+
+\ifdef{\foo}{yay}{nay}
+\ifdef{\totallynotdefined}{yay}{nay}
+
+\ifdefparam{\foo}{yay}{nay}
+\newcommand{\foopara}[1]{Wow: #1}
+\ifdefparam{\foopara}{yay}{nay}
+
+\ifnumcomp{3}{>}{6}{true}{false}
+\ifnumcomp{(7 + 5) / 2}{=}{6}{true}{false}
+\ifnumcomp{(7+5) / 4}{>}{3*(12-10)}{true}{false}
+\newcounter{countA}\setcounter{countA}{6}
+\newcounter{countB}\setcounter{countB}{5}
+\ifnumcomp{\value{countA} * \value{countB}/2}{=}{15}{true}{false}
+\ifnumcomp{6/2}{=}{5/2}{true}{false}
+
+\newbool{barbool}
+\boolfalse{barbool}
+\ifboolexpr{ bool {foobool} and ( not bool {barbool} ) }{true}{false}
+
+\DeclareListParser{\docsvline}{,}
+\renewcommand*{\do}[1]{--$>$ #1 $<$--}
+\docsvline{bla,blub,schwup,gub}
+
+\DeclareListParser*{\forcsvline}{,}
+\forcsvline{!}{foo, bar, baz, qux}
+
+\listadd{\ilist}{Item 1}
+\listadd{\ilist}{Item 2}
+\listadd{\ilist}{Item 3}
+\forlistloop{ HA }{\ilist}
+
+\ifinlist{Item 2}{\ilist}{yay}{nay}
+
+\rmntonum{mcmxcv}
+
+\end{document}
