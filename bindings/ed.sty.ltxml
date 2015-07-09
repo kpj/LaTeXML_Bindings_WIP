@@ -1,0 +1,51 @@
+# -*- CPERL -*-
+# /=====================================================================\ #
+# | ed.sty                                                              | #
+# | Implementation for LaTeXML                                          | #
+# |=====================================================================| #
+# | Part of LaTeXML:                                                    | #
+# |  Public domain software, produced as part of work done by the       | #
+# |  United States Government & not subject to copyright in the US.     | #
+# |---------------------------------------------------------------------| #
+# | Thanks to Lukas Kohlhase <kohliderzweite@gmail.com>                 | #
+# | of the arXMLiv group for initial implementation                     | #
+# |    http://arxmliv.kwarc.info/                                       | #
+# | Released under the Gnu Public License                               | #
+# | Released to the Public Domain                                       | #
+# |---------------------------------------------------------------------| #
+# | Bruce Miller <bruce.miller@nist.gov>                        #_#     | #
+# | http://dlmf.nist.gov/LaTeXML/                              (o o)    | #
+# \=========================================================ooo==U==ooo=/ #
+
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+######################################################
+
+DefConstructor('\ednote{}',"
+  <ltx:note role='ednote'> #1 </ltx:note>"); #TODO: Check if we need some special role for this.
+  
+  DefConstructor('\issue{}',"
+  <ltx:note role='issue'> #1 </ltx:note>"); #TODO: Check if we need marks etc.
+  
+  DefConstructor('\Issue{}',"
+  <ltx:note role='issue'> #1 </ltx:note>"); #TODO: Check if we need marks etc.
+  
+  DefConstructor('\todo{}',"<ltx:note role='todo'>#1</ltx:note>");
+  
+  DefConstructor('\tweak{}',"<ltx:note role='tweak'>#1</ltx:note>");
+   
+  DefMacroI('\begin{todolist}', '{}',  "\\begin{Lukasidentifier}#1\\begin{enumerate}");
+  DefMacroI('\end{todolist}',   undef, '\end{enumerate}\end{Lukasidentifier}');
+
+  DefEnvironment('{Lukasidentifier}',"
+  <ltx:note role='todolist'> #body </ltx:note>");
+
+  DefConstructor('\edissue{}',"<ltx:note role='issue'>#1</ltx:note>");
+
+######################################################
+
+1;
+
