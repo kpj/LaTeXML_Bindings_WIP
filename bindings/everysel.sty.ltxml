@@ -1,0 +1,23 @@
+# -*- CPERL -*-
+# /========================================================== #
+# |  everysel.sty - Implementation for LaTeXML                | #
+# |                                                           | #
+# |===========================================================| #
+# | Not yet Part of LaTeXML : http://dlmf.nist.gov/LaTeXML/   | #
+# | Copyright (c) 2013 arXMLiv group                          | #
+# | Released under the GNU Public License                     | #
+# ===========================================================/ #
+
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+######################################################
+
+DefMacro('\EverySelectfont{}',  '');
+DefMacro('\AtNextSelectfont{}', '');
+
+######################################################
+
+1;

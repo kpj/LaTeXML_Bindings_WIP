@@ -1,0 +1,28 @@
+# -*- CPERL -*-
+# /========================================================== #
+# |  cleveref.sty - Implementation for LaTeXML                | #
+# |                                                           | #
+# |===========================================================| #
+# | Not yet Part of LaTeXML : http://dlmf.nist.gov/LaTeXML/   | #
+# | Copyright (c) 2013 arXMLiv group                          | #
+# | Released under the GNU Public License                     | #
+# ===========================================================/ #
+
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+######################################################
+
+InputDefinitions('cleveref', type => 'sty', noltxml => 1);
+
+DefMacro('\cpageref{}',        '\cref{#1}');
+DefMacro('\cpagerefrange{}{}', '\crefrange{#1}{#2}');
+DefMacro('\Cpageref{}',        '\Cref{#1}');
+DefMacro('\Cpagerefrange{}{}', '\Crefrange{#1}{#2}');
+DefMacro('\labelcpageref{}',   '\labelcref{#1}');
+
+######################################################
+
+1;

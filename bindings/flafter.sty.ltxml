@@ -1,0 +1,26 @@
+# -*- CPERL -*-
+# /========================================================== #
+# |  flafter.sty - Implementation for LaTeXML                | #
+# |                                                           | #
+# |===========================================================| #
+# | Not yet Part of LaTeXML : http://dlmf.nist.gov/LaTeXML/   | #
+# | Copyright (c) 2013 arXMLiv group                          | #
+# | Released under the GNU Public License                     | #
+# ===========================================================/ #
+
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+######################################################
+
+# This package contains no macros and only forces that any floating objects
+# like figures,tables etc. are placed directly after their inclusion in the TeX
+# source instead of say at the beginning of a page. This is standard behaviour
+# for Latexml, hence we only create this binding so that LatexML knows what to do
+# when \usepackage{flafter} is used.
+
+######################################################
+
+1;

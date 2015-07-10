@@ -1,0 +1,339 @@
+# -*- CPERL -*-
+# /======================================================= #
+# |  beilstein.cls - Implementation for LaTeXML           | #
+# |                                                       | #
+# |=======================================================| #
+# | Not yet Part of LaTeXML : http://dlmf.nist.gov/LaTeXML/   | #
+# | Copyright (c) 2006 arXMLiv group                      | #
+# | Released under the GNU Public License                 | #
+# =======================================================/ #
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+######################################################
+
+###################
+# latex internals #
+###################
+# this section might become obsolete, if these commands are added to latexml itself
+
+RawTeX('\def\@ptionlist#1{%\@ifundefined{opt@#1}\@empty{\csname opt@#1\endcsname}}');
+RawTeX('\def\nfss@text#1{{\mbox{#1}}}');    # from "texmf-dist/tex/latex/base/latex.ltx"
+RawTeX('\def\@classoptionslist{}');         # from "texmf-dist/tex/latex/ltxkeys/ltxkeys.sty"
+
+# these can be defined as empty, since they add no content
+RawTeX('\def\@bsphack{}');
+RawTeX('\def\@esphack{}');
+
+LoadClass('article');
+RequirePackage('lineno');
+RequirePackage('everysel');
+RequirePackage('ragged2e');
+RequirePackage('flafter');
+RequirePackage('cleveref');
+
+RequirePackage('graphicx');
+RequirePackage('amsmath');
+
+# added because of usefulness
+RequirePackage('upgreek');    # -> all \up.. macros
+RequirePackage('url');        # -> \url
+RawTeX('\urlstyle{same}');
+RequirePackage('array');      # -> \newcolumntype
+RequirePackage('tabularx');
+
+# packages which are required after chapter 3 in the technical handbook
+#RequirePackage('xkeyval');
+#RequirePackage('ifthen'); # -> obsolete (replaced by etoolbox)
+#RequirePackage('babel');
+#RequirePackage('inputenc');
+#RequirePackage('fontenc');
+#RequirePackage('mathptmx');
+#RequirePackage('helvet');
+#RequirePackage('courier');
+RequirePackage('textcomp');
+#RequirePackage('geometry');
+#RequirePackage('ragged2e');
+#RequirePackage('everysel');
+#RequirePackage('footmisc');
+#RequirePackage('setspace');
+#RequirePackage('lineno');
+RequirePackage('amsmath');
+#RequirePackage('amstext');
+RequirePackage('amssymb');
+#RequirePackage('amsgen');
+#RequirePackage('asmbsy');
+#RequirePackage('amsopn');
+#RequirePackage('amsfonts');
+#RequirePackage('float');
+#RequirePackage('flafter');
+#RequirePackage('graphicx');
+#RequirePackage('array');
+#RequirePackage('tabularx');
+#RequirePackage('longtable');
+#RequirePackage('natbib');
+
+########################
+# \author and \author* #
+########################
+
+NewCounter('@affiliation');
+
+DefConstructor('\@@@affiliation{}',
+  "^ <ltx:contact role='affiliation' mark='#refnum'>#1</ltx:contact>",
+  properties => sub { RefStepCounter('@affiliation'); });
+DefMacro('\affiliation{}', '\@add@to@frontmatter{ltx:creator}{\@@@affiliation{#1}}');
+
+DefConstructor('\@@@dup@affiliation{}',
+  "^ <ltx:contact role='affiliation' mark='#1'></ltx:contact>");
+DefMacro('\dup@affiliation{}', '\@add@to@frontmatter{ltx:creator}{\@@@dup@affiliation{#1}}');
+
+DefConstructor('\@@@email{}', "^ <ltx:contact role='email'>#1</ltx:contact>");
+DefMacro('\@email Semiverbatim', '\@add@to@frontmatter{ltx:creator}{\@@@email{#1}}');
+
+DefConstructor('\@@@address{}', "^ <ltx:contact role='address'>#1</ltx:contact>");
+DefMacro('\@address Semiverbatim', '\@add@to@frontmatter{ltx:creator}{\@@@address{#1}}');
+
+DefConstructor('\@personname{}', "<ltx:contact role='name'>#1</ltx:contact>");
+DefMacro('\@author{}', '\@add@frontmatter{ltx:creator}[role=author]{\@personname{#1}}');
+
+DefMacro('\@author@nostar[][]{}',
+  '\@author{#3}' .
+    '\if.#1.' .
+    '\else' .    # has affiliation
+    '\dup@affiliation{#1}' .
+    '\fi' .
+    '\if.#2.' .
+    '\else' .    # has mail address
+    '\@address{#2}' .
+    '\fi'
+);
+DefMacro('\@author@star[]{}{}',
+  '\@author{#2}' .
+    '\@address{#3}' .
+    '\if.#1.' .
+    '\else' .    # has affiliation
+    '\dup@affiliation{#1}' .
+    '\fi'
+);
+
+DefMacro('\author OptionalMatch:*', sub { ($_[1] ? T_CS('\@author@star') : T_CS('\@author@nostar')); });
+
+##############
+# {abstract} #
+##############
+
+# uses p's autoclose property
+DefConstructor('\background', "<ltx:p role='background'>");
+DefConstructor('\results',    "<ltx:p role='results'>");
+DefConstructor('\conclusion', "<ltx:p role='conclusion'>");
+
+#############
+# \keywords #
+#############
+
+sub semicolonSplit {
+  my ($cs, $tokens) = @_;
+  return SplitTokens($cs, $tokens, T_OTHER(';')); }
+
+DefConstructor('\@@@keyword{}', "<ltx:inline-block role='keyword'>#1</ltx:inline-block>");
+DefMacro('\@keyword{}', '\@add@to@frontmatter{ltx:keywords}{\@@@keyword{#1}}');
+DefMacro('\keywords{}', sub { semicolonSplit(T_CS('\@keyword'), $_[1]); });
+
+##############
+# {suppinfo} #
+##############
+
+DefConstructor('\@sifileName{}',             "^ <ltx:p role='name'>#1");
+DefConstructor('\@sifileFormat{}',           "^ <ltx:p role='format'>#1");
+DefConstructor('\@sifileLongDescription{}',  "^ <ltx:p role='long description'>#1");
+DefConstructor('\@sifileShortDescription{}', "^ <ltx:p role='short description'>#1");
+DefConstructor('\@sifileEntry{}',            "<ltx:para role='entry'>#1</ltx:para>");
+
+# used to make later processing easier
+DefConstructor('\siIdentifier', "<ltx:para role='uniqueSiIdentifier'></ltx:para>");
+
+RawTeX('\newenvironment{suppinfo}{\section{suppinfo}\siIdentifier}{}');
+
+DefMacro('\sifile[]{}{}{}', '\subsection{subsuppinfo} \@sifileEntry{\@sifile[#1]{#2}{#3}{#4}}');
+DefMacro('\@sifile[]{}{}{}',
+  '\if.#1.' .
+    '\else' .    # has description
+    '\@sifileLongDescription{#1}' .
+    '\fi' .
+    '{' .
+    '\newcommand{_}{\_}' .    # because underscores are allowed in filenames
+    '\@sifileName{#2}' .
+    '}' .
+    '\@sifileFormat{#3}' .
+    '\@sifileShortDescription{#4}'
+);
+
+######################
+# {acknowledgements} #
+######################
+
+# used to make later processing easier
+DefConstructor('\acknowIdentifier', "<ltx:para role='uniqueAcknowIdentifier'></ltx:para>");
+
+RawTeX('\newenvironment{acknowledgements}{\section{Acknowledgements}\acknowIdentifier}{}');
+
+##########
+# tables #
+##########
+
+Let(T_CS('\sglcoltabular'),     T_CS('\tabular'));
+Let(T_CS('\endsglcoltabular'),  T_CS('\endtabular'));
+Let(T_CS('\sglcoltabularx'),    T_CS('\tabularx'));
+Let(T_CS('\endsglcoltabularx'), T_CS('\endtabularx'));
+Let(T_CS('\dblcoltabular'),     T_CS('\tabular'));
+Let(T_CS('\enddblcoltabular'),  T_CS('\endtabular'));
+Let(T_CS('\dblcoltabularx'),    T_CS('\tabularx'));
+Let(T_CS('\enddblcoltabularx'), T_CS('\endtabularx'));
+
+#########
+# files #
+#########
+
+#DefConstructor('\sglcolfigure{}', "<ltx:inline-block role='sglcolfigure'>#1</ltx:inline-block>");
+#DefConstructor('\sglcolscheme{}', "<ltx:inline-block role='sglcolscheme'>#1</ltx:inline-block>");
+#DefConstructor('\dblcolfigure{}', "<ltx:inline-block role='sglcolfigure'>#1</ltx:inline-block>");
+#DefConstructor('\dblcolscheme{}', "<ltx:inline-block role='sglcolscheme'>#1</ltx:inline-block>");
+DefMacro('\sglcolfigure{}', '\includegraphics{#1}');
+DefMacro('\sglcolscheme{}', '\includegraphics{#1}');
+DefMacro('\dblcolfigure{}', '\includegraphics{#1}');
+DefMacro('\dblcolscheme{}', '\includegraphics{#1}');
+
+##########
+# scheme #
+##########
+
+DefEnvironment('{scheme}', "<ltx:para role='scheme'>#body</ltx:para>");
+
+#############
+# unit/chem #
+#############
+
+#RawTeX('\def\testbx{bx}');
+#DefMacro('\chem{}', "\ensuremath{\ifx\testbx\f@series\mathbf{#1}\else\mathrm{#1}\fi}");
+#DefMacro('\unit{}', "\ensuremath{\def\mu{\mbox{\textmu}}\def~{\,}\unskip~\ifx\testbx\f@series\mathbf{#1}\else\mathrm{#1}\fi}");
+# is not working -> Global symbol "@series" requires explicit package
+
+RawTeX('
+\def\testbx{bx}
+\@ifundefined{chem}{%
+   \DeclareRobustCommand*{\chem}[1]{\ensuremath{%
+      \ifx\testbx\f@series\mathbf{#1}\else\mathrm{#1}\fi}}}%
+   {}
+\@ifundefined{unit}{%
+   \DeclareRobustCommand*{\unit}[1]{%
+      \ensuremath{\def\mu{\mbox{\textmu}}\def~{\,}%
+      \unskip~%
+      \ifx\testbx\f@series\mathbf{#1}\else\mathrm{#1}\fi}}}%
+   {}
+');
+
+######################
+# bibliography style #
+######################
+
+DefConstructor('\bibliographystyle{}', "");
+
+###########
+# symbols #
+###########
+
+RawTeX('\newcommand*{\degree}{\ensuremath{{}^{\circ}}}');
+DefMacro('\celsius',  '\degree\kern-\scriptspace C');
+DefMacro('\angstrom', '\AA');
+DefMacro('\permil',   '\textperthousand');
+DefMacro('\percent',  '\%');
+
+#################
+# pdfattributes #
+#################
+
+# only adds metadata information to the PDF file that LaTeXML already adds to the XML
+DefConstructor('\pdfcreationtime', "");
+DefConstructor('\pdfinfo{}',       "");
+DefConstructor('\pdfcreationdate', "");
+
+#DefConstructor('\pdfminorversion', "");
+#DefConstructor('\pdfcompresslevel', ""); => same as \listfiles
+#DefConstructor('\pdfobjcompresslevel', "");
+
+##################
+# \mynobreakdash #
+##################
+
+DefMacro('\mynobreakdash', '\nobreakdash--');
+
+# setboolean can be defined as empty, since it is only used to set "nobreakdashused" to false (and we do not care about it)
+DefConstructor('\setboolean{}{}', "");
+
+############
+# widetext #
+############
+
+DefMacro('\widetext', '');    # from revtex4_support.sty.ltxml
+
+##########
+# fnpara #
+##########
+
+DefConstructor('\fnpara', "");
+
+#########
+# IUPAC #
+#########
+
+# use local definitions here, so it does not interfere with escape underscores, etc.
+DefMacro('\IUPAC{}', '
+  {
+    \newcommand{\_}[1]{_{\text{#1}}}
+    \newcommand{\^{}}[1]{\textsuperscript{#1}}
+    \IUPAClocal{#1}
+  }
+');
+DefConstructor('\IUPAClocal{}', "<ltx:text class='IUPAC'>#1</ltx:text>");
+DefConstructor('\-',            "<ltx:text class='IUPAChyphen'>-</ltx:text>");
+DefConstructor('\|',            "<ltx:text class='IUPACmultibreak'/>");
+
+############
+# captions #
+############
+
+DefConstructor('\caption{}', "<ltx:text role='caption'>#1</ltx:text>");
+
+##############
+# {equation} #
+##############
+
+DefMacro('\@eegroup',             '\egroup\egroup');
+DefMacro('\@dollar@in@oldrevtex', '\bgroup\hbox\bgroup\let$\@eegroup');
+DefEnvironment('{equation}',
+  "<ltx:equation xml:id='#id' refnum='#refnum' frefnum='#frefnum' rrefnum='#rrefnum'>"
+    . "<ltx:Math mode='display'>"
+    . "<ltx:XMath>"
+    . "#body"
+    . "</ltx:XMath>"
+    . "</ltx:Math>"
+    . "</ltx:equation>",
+  mode => 'display_math',
+  beforeDigest => sub { Let(T_MATH, T_CS('\@dollar@in@oldrevtex')); },
+  properties => sub { RefStepCounter('equation'); },
+  locked => 1
+);
+
+###################
+# unneeded macros #
+###################
+# the following macros are not needed, since the only contain information concerning the layout
+
+DefMacro('\maketitle', '');
+
+######################################################
+
+1;

@@ -1,0 +1,78 @@
+# -*- CPERL -*-
+# /======================================================= #
+# |  lineno.sty - Implementation for LaTeXML              | #
+# |                                                       | #
+# |=======================================================| #
+# | Not yet Part of LaTeXML : http://dlmf.nist.gov/LaTeXML/   | #
+# | Copyright (c) 2013 arXMLiv group                      | #
+# | Released under the GNU Public License                 | #
+# =======================================================/ #
+
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+######################################################
+
+DefConstructor('\linenumbers[]', "");
+DefEnvironment('{linenumbers}', "#body");
+DefConstructor('\setrunninglinenumbers', "");
+DefConstructor('\runninglinenumbers[]',  "");
+DefConstructor('\resetlinenumber[]',     "");
+DefEnvironment('{linenumbers*}',        "#body");
+DefEnvironment('{runninglinenumbers*}', "#body");
+DefConstructor('\setpagewiselinenumbers', "");
+DefEnvironment('{pagewiselinenumbers}', "#body");
+DefConstructor('\pagewiselinenumbers',        "");
+DefConstructor('\runningpagewiselinenumbers', "");
+DefConstructor('\realpagewiselinenumbers',    "");
+DefConstructor('\leftlinenumbers',            "");
+DefConstructor('\modulolinenumbers[]',        "");
+DefConstructor('\linenumberfont',             "");
+DefEnvironment('{bframe}', "#body");
+DefConstructor('\bframsep',              "");
+DefConstructor('\bframerate',            "");
+DefConstructor('\baselineskip',          "");
+DefConstructor('\linenumberskip',        "");
+DefConstructor('\linenumberwidth',       "");
+DefConstructor('\thelinenumber',         "");
+DefConstructor('\makeLineNumber',        "");
+DefConstructor('\Linenumber',            "");
+DefConstructor('\makeLineNumberrunning', "");
+DefMacro('\linelabel{}',  "\label{#1}");
+DefMacro('\lineref[]{}',  "\ref{#2}");
+DefMacro('\linrefp[]{}',  "\ref{#2}");
+DefMacro('\linerefr[]{}', "\ref{#2}");
+RawTeX('\newenvironment{numquote}{\begin{quote}}{\end{quote}}');
+RawTeX('\newenvironment{numquote*}{\begin{quote}}{\end{quote}}');
+RawTeX('\newenvironment{numquotation}{\begin{quotation}}{\end{quotation}}');
+RawTeX('\newenvironment{numquotation*}{\begin{quotation}}{\end{quotation}}');
+DefConstructor('\quotelinenumberstep', "");
+DefConstructor('\quotelinenumberfont', "");
+DefConstructor('\makeLineNumberOdd',   "");
+DefConstructor('\MakeLineNumberEven',  "");
+DefConstructor('\makeLineNumberLeft',  "");
+DefConstructor('\makeLineNumberright', "");
+DefEnvironment('{linenomath}',  "#body");
+DefEnvironment('{linenomath*}', "#body");
+DefConstructor('\nolinenumbers', "");
+DeclareOption('left',        "");
+DeclareOption('right',       "");
+DeclareOption('switch',      "");
+DeclareOption('switch*',     "");
+DeclareOption('pagewise',    "");
+DeclareOption('running',     "");
+DeclareOption('modulo',      "");
+DeclareOption('mathlines',   "");
+DeclareOption('displaymath', "");
+DefMacro('\linenumbers OptionalMatch:*',          "");
+DefMacro('\runninglinenumbers OptionalMatch:*',   "");
+DefMacro('\switchlinenumbers OptionalMatch:*',    "");
+DefMacro('\leftlinenumbers OptionalMatch:*',      "");
+DefMacro('\rigthlinenumbers OptionalMatch:*',     "");
+DefMacro('\runninglinenumbers[] OptionalMatch:*', "");
+
+######################################################
+
+1;
