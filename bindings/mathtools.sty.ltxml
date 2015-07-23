@@ -394,50 +394,26 @@ DefMacro('\endVsmallmatrix', '\lx@end@ams@matrix');
 #    . "<ltx:XMHint name='multlined-end'/>");
 
 # cases
-DefConstructor('\@@cases@mt {} DigestedBody',
-  '#2',
-  reversion    => '\begin{#1}#2\end{#1}',
-  beforeDigest => sub {
-    $_[0]->bgroup; });
+DefMacro('\dcases', '\lx@ams@cases{name=dcases,meaning=cases,left=\@left\{,style=\displaystyle,conditionmode=math}');
+DefMacro('\enddcases', '\lx@end@ams@cases');
 
-DefPrimitive('\@cases@bindings {}{}{}{}{}', sub {
-    my ($stomach, $style1, $style2, $open, $close, $type) = @_;    # $type = m | t
-    $open  = ToString($open);
-    $close = ToString($close);
-    $type  = ToString($type);
+DefMacro('\csname dcases*\endcsname', '\lx@ams@cases{name=dcases,meaning=cases,left=\@left\{,style=\displaystyle,conditionmode=text}');
+DefMacro('\csname enddcases*\endcsname', '\lx@end@ams@cases');
 
-    # fix for \{ and \}
-    if (substr($open, 0, 1) eq '\\') {
-      $open = substr($open, 1); }
-    if (substr($close, 0, 1) eq '\\') {
-      $close = substr($close, 1); }
+DefMacro('\csname rcases\endcsname', '\lx@ams@cases{name=rcases,meaning=cases,right=\@right\},style=\textstyle,conditionmode=math}');
+DefMacro('\csname endrcases\endcsname', '\lx@end@ams@cases');
 
-    my $templ = LaTeXML::Core::Alignment::Template->new(columns => [
-        { before => Tokens($style1), after => Tokens(T_CS('\hfil')) },
-        { before => Tokens(($type eq 't') ? T_MATH : (), $style2), after => Tokens(($type eq 't') ? T_MATH : (), T_CS('\hfil')) }]);
+DefMacro('\csname rcases*\endcsname', '\lx@ams@cases{name=rcases,meaning=cases,right=\@right\},style=\textstyle,conditionmode=text}');
+DefMacro('\csname endrcases*\endcsname', '\lx@end@ams@cases');
 
-    alignmentBindings($templ, 'math', attributes => { meaning => 'cases', open => $open, close => $close }); });
+DefMacro('\csname drcases\endcsname', '\lx@ams@cases{name=drcases,meaning=cases,right=\@right\},style=\displaystyle,conditionmode=math}');
+DefMacro('\csname enddrcases\endcsname', '\lx@end@ams@cases');
 
-DefMacro('\dcases', '\@cases@bindings{\displaystyle}{\displaystyle}{\{}{}{m}\@@cases@mt{dcases}\@start@alignment');
-DefMacro('\enddcases', '\@finish@alignment\@end@cases');
+DefMacro('\csname drcases*\endcsname', '\lx@ams@cases{name=drcases,meaning=cases,right=\@right\},style=\displaystyle,conditionmode=text}');
+DefMacro('\csname enddrcases*\endcsname', '\lx@end@ams@cases');
 
-DefMacro('\csname dcases*\endcsname', '\@cases@bindings{\displaystyle}{\displaystyle}{\{}{}{t}\@@cases@mt{dcases*}\@start@alignment');
-DefMacro('\csname enddcases*\endcsname', '\@finish@alignment\@end@cases');
-
-DefMacro('\csname rcases\endcsname', '\@cases@bindings{\textstyle}{\textstyle}{}{\}}{m}\@@cases@mt{rcases}\@start@alignment');
-DefMacro('\csname endrcases\endcsname', '\@finish@alignment\@end@cases');
-
-DefMacro('\csname rcases*\endcsname', '\@cases@bindings{\textstyle}{\textstyle}{}{\}}{t}\@@cases@mt{rcases*}\@start@alignment');
-DefMacro('\csname endrcases*\endcsname', '\@finish@alignment\@end@cases');
-
-DefMacro('\csname drcases\endcsname', '\@cases@bindings{\displaystyle}{\displaystyle}{}{\}}{m}\@@cases@mt{drcases}\@start@alignment');
-DefMacro('\csname enddrcases\endcsname', '\@finish@alignment\@end@cases');
-
-DefMacro('\csname drcases*\endcsname', '\@cases@bindings{\displaystyle}{\displaystyle}{}{\}}{t}\@@cases@mt{drcases*}\@start@alignment');
-DefMacro('\csname enddrcases*\endcsname', '\@finish@alignment\@end@cases');
-
-DefMacro('\csname cases*\endcsname', '\@cases@bindings{\textstyle}{\textstyle}{\{}{}{t}\@@cases@mt{cases*}\@start@alignment');
-DefMacro('\csname endcases*\endcsname', '\@finish@alignment\@end@cases');
+DefMacro('\csname cases*\endcsname', '\lx@ams@cases{name=cases,meaning=cases,left=\@left\{,style=\textstyle,conditionmode=text}');
+DefMacro('\csname endcases*\endcsname', '\lx@end@ams@cases');
 
 #MoveEqLeft
 
