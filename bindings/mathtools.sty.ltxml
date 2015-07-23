@@ -345,46 +345,57 @@ Let('\LaTeXoverbrace',  '\overbrace');
 
 ## 3.4
 # starred normal matrices
-DefMacro('\csname matrix*\endcsname []',  '\lx@ams@matrix{name=matrix,datameaning=matrix,alignment=#1}');
-DefMacro('\csname pmatrix*\endcsname []', '\lx@ams@matrix{name=pmatrix,datameaning=matrix,alignment=#1,left=\@left(,right=\@right)}');
-DefMacro('\csname bmatrix*\endcsname []', '\lx@ams@matrix{name=bmatrix,datameaning=matrix,alignment=#1,left=\@left[,right=\@right]}');
-DefMacro('\csname Bmatrix*\endcsname []', '\lx@ams@matrix{name=Bmatrix,datameaning=matrix,alignment=#1,left=\@left\{,right=\@right\}}');
-DefMacro('\csname vmatrix*\endcsname []', '\lx@ams@matrix{name=vmatrix,delimitermeaning=determinant,datameaning=matrix,alignment=#1,left=\@left|,right=\@right|}}');
-DefMacro('\csname Vmatrix*\endcsname []', '\lx@ams@matrix{name=Vmatrix,delimitermeaning=norm,datameaning=matrix,alignment=#1,left=\@left\|,right=\@right\|}}');
+DefMacro('\csname matrix*\endcsname []', '\lx@ams@matrix{name=matrix,datameaning=matrix,alignment=#1}');
+DefMacro('\csname endmatrix*\endcsname', '\lx@end@ams@matrix');
 
-DefMacro('\csname endmatrix*\endcsname',  '\lx@end@ams@matrix');
+DefMacro('\csname pmatrix*\endcsname []', '\lx@ams@matrix{name=pmatrix,datameaning=matrix,alignment=#1,left=\@left(,right=\@right)}');
 DefMacro('\csname endpmatrix*\endcsname', '\lx@end@ams@matrix');
+
+DefMacro('\csname bmatrix*\endcsname []', '\lx@ams@matrix{name=bmatrix,datameaning=matrix,alignment=#1,left=\@left[,right=\@right]}');
 DefMacro('\csname endbmatrix*\endcsname', '\lx@end@ams@matrix');
+
+DefMacro('\csname Bmatrix*\endcsname []', '\lx@ams@matrix{name=Bmatrix,datameaning=matrix,alignment=#1,left=\@left\{,right=\@right\}}');
 DefMacro('\csname endBmatrix*\endcsname', '\lx@end@ams@matrix');
+
+DefMacro('\csname vmatrix*\endcsname []', '\lx@ams@matrix{name=vmatrix,delimitermeaning=determinant,datameaning=matrix,alignment=#1,left=\@left|,right=\@right|}}');
 DefMacro('\csname endvmatrix*\endcsname', '\lx@end@ams@matrix');
+
+DefMacro('\csname Vmatrix*\endcsname []', '\lx@ams@matrix{name=Vmatrix,delimitermeaning=norm,datameaning=matrix,alignment=#1,left=\@left\|,right=\@right\|}}');
 DefMacro('\csname endVmatrix*\endcsname', '\lx@end@ams@matrix');
 
 # starred small matrices
-DefMacro('\csname smallmatrix*\endcsname []',  '\lx@ams@matrix{name=matrix,datameaning=matrix,alignment=#1,style=\scriptsize}');
-DefMacro('\csname psmallmatrix*\endcsname []', '\lx@ams@matrix{name=pmatrix,datameaning=matrix,alignment=#1,left=\@left(,right=\@right),style=\scriptsize}');
-DefMacro('\csname bsmallmatrix*\endcsname []', '\lx@ams@matrix{name=bmatrix,datameaning=matrix,alignment=#1,left=\@left[,right=\@right],style=\scriptsize}');
-DefMacro('\csname Bsmallmatrix*\endcsname []', '\lx@ams@matrix{name=Bmatrix,datameaning=matrix,alignment=#1,left=\@left\{,right=\@right\},style=\scriptsize}');
-DefMacro('\csname vsmallmatrix*\endcsname []', '\lx@ams@matrix{name=vmatrix,delimitermeaning=determinant,datameaning=matrix,alignment=#1,left=\@left|,right=\@right|,style=\scriptsize}');
-DefMacro('\csname Vsmallmatrix*\endcsname []', '\lx@ams@matrix{name=Vmatrix,delimitermeaning=norm,datameaning=matrix,alignment=#1,left=\@left\|,right=\@right\|,style=\scriptsize}');
+DefMacro('\csname smallmatrix*\endcsname []', '\lx@ams@matrix{name=matrix,datameaning=matrix,alignment=#1,style=\scriptsize}');
+DefMacro('\csname endsmallmatrix*\endcsname', '\lx@end@ams@matrix');
 
-DefMacro('\csname endsmallmatrix*\endcsname',  '\lx@end@ams@matrix');
+DefMacro('\csname psmallmatrix*\endcsname []', '\lx@ams@matrix{name=pmatrix,datameaning=matrix,alignment=#1,left=\@left(,right=\@right),style=\scriptsize}');
 DefMacro('\csname endpsmallmatrix*\endcsname', '\lx@end@ams@matrix');
+
+DefMacro('\csname bsmallmatrix*\endcsname []', '\lx@ams@matrix{name=bmatrix,datameaning=matrix,alignment=#1,left=\@left[,right=\@right],style=\scriptsize}');
 DefMacro('\csname endbsmallmatrix*\endcsname', '\lx@end@ams@matrix');
+
+DefMacro('\csname Bsmallmatrix*\endcsname []', '\lx@ams@matrix{name=Bmatrix,datameaning=matrix,alignment=#1,left=\@left\{,right=\@right\},style=\scriptsize}');
 DefMacro('\csname endBsmallmatrix*\endcsname', '\lx@end@ams@matrix');
+
+DefMacro('\csname vsmallmatrix*\endcsname []', '\lx@ams@matrix{name=vmatrix,delimitermeaning=determinant,datameaning=matrix,alignment=#1,left=\@left|,right=\@right|,style=\scriptsize}');
 DefMacro('\csname endvsmallmatrix*\endcsname', '\lx@end@ams@matrix');
+
+DefMacro('\csname Vsmallmatrix*\endcsname []', '\lx@ams@matrix{name=Vmatrix,delimitermeaning=norm,datameaning=matrix,alignment=#1,left=\@left\|,right=\@right\|,style=\scriptsize}');
 DefMacro('\csname endVsmallmatrix*\endcsname', '\lx@end@ams@matrix');
 
 # non-starred small matrices
 DefMacro('\psmallmatrix', '\lx@ams@matrix{name=pmatrix,datameaning=matrix,left=\@left(,right=\@right),style=\scriptsize}');
-DefMacro('\bsmallmatrix', '\lx@ams@matrix{name=bmatrix,datameaning=matrix,left=\@left[,right=\@right],style=\scriptsize}');
-DefMacro('\Bsmallmatrix', '\lx@ams@matrix{name=Bmatrix,datameaning=matrix,left=\@left\{,right=\@right\},style=\scriptsize}');
-DefMacro('\vsmallmatrix', '\lx@ams@matrix{name=vmatrix,delimitermeaning=determinant,datameaning=matrix,left=\@left|,right=\@right|,style=\scriptsize}');
-DefMacro('\Vsmallmatrix', '\lx@ams@matrix{name=Vmatrix,delimitermeaning=norm,datameaning=matrix,left=\@left\|,right=\@right\|,style=\scriptsize}');
-
 DefMacro('\endpsmallmatrix', '\lx@end@ams@matrix');
+
+DefMacro('\bsmallmatrix', '\lx@ams@matrix{name=bmatrix,datameaning=matrix,left=\@left[,right=\@right],style=\scriptsize}');
 DefMacro('\endbsmallmatrix', '\lx@end@ams@matrix');
+
+DefMacro('\Bsmallmatrix', '\lx@ams@matrix{name=Bmatrix,datameaning=matrix,left=\@left\{,right=\@right\},style=\scriptsize}');
 DefMacro('\endBsmallmatrix', '\lx@end@ams@matrix');
+
+DefMacro('\vsmallmatrix', '\lx@ams@matrix{name=vmatrix,delimitermeaning=determinant,datameaning=matrix,left=\@left|,right=\@right|,style=\scriptsize}');
 DefMacro('\endvsmallmatrix', '\lx@end@ams@matrix');
+
+DefMacro('\Vsmallmatrix', '\lx@ams@matrix{name=Vmatrix,delimitermeaning=norm,datameaning=matrix,left=\@left\|,right=\@right\|,style=\scriptsize}');
 DefMacro('\endVsmallmatrix', '\lx@end@ams@matrix');
 
 # {multlined}
