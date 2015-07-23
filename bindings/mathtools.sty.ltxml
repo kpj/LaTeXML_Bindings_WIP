@@ -415,23 +415,7 @@ DefMacro('\csname endcases*\endcsname', '\lx@end@ams@cases');
 #DefMacro('\Aboxed{}', '#1');
 
 ## 3.5
-
-DefMacro('\@mt@intertext{}',
-  '\@mt@newline\multicolumn{\@alignment@ncolumns}{l}{\@@mt@intertext{#1}}\nonumber\@mt@newline');
-DefConstructor('\@@mt@intertext{}',
-  "<ltx:p class='ltx_intertext'>#1</ltx:p>", mode => 'text');
-
-DefMacroI('\@mt@newline', undef, sub {
-    my ($gullet) = @_;
-    readNewlineArgs($gullet);
-    $gullet->skipSpaces();
-    my $next = $gullet->readToken();
-    if ($next && $next->equals(T_CS('\shortintertext'))) {
-      ($next); }
-    else {
-      (T_CS('\@alignment@newline@noskip'), $next); } });
-
-Let('\shortintertext', '\@mt@intertext');
+Let('\shortintertext', '\@ams@intertext');
 
 ## 3.6
 
