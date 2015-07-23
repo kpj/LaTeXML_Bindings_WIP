@@ -38,23 +38,6 @@ DeclareOption(undef, sub {
 ProcessOptions();
 RequirePackage('amsmath', withoptions => 1);
 
-#########
-# Utils #
-#########
-
-# alignment stuff
-sub MTMatrixTemplate {
-  my ($type) = @_;
-  my $alty = {};
-  if ($type eq 'c') {
-    $alty = { before => Tokens(T_CS('\hfil')), after => Tokens(T_CS('\hfil')) }; }
-  elsif ($type eq 'l') {
-    $alty = { after => Tokens(T_CS('\hfil')) }; }
-  elsif ($type eq 'r') {
-    $alty = { before => Tokens(T_CS('\hfil')) }; }
-  my $stuff = LaTeXML::Core::Alignment::Template->new(repeated => [$alty]);
-  return $stuff; }
-
 ##########
 # Macros #
 ##########
