@@ -12,7 +12,6 @@
 \usetagform{good}
 
 \mathtoolsset{
-showonlyrefs,
 mathic % or mathic = true
 }
 
@@ -81,6 +80,30 @@ a=b \label{eq:example}\tag*{Q\&A}
 \end{equation*}
 See \ref{eq:example} or is it better with \refeq{eq:example}?
 \end{quote}
+
+\horz
+
+\mathtoolsset{showonlyrefs,showmanualtags}
+\usetagform{bad}
+\begin{gather}
+a=a \label{eq:a} \\
+b=b \label{eq:b} \tag{**}
+\end{gather}
+This should refer to the equation containing $a=a$: \eqref{eq:a}.
+Then a switch of tag forms.
+\usetagform{good}
+\begin{align}
+c&=c \label{eq:c} \\
+d&=d \label{eq:d}
+\end{align}
+This should refer to the equation containing $d=d$: \eqref{eq:d}.
+\begin{equation}
+e=e
+\end{equation}
+Back to normal.\mathtoolsset{showonlyrefs=false}
+\begin{equation}
+f=f
+\end{equation}
 
 \horz
 
