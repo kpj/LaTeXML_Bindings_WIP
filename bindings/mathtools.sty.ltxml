@@ -449,7 +449,7 @@ DefPrimitive('\DeclarePairedDelimiterX DefToken [] {} {} {}', sub {
         my ($gullet, $star, $opt) = @_;
         return (($star ? T_CS('\left') : ((defined $opt) ? $opt->unlist : ())),
           $ldel->unlist,
-          T_CS('\def'), T_CS('\delimsize'), T_BEGIN, ($opt ? $opt->unlist : ()), T_END,
+          T_CS('\def'), T_CS('\delimsize'), T_BEGIN, ($opt ? $opt->unlist : ($star ? T_CS('\middle') : ())), T_END,
           T_CS('\def'), T_CS($cs . '@after'), T_BEGIN, ($star ? T_CS('\right') : ((defined $opt) ? $opt->unlist : ())), $rdel->unlist, T_END,
           T_CS(ToString($cs) . '@inner')); }); });
 
@@ -467,7 +467,7 @@ DefPrimitive('\DeclarePairedDelimiterXPP DefToken [] {} {} {} {} {}', sub {
         return ($precode->unlist,
           ($star ? T_CS('\left') : ((defined $opt) ? $opt->unlist : ())),
           $ldel->unlist,
-          T_CS('\def'), T_CS('\delimsize'), T_BEGIN, ($opt ? $opt->unlist : ()), T_END,
+          T_CS('\def'), T_CS('\delimsize'), T_BEGIN, ($opt ? $opt->unlist : ($star ? T_CS('\middle') : ())), T_END,
           T_CS('\def'), T_CS($cs . '@after'), T_BEGIN, ($star ? T_CS('\right') : ((defined $opt) ? $opt->unlist : ())), $rdel->unlist, T_END,
           T_CS(ToString($cs) . '@inner')); }); });
 
