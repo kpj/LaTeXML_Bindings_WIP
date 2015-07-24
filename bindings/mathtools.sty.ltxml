@@ -340,10 +340,10 @@ DefMacro('\csname endbmatrix*\endcsname', '\lx@end@ams@matrix');
 DefMacro('\csname Bmatrix*\endcsname []', '\lx@ams@matrix{name=Bmatrix,datameaning=matrix,alignment=#1,left=\@left\{,right=\@right\}}');
 DefMacro('\csname endBmatrix*\endcsname', '\lx@end@ams@matrix');
 
-DefMacro('\csname vmatrix*\endcsname []', '\lx@ams@matrix{name=vmatrix,delimitermeaning=determinant,datameaning=matrix,alignment=#1,left=\@left|,right=\@right|}}');
+DefMacro('\csname vmatrix*\endcsname []', '\lx@ams@matrix{name=vmatrix,delimitermeaning=determinant,datameaning=matrix,alignment=#1,left=\@left|,right=\@right|}');
 DefMacro('\csname endvmatrix*\endcsname', '\lx@end@ams@matrix');
 
-DefMacro('\csname Vmatrix*\endcsname []', '\lx@ams@matrix{name=Vmatrix,delimitermeaning=norm,datameaning=matrix,alignment=#1,left=\@left\|,right=\@right\|}}');
+DefMacro('\csname Vmatrix*\endcsname []', '\lx@ams@matrix{name=Vmatrix,delimitermeaning=norm,datameaning=matrix,alignment=#1,left=\@left\|,right=\@right\|}');
 DefMacro('\csname endVmatrix*\endcsname', '\lx@end@ams@matrix');
 
 # starred small matrices
