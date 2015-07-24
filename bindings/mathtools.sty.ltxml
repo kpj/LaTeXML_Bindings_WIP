@@ -95,6 +95,7 @@ DefPrimitive('\renewtagform {} [] {} {}', sub {
 DefMacro('\usetagform {}', '\csname @MTStag@#1\endcsname');
 
 Let('\refeq', '\ref');
+DefMacro('\noeqref{}', '');
 
 ## 3.3
 

@@ -107,6 +107,21 @@ f=f
 
 \horz
 
+\mathtoolsset{showonlyrefs=true}
+\begin{equation*}
+1+1=2 \label{eq:much}
+\end{equation*}
+
+\begin{equation*}
+2+2=4 \label{eq:wow}
+\end{equation*}
+
+\noeqref{eq:much}
+Blabla \eqref{eq:wow}.
+\mathtoolsset{showonlyrefs=false}
+
+\horz
+
 \[
 A \xLeftarrow[under]{over} B \xRightarrow[under]{over} C
 \]
