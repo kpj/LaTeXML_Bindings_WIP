@@ -509,6 +509,24 @@ DefMathI('\bigtimes', undef, UTF(0xD7), role => 'MULOP', meaning => 'times', fon
 
 DefMathI('\prescript', '{}{}{}', '{}^{\@mt@getmtoption{prescript-sup-format}{#1}}_{\@mt@getmtoption{prescript-sub-format}{#2}}{\@mt@getmtoption{prescript-arg-format}{#3}}', scriptpos => 'pre');
 
+## 4.6
+
+DefConstructor('\@MT@dm@multlined DigestedBody',
+  "<ltx:Math mode='display'>"
+    . "<ltx:XMath>#body</ltx:XMath>"
+    . "</ltx:Math>",
+  mode         => 'display_math',
+  beforeDigest => sub { 
+    $_[0]->bgroup;
+    amsMultlineBindings(); },
+  afterDigest => sub {    # Nasty trick required to make "body" be the arg.
+    $_[1]->setBody($_[1]->getArg(1)->unlist, undef); },
+  afterConstruct => sub {
+    rearrangeAMSMultiline($_[0], $_[0]->getNode->lastChild->lastChild->lastChild); });
+
+DefMacro('\splitfrac{}{}', '\@MT@dm@multlined\@start@alignment #1 \\\ #2 \@finish@alignment\@end@multline');
+Let('\splitdfrac', '\splitfrac');
+
 ######################################################
 
 1;
