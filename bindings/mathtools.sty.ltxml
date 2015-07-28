@@ -383,18 +383,31 @@ DefMacro('\Vsmallmatrix', '\lx@ams@matrix{name=Vmatrix,delimitermeaning=norm,dat
 DefMacro('\endVsmallmatrix', '\lx@end@ams@matrix');
 
 # {multlined}
-DefConstructor('\@MT@multlined DigestedBody',
+DefKeyVal('multlined', 'width', 'Dimension');
+
+DefConstructor('\@@multlined DigestedBody',
   "#1",
-  beforeDigest => sub { 
-    $_[0]->bgroup;
-    amsMultlineBindings(); },
-  afterDigest => sub {    # Nasty trick required to make "body" be the arg.
+  beforeDigest => sub { $_[0]->bgroup; },
+  afterDigest => sub {
     $_[1]->setBody($_[1]->getArg(1)->unlist, undef); },
   afterConstruct => sub {
     rearrangeAMSMultiline($_[0], $_[0]->getNode->lastChild); });
 
-DefMacro('\multlined[][]',                      '\@MT@multlined\@start@alignment');
-DefMacro('\endmultlined',                   '\@finish@alignment\@end@multline');
+DefPrimitive('\@multlined@bindings RequiredKeyVals:multlined', sub {
+    my ($stomach, $attributes) = @_;
+    my %attr = $attributes->getPairs;
+
+    if (my $va = $attr{vattach}) {
+      $attr{vattach} = translateAttachment($va) || ToString($va); }
+    if ($attr{width} && $attr{width}->valueOf == 0) {
+      delete $attr{width}; }
+
+    amsMultirowBindings(%attr);
+    return; });
+
+DefMacroI('\multlined', '[] Optional:0em', '\@multlined@bindings{name=multlined,vattach=#1,width=#2}\@@multlined\@start@alignment');
+DefMacroI('\endmultlined', undef, '\@finish@alignment\@end@multlined');
+DefPrimitiveI('\@end@multlined', undef, sub { $_[0]->egroup; });
 
 # cases
 DefMacro('\dcases', '\lx@ams@cases{name=dcases,meaning=cases,left=\@left\{,style=\displaystyle,conditionmode=math}');
@@ -519,8 +532,8 @@ DefMathI('\prescript', '{}{}{}', '{}^{\@mt@getmtoption{prescript-sup-format}{#1}
 
 ## 4.6
 
-DefMacro('\splitfrac{}{}', '\@MT@multlined\@start@alignment #1 \\\ #2 \@finish@alignment\@end@multline');
-DefMacro('\splitdfrac{}{}', '\displaystyle\@MT@multlined\@start@alignment #1 \\\ #2 \@finish@alignment\@end@multline');
+DefMacro('\splitfrac{}{}', '\@multlined@bindings{name=splitfrac}\@@multlined\@start@alignment #1 \\\\ #2 \@finish@alignment\@end@multline');
+DefMacro('\splitdfrac{}{}', '\displaystyle\@multlined@bindings{name=splitdfrac}\@@multlined\@start@alignment #1 \\\\ #2 \@finish@alignment\@end@multline');
 
 ######################################################
 
