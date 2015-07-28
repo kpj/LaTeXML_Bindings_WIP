@@ -520,7 +520,7 @@ DefMathI('\prescript', '{}{}{}', '{}^{\@mt@getmtoption{prescript-sup-format}{#1}
 ## 4.6
 
 DefMacro('\splitfrac{}{}', '\@MT@multlined\@start@alignment #1 \\\ #2 \@finish@alignment\@end@multline');
-Let('\splitdfrac', '\splitfrac');
+DefMacro('\splitdfrac{}{}', '\displaystyle\@MT@multlined\@start@alignment #1 \\\ #2 \@finish@alignment\@end@multline');
 
 ######################################################
 
