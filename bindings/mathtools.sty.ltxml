@@ -38,6 +38,26 @@ DeclareOption(undef, sub {
 ProcessOptions();
 RequirePackage('amsmath', withoptions => 1);
 
+
+#########
+# Utils #
+#########
+
+DefKeyVal('multirow', 'width', 'Dimension');
+
+DefPrimitive('\@multirow@bindings RequiredKeyVals:multirow', sub {
+    my ($stomach, $attributes) = @_;
+    my %attr = $attributes->getPairs;
+
+    if (my $va = $attr{vattach}) {
+      $attr{vattach} = translateAttachment($va) || ToString($va); }
+    if ($attr{width} && $attr{width}->valueOf == 0) {
+      delete $attr{width}; }
+
+    amsMultirowBindings(%attr);
+    return; });
+
+
 ##########
 # Macros #
 ##########
@@ -383,29 +403,15 @@ DefMacro('\Vsmallmatrix', '\lx@ams@matrix{name=Vmatrix,delimitermeaning=norm,dat
 DefMacro('\endVsmallmatrix', '\lx@end@ams@matrix');
 
 # {multlined}
-DefKeyVal('multlined', 'width', 'Dimension');
-
 DefConstructor('\@@multlined DigestedBody',
   "#1",
   beforeDigest => sub { $_[0]->bgroup; },
   afterDigest => sub {
     $_[1]->setBody($_[1]->getArg(1)->unlist, undef); },
   afterConstruct => sub {
-    rearrangeAMSMultiline($_[0], $_[0]->getNode->lastChild); });
+    rearrangeAMSMultirow($_[0], $_[0]->getNode->lastChild); });
 
-DefPrimitive('\@multlined@bindings RequiredKeyVals:multlined', sub {
-    my ($stomach, $attributes) = @_;
-    my %attr = $attributes->getPairs;
-
-    if (my $va = $attr{vattach}) {
-      $attr{vattach} = translateAttachment($va) || ToString($va); }
-    if ($attr{width} && $attr{width}->valueOf == 0) {
-      delete $attr{width}; }
-
-    amsMultirowBindings(%attr);
-    return; });
-
-DefMacroI('\multlined', '[] Optional:0em', '\@multlined@bindings{name=multlined,vattach=#1,width=#2}\@@multlined\@start@alignment');
+DefMacroI('\multlined', '[] Optional:0em', '\@multirow@bindings{name=multlined,vattach=#1,width=#2}\@@multlined\@start@alignment');
 DefMacroI('\endmultlined', undef, '\@finish@alignment\@end@multlined');
 DefPrimitiveI('\@end@multlined', undef, sub { $_[0]->egroup; });
 
@@ -530,10 +536,12 @@ DefMathI('\bigtimes', undef, UTF(0xD7), role => 'MULOP', meaning => 'times', fon
 
 DefMathI('\prescript', '{}{}{}', '{}^{\@mt@getmtoption{prescript-sup-format}{#1}}_{\@mt@getmtoption{prescript-sub-format}{#2}}{\@mt@getmtoption{prescript-arg-format}{#3}}', scriptpos => 'pre');
 
+## 4.5
+
 ## 4.6
 
-DefMacro('\splitfrac{}{}', '\@multlined@bindings{name=splitfrac}\@@multlined\@start@alignment #1 \\\\ #2 \@finish@alignment\@end@multline');
-DefMacro('\splitdfrac{}{}', '\displaystyle\@multlined@bindings{name=splitdfrac}\@@multlined\@start@alignment #1 \\\\ #2 \@finish@alignment\@end@multline');
+DefMacro('\splitfrac{}{}', '\@multirow@bindings{name=splitfrac}\@@multlined\@start@alignment #1 \\\\ #2 \@finish@alignment\@end@multline');
+DefMacro('\splitdfrac{}{}', '\displaystyle\@multirow@bindings{name=splitdfrac}\@@multlined\@start@alignment #1 \\\\ #2 \@finish@alignment\@end@multline');
 
 ######################################################
 
