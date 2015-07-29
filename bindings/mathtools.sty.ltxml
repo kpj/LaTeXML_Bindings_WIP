@@ -409,7 +409,7 @@ DefConstructor('\@@multlined DigestedBody',
   afterDigest => sub {
     $_[1]->setBody($_[1]->getArg(1)->unlist, undef); },
   afterConstruct => sub {
-    rearrangeAMSMultirow($_[0], $_[0]->getNode->lastChild); });
+    rearrangeAMSMultirow($_[0], $_[0]->getNode->lastChild, ( '0' => 'left' ,'-1' => 'right' )); });
 
 DefMacroI('\multlined', '[] Optional:0em', '\@multirow@bindings{name=multlined,vattach=#1,width=#2}\@@multlined\@start@alignment');
 DefMacroI('\endmultlined', undef, '\@finish@alignment\@end@multlined');
@@ -537,6 +537,28 @@ DefMathI('\bigtimes', undef, UTF(0xD7), role => 'MULOP', meaning => 'times', fon
 DefMathI('\prescript', '{}{}{}', '{}^{\@mt@getmtoption{prescript-sup-format}{#1}}_{\@mt@getmtoption{prescript-sub-format}{#2}}{\@mt@getmtoption{prescript-arg-format}{#3}}', scriptpos => 'pre');
 
 ## 4.5
+
+DefConstructor('\@@lgathered DigestedBody',
+  "#1",
+  beforeDigest => sub { $_[0]->bgroup; },
+  afterDigest => sub {
+    $_[1]->setBody($_[1]->getArg(1)->unlist, undef); },
+  afterConstruct => sub {
+    rearrangeAMSMultirow($_[0], $_[0]->getNode->lastChild, ( 'default' => 'left' )); });
+
+DefMacroI('\lgathered', '[]', '\@multirow@bindings{name=lgathered,vattach=#1}\@@lgathered\@start@alignment');
+DefMacroI('\endlgathered', undef, '\@finish@alignment\@end@gathered');
+
+DefConstructor('\@@rgathered DigestedBody',
+  "#1",
+  beforeDigest => sub { $_[0]->bgroup; },
+  afterDigest => sub {
+    $_[1]->setBody($_[1]->getArg(1)->unlist, undef); },
+  afterConstruct => sub {
+    rearrangeAMSMultirow($_[0], $_[0]->getNode->lastChild, ( 'default' => 'right' )); });
+
+DefMacroI('\rgathered', '[]', '\@multirow@bindings{name=rgathered,vattach=#1}\@@rgathered\@start@alignment');
+DefMacroI('\endrgathered', undef, '\@finish@alignment\@end@gathered');
 
 ## 4.6
 
