@@ -44,6 +44,7 @@ RequirePackage('amsmath', withoptions => 1);
 #########
 
 DefKeyVal('multirow', 'width', 'Dimension');
+DefKeyVal('multirow', 'rowsep', 'Dimension');
 
 DefPrimitive('\@multirow@bindings RequiredKeyVals:multirow', sub {
     my ($stomach, $attributes) = @_;
@@ -535,6 +536,20 @@ DefMathI('\bigtimes', undef, UTF(0xD7), role => 'MULOP', meaning => 'times', fon
 ## 4.2
 
 DefMathI('\prescript', '{}{}{}', '{}^{\@mt@getmtoption{prescript-sup-format}{#1}}_{\@mt@getmtoption{prescript-sub-format}{#2}}{\@mt@getmtoption{prescript-arg-format}{#3}}', scriptpos => 'pre');
+
+## 4.4
+
+DefConstructor('\@@spreadlines DigestedBody',
+  "#1",
+  beforeDigest => sub { $_[0]->bgroup; },
+  afterDigest => sub {
+    $_[1]->setBody($_[1]->getArg(1)->unlist, undef); },
+  afterConstruct => sub {
+    rearrangeAMSMultirow($_[0], $_[0]->getNode->lastChild); });
+
+DefMacroI('\spreadlines', '{}', '\@multirow@bindings{name=spreadlines,rowsep=#1}\@@spreadlines\@start@alignment');
+DefMacroI('\endspreadlines', undef, '\@finish@alignment\@end@spreadlines');
+DefPrimitiveI('\@end@spreadlines', undef, sub { $_[0]->egroup; });
 
 ## 4.5
 
