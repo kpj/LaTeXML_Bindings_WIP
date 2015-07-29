@@ -544,7 +544,7 @@ DefConstructor('\@@lgathered DigestedBody',
   afterDigest => sub {
     $_[1]->setBody($_[1]->getArg(1)->unlist, undef); },
   afterConstruct => sub {
-    rearrangeAMSMultirow($_[0], $_[0]->getNode->lastChild, ( 'default' => 'left' )); });
+    rearrangeAMSMultirow($_[0], $_[0]->getNode->lastChild, rowalignment => { 'default' => 'left' }); });
 
 DefMacroI('\lgathered', '[]', '\@multirow@bindings{name=lgathered,vattach=#1}\@@lgathered\@start@alignment');
 DefMacroI('\endlgathered', undef, '\@finish@alignment\@end@gathered');
@@ -555,7 +555,7 @@ DefConstructor('\@@rgathered DigestedBody',
   afterDigest => sub {
     $_[1]->setBody($_[1]->getArg(1)->unlist, undef); },
   afterConstruct => sub {
-    rearrangeAMSMultirow($_[0], $_[0]->getNode->lastChild, ( 'default' => 'right' )); });
+    rearrangeAMSMultirow($_[0], $_[0]->getNode->lastChild, rowalignment => { 'default' => 'right' }); });
 
 DefMacroI('\rgathered', '[]', '\@multirow@bindings{name=rgathered,vattach=#1}\@@rgathered\@start@alignment');
 DefMacroI('\endrgathered', undef, '\@finish@alignment\@end@gathered');
