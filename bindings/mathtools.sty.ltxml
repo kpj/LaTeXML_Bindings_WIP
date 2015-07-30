@@ -406,11 +406,14 @@ DefMacro('\endVsmallmatrix', '\lx@end@ams@matrix');
 # {multlined}
 DefConstructor('\@@multlined DigestedBody',
   "#1",
-  beforeDigest => sub { $_[0]->bgroup; },
+  beforeDigest => sub {
+    AssignValue('MULTIROW_ALIGNMENT_RULE' => { 'default' => 'center', '0' => 'left' ,'-1' => 'right' });
+    $_[0]->bgroup; },
   afterDigest => sub {
+    $_[1]->setProperty('MULTIROW_ALIGNMENT_RULE' => LookupValue('MULTIROW_ALIGNMENT_RULE'));
     $_[1]->setBody($_[1]->getArg(1)->unlist, undef); },
   afterConstruct => sub {
-    rearrangeAMSMultirow($_[0], $_[0]->getNode->lastChild, ( '0' => 'left' ,'-1' => 'right' )); });
+    rearrangeAMSMultirow($_[0], $_[1], $_[0]->getNode->lastChild); });
 
 DefMacroI('\multlined', '[] Optional:0em', '\@multirow@bindings{name=multlined,vattach=#1,width=#2}\@@multlined\@start@alignment');
 DefMacroI('\endmultlined', undef, '\@finish@alignment\@end@multlined');
@@ -419,17 +422,11 @@ DefPrimitiveI('\@end@multlined', undef, sub { $_[0]->egroup; });
 # Is currently ignore the shoving dimension
 DefMacro('\@MT@shove{}', sub {
     my ($gullet, $shove_dir) = @_;
-    my $cur_col = LookupValue('Alignment')->currentColumn;
-    $shove_dir = ToString($shove_dir);
+    my $cur_row_num = LookupValue('Alignment')->currentRowNumber - 1;
 
-    if ($shove_dir eq 'left') {
-      delete $$cur_col{before};
-      $$cur_col{after} = Tokens(T_CS('\hfil'), T_CS('\displaystyle')); }
-    elsif ($shove_dir eq 'right') {
-      delete $$cur_col{after};
-      $$cur_col{before} = Tokens(T_CS('\hfil'), T_CS('\displaystyle')); }
-
-  return; });
+    my $rowalignment = LookupValue('MULTIROW_ALIGNMENT_RULE');
+    $$rowalignment{$cur_row_num} = ToString($shove_dir);
+    return; });
 
 DefMacro('\shoveright[]{}', '\@MT@shove{right}#2');
 DefMacro('\shoveleft[]{}', '\@MT@shove{left}#2');
@@ -565,9 +562,10 @@ DefConstructor('\@@lgathered DigestedBody',
   "#1",
   beforeDigest => sub { $_[0]->bgroup; },
   afterDigest => sub {
+    $_[1]->setProperty('MULTIROW_ALIGNMENT_RULE' => { 'default' => 'left' });
     $_[1]->setBody($_[1]->getArg(1)->unlist, undef); },
   afterConstruct => sub {
-    rearrangeAMSMultirow($_[0], $_[0]->getNode->lastChild, rowalignment => { 'default' => 'left' }); });
+    rearrangeAMSMultirow($_[0], $_[1], $_[0]->getNode->lastChild); });
 
 DefMacroI('\lgathered', '[]', '\@multirow@bindings{name=lgathered,vattach=#1}\@@lgathered\@start@alignment');
 DefMacroI('\endlgathered', undef, '\@finish@alignment\@end@gathered');
@@ -576,9 +574,10 @@ DefConstructor('\@@rgathered DigestedBody',
   "#1",
   beforeDigest => sub { $_[0]->bgroup; },
   afterDigest => sub {
+    $_[1]->setProperty('MULTIROW_ALIGNMENT_RULE' => { 'default' => 'right' });
     $_[1]->setBody($_[1]->getArg(1)->unlist, undef); },
   afterConstruct => sub {
-    rearrangeAMSMultirow($_[0], $_[0]->getNode->lastChild, rowalignment => { 'default' => 'right' }); });
+    rearrangeAMSMultirow($_[0], $_[1], $_[0]->getNode->lastChild); });
 
 DefMacroI('\rgathered', '[]', '\@multirow@bindings{name=rgathered,vattach=#1}\@@rgathered\@start@alignment');
 DefMacroI('\endrgathered', undef, '\@finish@alignment\@end@gathered');
