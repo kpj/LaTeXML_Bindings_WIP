@@ -416,6 +416,24 @@ DefMacroI('\multlined', '[] Optional:0em', '\@multirow@bindings{name=multlined,v
 DefMacroI('\endmultlined', undef, '\@finish@alignment\@end@multlined');
 DefPrimitiveI('\@end@multlined', undef, sub { $_[0]->egroup; });
 
+# Is currently ignore the shoving dimension
+DefMacro('\@MT@shove{}', sub {
+    my ($gullet, $shove_dir) = @_;
+    my $cur_col = LookupValue('Alignment')->currentColumn;
+    $shove_dir = ToString($shove_dir);
+
+    if ($shove_dir eq 'left') {
+      delete $$cur_col{before};
+      $$cur_col{after} = Tokens(T_CS('\hfil'), T_CS('\displaystyle')); }
+    elsif ($shove_dir eq 'right') {
+      delete $$cur_col{after};
+      $$cur_col{before} = Tokens(T_CS('\hfil'), T_CS('\displaystyle')); }
+
+  return; });
+
+DefMacro('\shoveright[]{}', '\@MT@shove{right}#2');
+DefMacro('\shoveleft[]{}', '\@MT@shove{left}#2');
+
 # cases
 DefMacro('\dcases', '\lx@ams@cases{name=dcases,meaning=cases,left=\@left\{,style=\displaystyle,conditionmode=math}');
 DefMacro('\enddcases', '\lx@end@ams@cases');
