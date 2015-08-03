@@ -602,4 +602,34 @@ Spread it
   \end{multlined}
 \]
 
+\horz
+
+\newcounter{steplinecnt}
+\newcommand\stepline{\stepcounter{steplinecnt}\thesteplinecnt}
+\newgathered{stargathered}
+  {\llap{\stepline}$*$\quad\hfil}%
+  {\quad\textbf{over}}%
+  {\setcounter{steplinecnt}{42}}
+
+\[
+  \begin{stargathered}
+    x=1,\quad x+1=2 \\
+    y=2
+  \end{stargathered}
+\]
+\thesteplinecnt
+
+\renewgathered{stargathered}
+  {See:}%
+  {the end}%
+  {\setcounter{steplinecnt}{1337}}
+
+\[
+  \begin{stargathered}
+    s=2.8,\quad s+0.2=3 \\
+    t=4.5
+  \end{stargathered}
+\]
+\thesteplinecnt
+
 \end{document}

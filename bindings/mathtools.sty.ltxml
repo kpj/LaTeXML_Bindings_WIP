@@ -46,8 +46,8 @@ RequirePackage('amsmath', withoptions => 1);
 DefKeyVal('multirow', 'width', 'Dimension');
 DefKeyVal('multirow', 'rowsep', 'Dimension');
 
-DefPrimitive('\@multirow@bindings RequiredKeyVals:multirow', sub {
-    my ($stomach, $attributes) = @_;
+DefPrimitiveI('\@multirow@bindings', 'RequiredKeyVals:multirow OptionalKeyVals', sub {
+    my ($stomach, $attributes, $options) = @_;
     my %attr = $attributes->getPairs;
 
     if (my $va = $attr{vattach}) {
@@ -55,7 +55,7 @@ DefPrimitive('\@multirow@bindings RequiredKeyVals:multirow', sub {
     if ($attr{width} && $attr{width}->valueOf == 0) {
       delete $attr{width}; }
 
-    amsMultirowBindings(%attr);
+    amsMultirowBindings(\%attr, ($options ? $options->getPairs : ()));
     return; });
 
 
@@ -581,6 +581,29 @@ DefConstructor('\@@rgathered DigestedBody',
 
 DefMacroI('\rgathered', '[]', '\@multirow@bindings{name=rgathered,vattach=#1}\@@rgathered\@start@alignment');
 DefMacroI('\endrgathered', undef, '\@finish@alignment\@end@gathered');
+
+DefConstructor('\@@newgathered@dummy DigestedBody',
+  '#1',
+  beforeDigest => sub { $_[0]->bgroup; },
+  afterConstruct => sub {
+    my ($document) = @_;
+    my $array = $document->getNode->lastChild;
+    # Insert a \qquad between the rows to encourage the parser to see them as separate eqns.
+    my @stuff = extractXMArrayCells($document, $array);
+    $document->replaceTree(['ltx:XMDual', {},
+      ['ltx:XMWrap', { rule => 'Anything,' },
+        createXMRefs($document, @stuff)],
+      $array],
+    $array);
+  return; });
+
+DefMacro('\newgathered{}{}{}{}', sub {
+    my ($gullet, $name, $pre_line, $post_line, $after) = @_;
+    $name = ToString($name);
+
+    DefMacroI('\\' . $name, undef, '\@multirow@bindings{name=' . $name . '}[before_row=' . UnTeX($pre_line) . ',after_row=' . UnTeX($post_line) . ']\@@newgathered@dummy\@start@alignment');
+    DefMacroI('\end' . $name, undef, Tokens(T_CS('\@finish@alignment'), T_CS('\@end@gathered'), $after)); });
+Let('\renewgathered', '\newgathered');
 
 ## 4.6
 
