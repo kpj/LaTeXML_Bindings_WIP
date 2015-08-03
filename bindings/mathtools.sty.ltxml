@@ -423,8 +423,8 @@ DefPrimitiveI('\@end@multlined', undef, sub { $_[0]->egroup; });
 DefMacro('\@MT@shove{}', sub {
     my ($gullet, $shove_dir) = @_;
     my $cur_row_num = LookupValue('Alignment')->currentRowNumber - 1;
-
     my $rowalignment = LookupValue('MULTIROW_ALIGNMENT_RULE');
+
     $$rowalignment{$cur_row_num} = ToString($shove_dir);
     return; });
 
