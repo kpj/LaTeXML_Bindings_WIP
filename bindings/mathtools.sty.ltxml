@@ -415,7 +415,23 @@ DefConstructor('\@@multlined DigestedBody',
   afterConstruct => sub {
     rearrangeAMSMultirow($_[0], $_[1], $_[0]->getNode->lastChild); });
 
-DefMacroI('\multlined', '[] Optional:0em', '\@multirow@bindings{name=multlined,vattach=#1,width=#2}\@@multlined\@start@alignment');
+DefMacroI('\@multlined@tmp', 'RequiredKeyVals', sub {
+    my ($gullet, $kv) = @_;
+    my %dict = $kv->getPairs;
+
+    my $vattach = (defined $dict{vattach}) ? ToString($dict{vattach}) : ToString(Digest('\@mt@getmtoption{multlined-pos}'));
+    my $width = (defined $dict{width}) ? ToString($dict{width}) : ToString(Digest('\@mt@getmtoption{multlined-width}'));
+
+    return TokenizeInternal('\@multirow@bindings{'
+      . 'name=multlined'
+      . (($vattach ne '') ? (',vattach=' . $vattach) : '')
+      . (($width ne '') ? (',width=' . $width) : '')
+      . '}'); });
+DefMacroI('\multlined', '[][]', '\@multlined@tmp{'
+  . 'name=multlined,'
+  . '\ifx/#1/\else vattach=#1,\fi'
+  . '\ifx/#2/\else width=#2,\fi'
+  . '}\@@multlined\@start@alignment');
 DefMacroI('\endmultlined', undef, '\@finish@alignment\@end@multlined');
 DefPrimitiveI('\@end@multlined', undef, sub { $_[0]->egroup; });
 
