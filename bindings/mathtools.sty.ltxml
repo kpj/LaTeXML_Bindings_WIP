@@ -471,8 +471,8 @@ DefMacro('\csname endcases*\endcsname', '\lx@end@ams@cases');
 
 #MoveEqLeft
 
-#Aboxed
-#DefMacro('\Aboxed{}', '#1');
+# TODO: Properly implement \Aboxed
+DefMacro('\Aboxed{}', '#1');
 
 ## 3.5
 Let('\shortintertext', '\@ams@intertext');
