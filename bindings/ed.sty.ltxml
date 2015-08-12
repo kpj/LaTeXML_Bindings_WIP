@@ -34,20 +34,6 @@ ProcessOptions();
 
  RequirePackage('paralist');
  RequirePackage('xcolor');
-
-
-  DefConstructor('\tweak{}',"<ltx:note role='tweak'>#1</ltx:note>");
-   
-  DefMacroI('\begin{todolist}', '{}',  "\\begin{Lukasidentifier}#1\\begin{enumerate}");
-  DefMacroI('\end{todolist}',   undef, '\end{enumerate}\end{Lukasidentifier}');
-
-  DefEnvironment('{Lukasidentifier}',"
-  <ltx:note role='todolist'> #body </ltx:note><ltx:note role='todomark'>ToDo </ltx:note>");
- 
-  
-  DefEnvironment('{Newpart}{}',"<ltx:note role='newpart'>#body</ltx:note><ltx:note role='newparttitle'>#1</ltx:note>");
-  
-  DefEnvironment('{Oldpart}{}',"<ltx:note role='oldpart'>#body</ltx:note><ltx:note role='oldparttitle'>#1</ltx:note>");
   
   
   RawTeX('
@@ -83,7 +69,7 @@ ProcessOptions();
 
 NewCounter('ednote');
 
-DefMacro('\ednote','\ifshowednotes\lx@show@ednote\else\lx@hide@ednote\fi'); 
+DefMacro('\ednote{}','\ifshowednotes\lx@show@ednote{#1}\else\lx@hide@ednote{#1}\fi'); 
 
 DefConstructor('\lx@show@ednote{}',
   "<ltx:note role='ednote' mark='#refnum'>#label: #1  </ltx:note><ltx:note role='ednotemark' mark='#margin:#refnum'/>",
@@ -117,19 +103,24 @@ DefMacro('\Ednote','\ifshowednotes\lx@show@Ednote\else\lx@hide@Ednote\fi');
    AssignValue('ednotelabel'=>$newlabel);});
    
    
-   DefConstructor('\issue{}',
+   DefMacro('\issue{}','\ifshowednotes\lx@show@issue{#1}\else\lx@hide@issue{#1}\fi');  
+   DefConstructor('\lx@show@issue{}',
   "<ltx:note role='issue' mark='#refnum'>#label: #1  </ltx:note><ltx:note role='issuemark' mark='#margin:#refnum'/>",
   properties => sub {
     RefStepCounter('ednote'),
     margin=>LookupValue('issuemargin'), 
     label=>LookupValue('issuelabel') });
     
-    DefConstructor('\Issue{}',							#This is the same as \issue, except there is no mark in the margins.
+    
+    DefConstructor('\lx@hide@issue{}','');
+    DefMacro('\Issue{}','\ifshowednotes\lx@show@Issue{#1}\else\lx@hide@Issue{#1}\fi');  
+    DefConstructor('\lx@show@Issue{}',							#This is the same as \issue, except there is no mark in the margins.
   "<ltx:note role='issue' mark='#refnum'>#label: #1  </ltx:note>",
   properties => sub {
     RefStepCounter('ednote'), 
     label=>LookupValue('issuelabel') });
    
+   DefConstructor('\lx@hide@Issue{}','');
     
    AssignValue('issuemargin'=>'Is'); #Giving a default value to issuemargin
    AssignValue('issuelabel'=>'Issue'); #Giving a default value to issuelabel. 
@@ -144,34 +135,40 @@ DefMacro('\Ednote','\ifshowednotes\lx@show@Ednote\else\lx@hide@Ednote\fi');
    $newlabel=ToString($newlabel);
    AssignValue('issuelabel'=>$newlabel);});
    
-      DefConstructor('\todo{}',
+   DefMacro('\todo{}','\ifshowednotes\lx@show@todo{#1}\else\lx@hide@todo{#1}\fi');  
+      DefConstructor('\lx@show@todo{}',
   "<ltx:note role='todo' mark='#refnum'>#label: #1  </ltx:note><ltx:note role='todomark' mark='#margin:#refnum'/>",
   properties => sub {
     RefStepCounter('ednote'),
     margin=>LookupValue('todomargin'), 
     label=>LookupValue('todolabel') });
     
-   
+   DefConstructor('\lx@hide@todo{}','');
     
    AssignValue('todomargin'=>'ToDo'); #Giving a default value to todomargin
    AssignValue('todolabel'=>'To Do'); #Giving a default value to todolabel. 
    
    #I can't  really find a way for the user to modify the label and margin, as for issues and ednotes.
-   
-      DefConstructor('\tweak{}',
+   DefMacro('\tweak{}','\ifshowednotes\lx@show@tweak{#1}\else\lx@hide@tweak{#1}\fi');  
+      DefConstructor('\lx@show@tweak{}',
   "<ltx:note role='tweak' mark='#refnum'>#label: #1  </ltx:note><ltx:note role='tweakmark' mark='#margin:#refnum'/>",
   properties => sub {
     RefStepCounter('ednote'),
     margin=>LookupValue('tweakmargin'), 
     label=>LookupValue('tweaklabel') });
     
-    DefConstructor('\Issue{}',							#This is the same as \issue, except there is no mark in the margins.
+    
+    DefConstructor('\lx@hide@tweak{}','');
+    
+    
+    DefMacro('\Tweak{}','\ifshowednotes\lx@show@Tweak{#1}\else\lx@hide@Tweak{#1}\fi');  
+    DefConstructor('\lx@show@Tweak{}',							#This is the same as \issue, except there is no mark in the margins.
   "<ltx:note role='tweak' mark='#refnum'>#label: #1  </ltx:note>",
   properties => sub {
     RefStepCounter('ednote'), 
     label=>LookupValue('tweaklabel') });
    
-    
+    DefConstructor('\lx@hide@Tweak{}','');
    AssignValue('tweakmargin'=>'Tw'); #Giving a default value to ednotemargin
    AssignValue('tweaklabel'=>'Tweak'); #Giving a default value to ednotelabel. 
    
@@ -184,10 +181,49 @@ DefMacro('\Ednote','\ifshowednotes\lx@show@Ednote\else\lx@hide@Ednote\fi');
    my ($gullet,$newlabel)=@_;
    $newlabel=ToString($newlabel);
    AssignValue('tweaklabel'=>$newlabel);});
-
-  DefEnvironment('{musings}{}',"<ltx:note role='musings'>#body</ltx:note><ltx:note role='musingstitle'>#1</ltx:note>");
+  
+  
+  DefMacroI('\begin{musings}','{}','\ifshowednotes\begin{lx@show@musings}{#1}\else\begin{lx@hide@musings}{#1}\fi');
+  DefMacroI('\end{musings}',undef,'\ifshowednotes \end{lx@show@musings}{#1}\else\end{lx@hide@musings}{#1}\fi');   
+  DefEnvironment('{lx@show@musings}{}',"<ltx:note role='musings'>#body</ltx:note><ltx:note role='musingstitle'>#1</ltx:note>");
+  
+  DefEnvironment('{lx@hide@musings}{}','');
   
   DefMacro('\edissue{}','\issue{#1}');				#I am rawtexing all the edstub stuff, since it isn't semantically interesting
+  
+    DefMacroI('\begin{todolist}', '{}',  '\ifshowednotes\begin{Lukasidentifier@show}#1\begin{enumerate}\else \begin{Lukasidentifier@hide}#1\begin{enumerate} \fi');
+  DefMacroI('\end{todolist}',   undef, '\ifshowednotes \end{enumerate}\end{Lukasidentifier@show} \else \end{Lukasidentifier@hide}\end{enumerate} \fi');
+
+  DefEnvironment('{Lukasidentifier@show}',"
+  <ltx:note role='todolist'> #body </ltx:note><ltx:note role='todomark'>ToDo </ltx:note>");
+ 
+  DefEnvironment('{Lukasidentifer@hide}','');
+  
+  
+   DefMacroI('\begin{Newpart}','{}','\ifshowednotes\begin{lx@show@Newpart}{#1}\else\begin{lx@hide@Newpart}{#1}\fi');
+  DefMacroI('\end{Newpart}',undef,'\ifshowednotes \end{lx@show@Newpart}{#1}\else\end{lx@hide@Newpart}{#1}\fi');   
+    DefEnvironment('{lx@show@Newpart}{}',"<ltx:note role='newpart'>#body</ltx:note><ltx:note role='newparttitle'>#1</ltx:note>");
+    DefEnvironment('{lx@hide@Newpart}{}',"");
+    
+     DefMacroI('\begin{Oldpart}','{}','\ifshowednotes\begin{lx@show@Oldpart}{#1}\else\begin{lx@hide@Oldpart}{#1}\fi');
+  DefMacroI('\end{Oldpart}',undef,'\ifshowednotes \end{lx@show@Oldpart}{#1}\else\end{lx@hide@Oldpart}{#1}\fi');   
+  
+  DefEnvironment('{lx@show@Oldpart}{}',"<ltx:note role='oldpart'>#body</ltx:note><ltx:note role='oldparttitle'>#1</ltx:note>");
+    DefEnvironment('{lx@hide@Oldpart}{}',"");
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   RawTeX('\def\ed@stubURI{random}
 \newcommand\edstuURI[1]{\gdef\ed@stubURI{#1}}'); 					

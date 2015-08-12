@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage[show]{ed}
+\author{Lukas Kohlhase}
+\title{testdocument for ed.sty}
+\begin{document}
+\maketitle
+\section{Using all macros without any modification}
+\textbackslash ednote  \ednote{Here we write a normal ednote} \\
+\textbackslash issue \issue{It's the same thing for \textbackslash Issue} \\
+\textbackslash todo \todo{Here is a todo} \\
+\textbackslash tweak \tweak{Same as for Tweak} \\
+
+Now we make a todolist 
+
+\begin{todolist}{an example todolist} 
+\item First we write the first item 
+\item and then the second one 
+\end{todolist}
+
+We note that the todolist appears in the main document text. 
+
+
+Finally we make some \textbackslash edissue    \edissue{Nothing really to say here}
+\begin{Newpart}{Newpart}
+This is the newpart 
+\end{Newpart}
+\begin{Oldpart}{OldPart}
+This is the Oldpart
+\end{Oldpart}
+\begin{musings}{Musings}
+Here are the random musings of a distrubed mind 
+\end{musings}
+\begin{edstub}{Edstub}
+Here is a stub. No idea what it does 
+\end{edstub}
+
+\section{Now we change labels and margins}
+
+\edissuelabel{alteredissue}
+\edissuemargin{aIs}
+\issue{This has an altered margin and an altered label}
+
+\ednotelabel{alteredlabel}
+\ednotemargin{aEdN}
+
+\ednote{This has an altered marin and an altered label}
+
+\edstuURI{ednotestest.tex}
+\edstub{testdocument}{Altered text}
+
+\tweaklabel{alteredtweak}
+\tweakmargin{aTw}
+
+Here is a tweak \tweak{With text as well !!}
+
+\end{document}
