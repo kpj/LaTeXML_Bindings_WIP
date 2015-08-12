@@ -469,10 +469,20 @@ DefMacro('\csname enddrcases*\endcsname', '\lx@end@ams@cases');
 DefMacro('\csname cases*\endcsname', '\lx@ams@cases{name=cases,meaning=cases,left=\@left\{,style=\textstyle,conditionmode=text}');
 DefMacro('\csname endcases*\endcsname', '\lx@end@ams@cases');
 
-#MoveEqLeft
+# TODO: Make this actually shift the equation
+DefMacro('\MoveEqLeft[]', T_ALIGN);
 
 # TODO: Properly implement \Aboxed
 DefMacro('\Aboxed{}', '#1');
+
+# TODO: Make this actually do something
+DefMacro('\ArrowBetweenLines[]', '');
+DefMacro('\csname ArrowBetweenLines*\endcsname[]', '');
+DefMacro('\vdotswithin{}', '');
+DefMacro('\shortvdotswithin{}', '');
+DefMacro('\csname shortvdotswithin*\endcsname{}', '');
+DefMacro('\MTFlushSpaceAbove', '');
+DefMacro('\MTFlushSpaceBelow', '');
 
 ## 3.5
 Let('\shortintertext', '\@ams@intertext');
