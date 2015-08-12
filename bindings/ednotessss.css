@@ -1,0 +1,27 @@
+
+.ltx_role_ednotemark> .ltx_note_mark {
+	color:black;
+	position: absolute;
+	right: 100px;
+	font-size: 12pt;
+}
+
+.ltx_role_issuemark> .ltx_note_mark {
+	position:absolute;
+	right: 100px;
+	color:black;
+	font-size:12pt; 
+}
+.ltx_role_todomark> .ltx_note_mark {
+	position: absolute;
+	right: 100px;
+	color:black;
+	font-size: 12pt;
+} 
+.ltx_role_tweakmark> .ltx_note_mark {
+	position: absolute;
+	right: 100px;
+	color:black;
+	font-size:12pt;
+} 
+
