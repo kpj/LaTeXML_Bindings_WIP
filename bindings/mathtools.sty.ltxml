@@ -369,22 +369,42 @@ DefMacro('\csname Vmatrix*\endcsname []', '\lx@ams@matrix{name=Vmatrix,delimiter
 DefMacro('\csname endVmatrix*\endcsname', '\lx@end@ams@matrix');
 
 # starred small matrices
-DefMacro('\csname smallmatrix*\endcsname []', '\lx@ams@matrix{name=matrix,datameaning=matrix,alignment=#1,style=\scriptsize}');
+DefMacroI('\@smallmatrix@star@tmp', 'RequiredKeyVals', sub {
+    my ($gullet, $kv) = @_;
+    my %dict = $kv->getPairs;
+
+    my $alignment = (defined $dict{alignment}) ? ToString($dict{alignment}) : ToString(Digest('\@mt@getmtoption{smallmatrix-align}'));
+
+    my $delimitermeaning = (defined $dict{delimitermeaning}) ? ToString($dict{delimitermeaning}) : '';
+    my $left = (defined $dict{left}) ? ToString($dict{left}) : '';
+    my $right = (defined $dict{right}) ? ToString($dict{right}) : '';
+
+    return TokenizeInternal('\lx@ams@matrix{'
+      . 'name=' . ToString($dict{name}) . ','
+      . 'datameaning=' . ToString($dict{datameaning}) . ','
+      . 'style=' . ToString($dict{style})
+      . (($delimitermeaning ne '') ? (',delimitermeaning=' . $delimitermeaning) : '')
+      . (($left ne '') ? (',left=' . $left) : '')
+      . (($right ne '') ? (',right=' . $right) : '')
+      . (($alignment ne '') ? (',alignment=' . $alignment) : '')
+      . '}'); });
+
+DefMacro('\csname smallmatrix*\endcsname []', '\@smallmatrix@star@tmp{name=matrix,datameaning=matrix,style=\scriptsize,\ifx/#1/\else alignment=#1,\fi}');
 DefMacro('\csname endsmallmatrix*\endcsname', '\lx@end@ams@matrix');
 
-DefMacro('\csname psmallmatrix*\endcsname []', '\lx@ams@matrix{name=pmatrix,datameaning=matrix,alignment=#1,left=\@left(,right=\@right),style=\scriptsize}');
+DefMacro('\csname psmallmatrix*\endcsname []', '\@smallmatrix@star@tmp{name=pmatrix,datameaning=matrix,left=\@left(,right=\@right),style=\scriptsize,\ifx/#1/\else alignment=#1,\fi}');
 DefMacro('\csname endpsmallmatrix*\endcsname', '\lx@end@ams@matrix');
 
-DefMacro('\csname bsmallmatrix*\endcsname []', '\lx@ams@matrix{name=bmatrix,datameaning=matrix,alignment=#1,left=\@left[,right=\@right],style=\scriptsize}');
+DefMacro('\csname bsmallmatrix*\endcsname []', '\@smallmatrix@star@tmp{name=bmatrix,datameaning=matrix,left=\@left[,right=\@right],style=\scriptsize,\ifx/#1/\else alignment=#1,\fi}');
 DefMacro('\csname endbsmallmatrix*\endcsname', '\lx@end@ams@matrix');
 
-DefMacro('\csname Bsmallmatrix*\endcsname []', '\lx@ams@matrix{name=Bmatrix,datameaning=matrix,alignment=#1,left=\@left\{,right=\@right\},style=\scriptsize}');
+DefMacro('\csname Bsmallmatrix*\endcsname []', '\@smallmatrix@star@tmp{name=Bmatrix,datameaning=matrix,left=\@left\{,right=\@right\},style=\scriptsize,\ifx/#1/\else alignment=#1,\fi}');
 DefMacro('\csname endBsmallmatrix*\endcsname', '\lx@end@ams@matrix');
 
-DefMacro('\csname vsmallmatrix*\endcsname []', '\lx@ams@matrix{name=vmatrix,delimitermeaning=determinant,datameaning=matrix,alignment=#1,left=\@left|,right=\@right|,style=\scriptsize}');
+DefMacro('\csname vsmallmatrix*\endcsname []', '\@smallmatrix@star@tmp{name=vmatrix,delimitermeaning=determinant,datameaning=matrix,left=\@left|,right=\@right|,style=\scriptsize,\ifx/#1/\else alignment=#1,\fi}');
 DefMacro('\csname endvsmallmatrix*\endcsname', '\lx@end@ams@matrix');
 
-DefMacro('\csname Vsmallmatrix*\endcsname []', '\lx@ams@matrix{name=Vmatrix,delimitermeaning=norm,datameaning=matrix,alignment=#1,left=\@left\|,right=\@right\|,style=\scriptsize}');
+DefMacro('\csname Vsmallmatrix*\endcsname []', '\@smallmatrix@star@tmp{name=Vmatrix,delimitermeaning=norm,datameaning=matrix,left=\@left\|,right=\@right\|,style=\scriptsize,\ifx/#1/\else alignment=#1,\fi}');
 DefMacro('\csname endVsmallmatrix*\endcsname', '\lx@end@ams@matrix');
 
 # non-starred small matrices
@@ -415,7 +435,23 @@ DefConstructor('\@@multlined DigestedBody',
   afterConstruct => sub {
     rearrangeAMSMultirow($_[0], $_[1], $_[0]->getNode->lastChild); });
 
-DefMacroI('\multlined', '[] Optional:0em', '\@multirow@bindings{name=multlined,vattach=#1,width=#2}\@@multlined\@start@alignment');
+DefMacroI('\@multlined@tmp', 'RequiredKeyVals', sub {
+    my ($gullet, $kv) = @_;
+    my %dict = $kv->getPairs;
+
+    my $vattach = (defined $dict{vattach}) ? ToString($dict{vattach}) : ToString(Digest('\@mt@getmtoption{multlined-pos}'));
+    my $width = (defined $dict{width}) ? ToString($dict{width}) : ToString(Digest('\@mt@getmtoption{multlined-width}'));
+
+    return TokenizeInternal('\@multirow@bindings{'
+      . 'name=multlined'
+      . (($vattach ne '') ? (',vattach=' . $vattach) : '')
+      . (($width ne '') ? (',width=' . $width) : '')
+      . '}'); });
+DefMacroI('\multlined', '[][]', '\@multlined@tmp{'
+  . 'name=multlined,'
+  . '\ifx/#1/\else vattach=#1,\fi'
+  . '\ifx/#2/\else width=#2,\fi'
+  . '}\@@multlined\@start@alignment');
 DefMacroI('\endmultlined', undef, '\@finish@alignment\@end@multlined');
 DefPrimitiveI('\@end@multlined', undef, sub { $_[0]->egroup; });
 
